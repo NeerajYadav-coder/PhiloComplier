@@ -1,0 +1,459 @@
+import { useState, useEffect } from "react";
+import { Header } from "./components/Header";
+import { PropositionInput } from "./components/PropositionInput";
+import { CleanTransformationCard } from "./components/CleanTransformationCard";
+import { NagarjunaCard } from "./components/NagarjunaCard";
+import { ComparativeCard } from "./components/ComparativeCard";
+import { SaveToNotebookModal } from "./components/SaveToNotebookModal";
+import { NotebookView } from "./components/NotebookView";
+import { EpistemicLadderView } from "./components/EpistemicLadderView";
+import { LinguisticDebuggerView } from "./components/LinguisticDebuggerView";
+import { QuestionDebuggerView } from "./components/QuestionDebuggerView";
+import { HiddenAssumptionsView } from "./components/HiddenAssumptionsView";
+import { TruthFalsityView } from "./components/TruthFalsityView";
+import { WittgensteinLensView } from "./components/WittgensteinLensView";
+import { IntuitionPreservationView } from "./components/IntuitionPreservationView";
+import { ReformulationCards } from "./components/ReformulationCards";
+import { PhilosophicalLinterView } from "./components/PhilosophicalLinterView";
+import { SettingsModal } from "./components/SettingsModal";
+import { AboutModal } from "./components/AboutModal";
+import {
+  PhilosophicalAnalysisResult,
+  NagarjunaDiagnosticResult,
+  ComparativeDiagnosticResult,
+  AnyAnalysisResult,
+  AnalysisMode,
+  CanonicalPresetMeta
+} from "./types";
+import { NotebookEntry } from "./types/notebook";
+import {
+  getNotebookEntries,
+  createEntryFromAnalysis,
+  addVersionToEntry,
+  deleteNotebookEntry,
+  exportNotebookJson,
+  importNotebookJson
+} from "./services/notebookStorage";
+import { GitCommit, Search, Key, Sparkles, BookOpen } from "lucide-react";
+
+export function App() {
+  const [currentView, setCurrentView] = useState<"debugger" | "notebook">("debugger");
+  const [activeMode, setActiveMode] = useState<AnalysisMode>("wittgenstein");
+  const [input, setInput] = useState<string>("");
+  const [analysis, setAnalysis] = useState<AnyAnalysisResult | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [presets, setPresets] = useState<CanonicalPresetMeta[]>([]);
+
+  // Notebook state
+  const [notebookEntries, setNotebookEntries] = useState<NotebookEntry[]>([]);
+  const [isSaveModalOpen, setIsSaveModalOpen] = useState<boolean>(false);
+
+  // Freedom to inspect deeper: HIDDEN BY DEFAULT per user specification
+  const [showDeepInspection, setShowDeepInspection] = useState<boolean>(false);
+
+  // Modals
+  const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
+  const [isAboutOpen, setIsAboutOpen] = useState<boolean>(false);
+
+  // Settings state
+  const [apiKey, setApiKey] = useState<string>(() => localStorage.getItem("philocompiler_gemini_key") || "");
+  const [model, setModel] = useState<string>(() => localStorage.getItem("philocompiler_gemini_model") || "openai/gpt-oss-120b");
+  const [serverHasKey, setServerHasKey] = useState<boolean>(false);
+
+  // Active deep tab: strictly ONE tab visible when deep inspection is opened
+  const [activeTab, setActiveTab] = useState<"ladder" | "linguistics" | "assumptions" | "reformulations" | "wittgenstein">("ladder");
+
+  // Load presets, notebook entries, & check server health on mount and mode changes
+  useEffect(() => {
+    fetch("/api/health")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.hasServerApiKey) setServerHasKey(true);
+      })
+      .catch((err) => console.warn("Could not reach health check:", err));
+
+    setNotebookEntries(getNotebookEntries());
+  }, []);
+
+  useEffect(() => {
+    fetch(`/api/canonical?mode=${activeMode}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) setPresets(data);
+      })
+      .catch((err) => console.warn("Could not load canonical presets:", err));
+  }, [activeMode]);
+
+  const handleSaveApiKey = (key: string) => {
+    setApiKey(key);
+    localStorage.setItem("philocompiler_gemini_key", key);
+  };
+
+  const handleSaveModel = (m: string) => {
+    setModel(m);
+    localStorage.setItem("philocompiler_gemini_model", m);
+  };
+
+  const handleAnalyze = async (propositionText: string) => {
+    const trimmed = propositionText.trim();
+    if (!trimmed) return;
+
+    setIsLoading(true);
+    setError(null);
+    setShowDeepInspection(false); // keep deep inspection closed by default for clean result
+
+    try {
+      const response = await fetch("/api/analyze", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(apiKey ? { "x-gemini-api-key": apiKey } : {}),
+        },
+        body: JSON.stringify({
+          input: trimmed,
+          mode: activeMode,
+          model,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `HTTP error ${response.status}`);
+      }
+
+      const data = await response.json();
+      setAnalysis(data);
+    } catch (err: any) {
+      console.error("Analysis failed:", err);
+      setError(err.message || "Failed to analyze the proposition.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleReset = () => {
+    setAnalysis(null);
+    setInput("");
+    setError(null);
+    setShowDeepInspection(false);
+  };
+
+  // Notebook Handlers
+  const handleSaveNewThought = (title: string, tag: string, notes?: string) => {
+    if (!analysis) return;
+    createEntryFromAnalysis(title, tag, analysis, notes);
+    setNotebookEntries(getNotebookEntries());
+  };
+
+  const handleAddVersion = (entryId: string, notes?: string) => {
+    if (!analysis) return;
+    addVersionToEntry(entryId, analysis, notes);
+    setNotebookEntries(getNotebookEntries());
+  };
+
+  const handleDeleteEntry = (entryId: string) => {
+    deleteNotebookEntry(entryId);
+    setNotebookEntries(getNotebookEntries());
+  };
+
+  const handleLoadFromNotebook = (rawThought: string) => {
+    setCurrentView("debugger");
+    setInput(rawThought);
+    handleAnalyze(rawThought);
+  };
+
+  const handleExportNotebook = () => {
+    const json = exportNotebookJson();
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `philocompiler_notebook_${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleImportNotebook = () => {
+    const inputEl = document.createElement("input");
+    inputEl.type = "file";
+    inputEl.accept = ".json,application/json";
+    inputEl.onchange = (e: any) => {
+      const file = e.target.files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const content = event.target?.result as string;
+          if (content && importNotebookJson(content)) {
+            setNotebookEntries(getNotebookEntries());
+          }
+        };
+        reader.readAsText(file);
+      }
+    };
+    inputEl.click();
+  };
+
+  return (
+    <div className="min-h-screen bg-apple-bg dark:bg-apple-darkBg text-apple-text dark:text-zinc-100 flex flex-col font-sans selection:bg-apple-accent/20 selection:text-apple-accent">
+      {/* Navigation Header with Debugger vs Notebook switcher */}
+      <Header
+        onOpenSettings={() => setIsSettingsOpen(true)}
+        onOpenAbout={() => setIsAboutOpen(true)}
+        hasCustomKey={Boolean(apiKey)}
+        engineUsed={analysis?.engineUsed}
+        currentView={currentView}
+        onSelectView={setCurrentView}
+        notebookCount={notebookEntries.length}
+      />
+
+      {/* Main Content Area */}
+      <main className="flex-1 max-w-4xl mx-auto w-full px-4 sm:px-6 py-10 sm:py-14 space-y-8">
+        {currentView === "notebook" ? (
+          /* ================= NOTEBOOK VIEW ================= */
+          <NotebookView
+            entries={notebookEntries}
+            onLoadIntoDebugger={handleLoadFromNotebook}
+            onDeleteEntry={handleDeleteEntry}
+            onExport={handleExportNotebook}
+            onImport={handleImportNotebook}
+            onGoToDebugger={() => setCurrentView("debugger")}
+          />
+        ) : (
+          /* ================= DEBUGGER VIEW ================= */
+          <>
+            {/* Minimal Hero (only when no analysis is active) */}
+            {!analysis && (
+              <div className="text-center max-w-xl mx-auto space-y-2 py-4">
+                <h2 className="text-2xl sm:text-3xl font-serif font-normal tracking-tight text-apple-text dark:text-white">
+                  PhiloCompiler
+                </h2>
+                <p className="text-xs sm:text-sm text-apple-secondary leading-relaxed">
+                  Transform your thoughts into clear logical form. Preserve your authentic intuition while debugging deceptive grammar.
+                </p>
+              </div>
+            )}
+
+            {/* Input Box */}
+            <PropositionInput
+              currentInput={input}
+              onInputChange={setInput}
+              onAnalyze={handleAnalyze}
+              isLoading={isLoading}
+              presets={presets}
+              activeMode={activeMode}
+              onModeChange={(newMode) => {
+                setActiveMode(newMode);
+              }}
+            />
+
+            {/* Error notification */}
+            {error && (
+              <div className="rounded-2xl p-4 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 text-rose-800 dark:text-rose-200 text-xs flex items-center justify-between">
+                <span>{error}</span>
+                <button
+                  onClick={() => handleAnalyze(input)}
+                  className="font-mono underline text-rose-700 dark:text-rose-300 ml-2"
+                >
+                  Retry
+                </button>
+              </div>
+            )}
+
+            {/* The Result Experience */}
+            {analysis && (
+              <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                {"transformedRelationalProposition" in analysis ? (
+                  /* 1. NĀGĀRJUNA / KĀRIKĀ MODE */
+                  <NagarjunaCard
+                    analysis={analysis as NagarjunaDiagnosticResult}
+                    onReset={handleReset}
+                    onOpenSaveModal={() => setIsSaveModalOpen(true)}
+                  />
+                ) : "wittgensteinTransformation" in analysis && "nagarjunaTransformation" in analysis ? (
+                  /* 2. COMPARATIVE MODE */
+                  <ComparativeCard
+                    analysis={analysis as ComparativeDiagnosticResult}
+                    onReset={handleReset}
+                    onOpenSaveModal={() => setIsSaveModalOpen(true)}
+                  />
+                ) : (
+                  /* 3. WITTGENSTEIN MODE */
+                  <>
+                    <CleanTransformationCard
+                      analysis={analysis as PhilosophicalAnalysisResult}
+                      onReset={handleReset}
+                      onOpenSaveModal={() => setIsSaveModalOpen(true)}
+                      showDeepInspection={showDeepInspection}
+                      onToggleDeepInspection={() => setShowDeepInspection(!showDeepInspection)}
+                    />
+
+                    {/* 2. Deep Analytical Machinery (HIDDEN by default, shown only if user clicks) */}
+                    {showDeepInspection && (
+                      <div className="space-y-6 pt-4 border-t border-apple-border/50 dark:border-apple-darkBorder/50 animate-in fade-in duration-300">
+                    <div className="text-center space-y-1">
+                      <h3 className="text-xs font-mono uppercase tracking-wider text-apple-secondary font-semibold">
+                        Deep Analytical Machinery
+                      </h3>
+                      <p className="text-[11px] text-apple-secondary">
+                        Inspect the underlying philosophical engine, epistemic ladder, and linter warnings
+                      </p>
+                    </div>
+
+                    {/* Segmented control: strictly ONE tab at a time */}
+                    <div className="flex items-center justify-center p-1 rounded-2xl bg-apple-subtle dark:bg-apple-darkSubtle border border-apple-border/70 dark:border-apple-darkBorder text-xs overflow-x-auto">
+                      <button
+                        onClick={() => setActiveTab("ladder")}
+                        className={`flex items-center space-x-1.5 px-3.5 py-2 rounded-xl transition-all whitespace-nowrap ${
+                          activeTab === "ladder"
+                            ? "bg-white dark:bg-apple-darkSurface text-apple-text dark:text-white font-medium shadow-apple-sm"
+                            : "text-apple-secondary hover:text-apple-text"
+                        }`}
+                      >
+                        <GitCommit className="w-3.5 h-3.5 text-apple-accent" />
+                        <span>Epistemic Ladder</span>
+                      </button>
+
+                      <button
+                        onClick={() => setActiveTab("linguistics")}
+                        className={`flex items-center space-x-1.5 px-3.5 py-2 rounded-xl transition-all whitespace-nowrap ${
+                          activeTab === "linguistics"
+                            ? "bg-white dark:bg-apple-darkSurface text-apple-text dark:text-white font-medium shadow-apple-sm"
+                            : "text-apple-secondary hover:text-apple-text"
+                        }`}
+                      >
+                        <Search className="w-3.5 h-3.5 text-indigo-500" />
+                        <span>Language & Grammar</span>
+                      </button>
+
+                      <button
+                        onClick={() => setActiveTab("assumptions")}
+                        className={`flex items-center space-x-1.5 px-3.5 py-2 rounded-xl transition-all whitespace-nowrap ${
+                          activeTab === "assumptions"
+                            ? "bg-white dark:bg-apple-darkSurface text-apple-text dark:text-white font-medium shadow-apple-sm"
+                            : "text-apple-secondary hover:text-apple-text"
+                        }`}
+                      >
+                        <Key className="w-3.5 h-3.5 text-amber-500" />
+                        <span>All Assumptions ({analysis.hiddenAssumptions.length})</span>
+                      </button>
+
+                      <button
+                        onClick={() => setActiveTab("reformulations")}
+                        className={`flex items-center space-x-1.5 px-3.5 py-2 rounded-xl transition-all whitespace-nowrap ${
+                          activeTab === "reformulations"
+                            ? "bg-white dark:bg-apple-darkSurface text-apple-text dark:text-white font-medium shadow-apple-sm"
+                            : "text-apple-secondary hover:text-apple-text"
+                        }`}
+                      >
+                        <Sparkles className="w-3.5 h-3.5 text-emerald-500" />
+                        <span>Intuition Diff</span>
+                      </button>
+
+                      <button
+                        onClick={() => setActiveTab("wittgenstein")}
+                        className={`flex items-center space-x-1.5 px-3.5 py-2 rounded-xl transition-all whitespace-nowrap ${
+                          activeTab === "wittgenstein"
+                            ? "bg-white dark:bg-apple-darkSurface text-apple-text dark:text-white font-medium shadow-apple-sm"
+                            : "text-apple-secondary hover:text-apple-text"
+                        }`}
+                      >
+                        <BookOpen className="w-3.5 h-3.5 text-purple-500" />
+                        <span>Wittgenstein & Linter</span>
+                      </button>
+                    </div>
+
+                    {/* Tab content */}
+                    <div className="pt-2">
+                      {activeTab === "ladder" && (
+                        <EpistemicLadderView
+                          ladder={analysis.epistemicLadder}
+                          hasInferenceJump={analysis.hasInferenceJump}
+                        />
+                      )}
+
+                      {activeTab === "linguistics" && (
+                        <div className="space-y-6">
+                          {analysis.questionDiagnostic?.isQuestion && (
+                            <QuestionDebuggerView diagnostic={analysis.questionDiagnostic} />
+                          )}
+                          <LinguisticDebuggerView
+                            terms={analysis.termsInUse}
+                            grammar={analysis.grammaticalAnalysis}
+                            typeError={analysis.typeErrorAnalysis}
+                          />
+                        </div>
+                      )}
+
+                      {activeTab === "assumptions" && (
+                        <HiddenAssumptionsView assumptions={analysis.hiddenAssumptions} />
+                      )}
+
+                      {activeTab === "reformulations" && (
+                        <div className="space-y-6">
+                          <IntuitionPreservationView preservation={analysis.intuitionPreservation} />
+                          <ReformulationCards
+                            reformulations={analysis.reformulations}
+                            onSelectReformulation={(newProp) => {
+                              setInput(newProp);
+                              handleAnalyze(newProp);
+                            }}
+                          />
+                        </div>
+                      )}
+
+                      {activeTab === "wittgenstein" && (
+                        <div className="space-y-6">
+                          <WittgensteinLensView diagnostic={analysis.wittgensteinDiagnostic} />
+                          <TruthFalsityView conditions={analysis.truthConditions} />
+                          <PhilosophicalLinterView warnings={analysis.linterWarnings} />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+                  </>
+                )}
+              </div>
+            )}
+          </>
+        )}
+      </main>
+
+      {/* Footer */}
+      <footer className="w-full border-t border-apple-border/50 dark:border-apple-darkBorder/50 py-5 text-center text-[11px] text-apple-secondary font-mono">
+        <div className="max-w-4xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+          <span>PhiloCompiler • Wittgenstein Laboratory</span>
+          <span>"Preserve the intuition, debug the formulation."</span>
+        </div>
+      </footer>
+
+      {/* Save to Notebook Modal */}
+      {analysis && (
+        <SaveToNotebookModal
+          isOpen={isSaveModalOpen}
+          onClose={() => setIsSaveModalOpen(false)}
+          analysis={analysis}
+          existingEntries={notebookEntries}
+          onSaveNew={handleSaveNewThought}
+          onAddVersion={handleAddVersion}
+        />
+      )}
+
+      {/* Settings Modal */}
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+        apiKey={apiKey}
+        onSaveApiKey={handleSaveApiKey}
+        model={model}
+        onSaveModel={handleSaveModel}
+        serverHasKey={serverHasKey}
+      />
+
+      {/* About Modal */}
+      <AboutModal isOpen={isAboutOpen} onClose={() => setIsAboutOpen(false)} />
+    </div>
+  );
+}
+export default App;
