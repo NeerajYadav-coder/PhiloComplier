@@ -14,7 +14,9 @@ import {
   Sparkles,
   RotateCcw,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  Columns2,
+  FileText
 } from "lucide-react";
 
 interface NotebookViewProps {
@@ -38,6 +40,44 @@ export const NotebookView: React.FC<NotebookViewProps> = ({
   const [selectedVersionIndex, setSelectedVersionIndex] = useState<number>(0);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedTag, setSelectedTag] = useState<string>("All");
+  const [isSideBySide, setIsSideBySide] = useState<boolean>(false);
+
+  const activeEntry = entries.find((e) => e.id === selectedEntryId) || entries[0];
+  const activeVersion: ThoughtVersion | undefined =
+    activeEntry?.versions[selectedVersionIndex] || activeEntry?.versions[activeEntry?.versions.length - 1];
+
+  const handleExportEntryMarkdown = () => {
+    if (!activeEntry || !activeVersion) return;
+    const md = `# ${activeEntry.title}
+Tag: #${activeEntry.tag}
+Date: ${new Date(activeEntry.updatedAt).toLocaleDateString()}
+
+## Current Version (v${activeVersion.versionNumber})
+**Original Thought:**
+> "${activeVersion.rawThought}"
+
+**Clear Refined Version:**
+> "${activeVersion.transformedThought}"
+
+**Verdict:** ${activeVersion.verdict}
+**Why this is clearer:**
+${activeVersion.reasonSummary}
+
+**Assumptions Behind Thought:**
+${activeVersion.keyAssumptions.map(a => `- ${a}`).join("\n")}
+
+${activeVersion.userNotes ? `**Notes:**\n${activeVersion.userNotes}\n` : ""}
+---
+*Exported from PhiloCompiler*
+`;
+    const blob = new Blob([md], { type: "text/markdown" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${activeEntry.title.replace(/[^a-zA-Z0-9_-]/g, "_")}.md`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   const filteredEntries = entries.filter((e) => {
     const matchesSearch =
@@ -46,10 +86,6 @@ export const NotebookView: React.FC<NotebookViewProps> = ({
     const matchesTag = selectedTag === "All" || e.tag === selectedTag;
     return matchesSearch && matchesTag;
   });
-
-  const activeEntry = entries.find((e) => e.id === selectedEntryId) || filteredEntries[0];
-  const activeVersion: ThoughtVersion | undefined =
-    activeEntry?.versions[selectedVersionIndex] || activeEntry?.versions[activeEntry.versions.length - 1];
 
   const tags = ["All", ...Array.from(new Set(entries.map((e) => e.tag)))];
 
@@ -189,6 +225,27 @@ export const NotebookView: React.FC<NotebookViewProps> = ({
 
               <div className="flex items-center space-x-2 self-start sm:self-auto">
                 <button
+                  onClick={() => setIsSideBySide(!isSideBySide)}
+                  className={`inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-mono transition-all ${
+                    isSideBySide
+                      ? "bg-apple-text text-white dark:bg-white dark:text-black font-semibold shadow-apple-sm"
+                      : "bg-apple-subtle dark:bg-apple-darkSubtle text-apple-secondary hover:text-apple-text border border-apple-border/60"
+                  }`}
+                  title="Toggle side-by-side comparison"
+                >
+                  <Columns2 className="w-3.5 h-3.5" />
+                  <span>{isSideBySide ? "Stacked View" : "Side-by-Side"}</span>
+                </button>
+
+                <button
+                  onClick={handleExportEntryMarkdown}
+                  className="p-2 rounded-xl text-apple-secondary hover:text-apple-text bg-apple-subtle dark:bg-apple-darkSubtle border border-apple-border/60 transition-colors"
+                  title="Export this thought as Markdown"
+                >
+                  <FileText className="w-3.5 h-3.5" />
+                </button>
+
+                <button
                   onClick={() => onLoadIntoDebugger(activeVersion.rawThought)}
                   className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-medium text-white bg-apple-text dark:bg-white dark:text-black hover:opacity-90 transition-all shadow-apple-sm"
                   title="Open this thought in the Debugger"
@@ -199,7 +256,7 @@ export const NotebookView: React.FC<NotebookViewProps> = ({
 
                 <button
                   onClick={() => onDeleteEntry(activeEntry.id)}
-                  className="p-1.5 rounded-xl text-apple-secondary hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/20 transition-colors"
+                  className="p-2 rounded-xl text-apple-secondary hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/20 transition-colors"
                   title="Delete Entry"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -267,26 +324,61 @@ export const NotebookView: React.FC<NotebookViewProps> = ({
             )}
 
             {/* Version Detail: Raw vs Transformed */}
-            <div className="space-y-4">
-              <div className="p-4 rounded-2xl bg-apple-subtle/50 dark:bg-apple-darkSubtle/50 border border-apple-border/60 dark:border-apple-darkBorder/60 space-y-1">
-                <span className="text-[10px] uppercase font-mono tracking-wider text-apple-secondary font-semibold block">
-                  Original Wording (v{activeVersion.versionNumber}):
-                </span>
-                <p className="font-serif italic text-sm sm:text-base text-apple-text dark:text-zinc-200">
-                  "{activeVersion.rawThought}"
-                </p>
-              </div>
-
-              <div className="p-5 rounded-2xl bg-emerald-500/[0.04] dark:bg-emerald-500/[0.08] border border-emerald-500/20 space-y-1.5">
-                <div className="flex items-center space-x-1.5 text-[10px] uppercase font-mono tracking-wider text-emerald-700 dark:text-emerald-400 font-semibold">
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>Clear, Refined Version:</span>
+            {isSideBySide ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="p-5 rounded-2xl bg-apple-subtle/50 dark:bg-apple-darkSubtle/50 border border-apple-border/70 dark:border-apple-darkBorder/70 space-y-2 flex flex-col justify-between">
+                  <div className="space-y-2">
+                    <span className="text-[10px] uppercase font-mono tracking-wider text-apple-secondary font-semibold block">
+                      Original Starting Wording (v{activeVersion.versionNumber}):
+                    </span>
+                    <p className="font-serif italic text-base text-apple-text dark:text-zinc-200">
+                      "{activeVersion.rawThought}"
+                    </p>
+                  </div>
+                  <div className="pt-2 border-t border-apple-border/40 dark:border-apple-darkBorder/40 text-xs text-apple-secondary">
+                    <span className="font-mono text-[10px] uppercase block">Starting Status:</span>
+                    <span className="font-medium text-apple-text dark:text-zinc-300">{activeVersion.verdict}</span>
+                  </div>
                 </div>
-                <p className="font-serif text-base sm:text-lg text-apple-text dark:text-white leading-relaxed">
-                  "{activeVersion.transformedThought}"
-                </p>
+
+                <div className="p-5 rounded-2xl bg-emerald-500/[0.05] dark:bg-emerald-500/[0.09] border border-emerald-500/25 space-y-2 flex flex-col justify-between">
+                  <div className="space-y-2">
+                    <div className="flex items-center space-x-1.5 text-[10px] uppercase font-mono tracking-wider text-emerald-700 dark:text-emerald-400 font-semibold">
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span>Clear Refined Version:</span>
+                    </div>
+                    <p className="font-serif text-base sm:text-lg text-apple-text dark:text-white leading-relaxed">
+                      "{activeVersion.transformedThought}"
+                    </p>
+                  </div>
+                  <div className="pt-2 border-t border-emerald-500/20 text-xs text-emerald-900 dark:text-emerald-300">
+                    <span className="font-mono text-[10px] uppercase block">Why this is clearer:</span>
+                    <span className="font-sans leading-relaxed">{activeVersion.reasonSummary}</span>
+                  </div>
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="space-y-4">
+                <div className="p-4 rounded-2xl bg-apple-subtle/50 dark:bg-apple-darkSubtle/50 border border-apple-border/60 dark:border-apple-darkBorder/60 space-y-1">
+                  <span className="text-[10px] uppercase font-mono tracking-wider text-apple-secondary font-semibold block">
+                    Original Wording (v{activeVersion.versionNumber}):
+                  </span>
+                  <p className="font-serif italic text-sm sm:text-base text-apple-text dark:text-zinc-200">
+                    "{activeVersion.rawThought}"
+                  </p>
+                </div>
+
+                <div className="p-5 rounded-2xl bg-emerald-500/[0.04] dark:bg-emerald-500/[0.08] border border-emerald-500/20 space-y-1.5">
+                  <div className="flex items-center space-x-1.5 text-[10px] uppercase font-mono tracking-wider text-emerald-700 dark:text-emerald-400 font-semibold">
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>Clear, Refined Version:</span>
+                  </div>
+                  <p className="font-serif text-base sm:text-lg text-apple-text dark:text-white leading-relaxed">
+                    "{activeVersion.transformedThought}"
+                  </p>
+                </div>
+              </div>
+            )}
 
             {/* Reason & Core Assumptions */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">

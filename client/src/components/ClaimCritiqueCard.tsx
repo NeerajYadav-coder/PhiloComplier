@@ -6,7 +6,8 @@ import {
   AlertTriangle,
   RotateCcw,
   Sparkles,
-  Info
+  Info,
+  Workflow
 } from "lucide-react";
 import { ClaimCritiqueResult } from "../types";
 
@@ -158,6 +159,76 @@ export const ClaimCritiqueCard: React.FC<ClaimCritiqueCardProps> = ({
             </p>
           </div>
         </div>
+
+        {/* 1b. STEP-BY-STEP LOGIC FLOW */}
+        {critique.stepByStepFlow && critique.stepByStepFlow.length > 0 && (
+          <div className="space-y-3 pt-2">
+            <div className="flex items-center space-x-2">
+              <Workflow className="w-4 h-4 text-apple-accent" />
+              <h4 className="text-xs font-mono uppercase tracking-wider text-apple-text dark:text-zinc-200 font-bold">
+                Step-by-Step Logic Flow:
+              </h4>
+            </div>
+
+            <div className="space-y-2">
+              {critique.stepByStepFlow.map((step) => {
+                const isLeap = step.status === "unproven_leap" || step.status === "flawed";
+                return (
+                  <div
+                    key={step.stepNumber}
+                    className={`p-3.5 rounded-2xl border transition-all flex items-start space-x-3 ${
+                      isLeap
+                        ? "bg-rose-50/70 dark:bg-rose-950/20 border-rose-300 dark:border-rose-900/60"
+                        : "bg-apple-subtle/50 dark:bg-apple-darkSubtle/50 border-apple-border/70 dark:border-apple-darkBorder/70"
+                    }`}
+                  >
+                    <span
+                      className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-mono font-bold shrink-0 mt-0.5 ${
+                        isLeap
+                          ? "bg-rose-500 text-white"
+                          : "bg-apple-text text-white dark:bg-white dark:text-black"
+                      }`}
+                    >
+                      {step.stepNumber}
+                    </span>
+
+                    <div className="space-y-1 flex-1">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                        <span className="text-xs sm:text-sm font-medium text-apple-text dark:text-zinc-100 font-sans">
+                          {step.statement}
+                        </span>
+                        <span
+                          className={`text-[10px] font-mono px-2 py-0.5 rounded-full uppercase font-semibold shrink-0 self-start sm:self-auto ${
+                            isLeap
+                              ? "bg-rose-100 dark:bg-rose-900/50 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800"
+                              : "bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800"
+                          }`}
+                        >
+                          {step.status === "sound" ? "Sound Step" : "Unproven Jump"}
+                        </span>
+                      </div>
+                      <p className="text-xs text-apple-secondary dark:text-zinc-300 font-sans leading-relaxed">
+                        {step.note}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* 1c. AUTHOR DEFENSE / CONTEXT */}
+        {critique.authorCounterDefense && (
+          <div className="p-4 rounded-2xl bg-black/[0.02] dark:bg-white/[0.02] border border-apple-border/50 dark:border-apple-darkBorder/50 space-y-1 text-xs">
+            <span className="text-[10px] font-mono uppercase text-apple-secondary font-semibold block">
+              How the Author Defended This:
+            </span>
+            <p className="text-apple-secondary dark:text-zinc-300 font-sans italic leading-relaxed">
+              "{critique.authorCounterDefense}"
+            </p>
+          </div>
+        )}
 
         {/* 2. SMUGGLED ASSUMPTIONS */}
         {critique.smuggledAssumptions && critique.smuggledAssumptions.length > 0 && (

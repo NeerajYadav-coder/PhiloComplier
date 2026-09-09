@@ -11,20 +11,28 @@ interface ClaimCritiqueViewProps {
 
 const HISTORICAL_SAMPLES = [
   {
-    author: "René Descartes (Meditations)",
+    author: "René Descartes",
     quote: "I think, therefore I am (an immaterial thinking substance)."
   },
   {
-    author: "Nāgārjuna (MMK 1.1)",
+    author: "David Hume",
+    quote: "Because the sun has risen every morning so far, it is guaranteed to rise tomorrow."
+  },
+  {
+    author: "St. Anselm",
+    quote: "God is that than which nothing greater can be conceived; since existing in reality is greater than existing merely in thought, God must exist in reality."
+  },
+  {
+    author: "Zeno of Elea",
+    quote: "To reach a destination, an object must first reach halfway, and before that, a quarter way; therefore, motion can never begin or finish."
+  },
+  {
+    author: "Nāgārjuna",
     quote: "Neither from itself, nor from another, nor from both, nor without cause, does anything anywhere ever arise."
   },
   {
-    author: "Parmenides (On Nature)",
+    author: "Parmenides",
     quote: "What is not cannot be thought or spoken of, for nothing can come from nothing."
-  },
-  {
-    author: "Baruch Spinoza (Ethics)",
-    quote: "Except God no substance can be granted, or be conceived."
   }
 ];
 

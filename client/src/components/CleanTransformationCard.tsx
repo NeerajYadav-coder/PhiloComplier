@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { PhilosophicalAnalysisResult, Reformulation } from "../types";
-import { Check, Copy, RotateCcw, Sparkles, AlertCircle, Key, ChevronDown, ChevronUp, Bookmark } from "lucide-react";
+import { Check, Copy, RotateCcw, Sparkles, AlertCircle, Key, ChevronDown, ChevronUp, Bookmark, GitBranch } from "lucide-react";
 
 interface CleanTransformationCardProps {
   analysis: PhilosophicalAnalysisResult;
@@ -8,6 +8,7 @@ interface CleanTransformationCardProps {
   onOpenSaveModal: () => void;
   showDeepInspection: boolean;
   onToggleDeepInspection: () => void;
+  onEvolveThought?: (refinedText: string) => void;
 }
 
 export const CleanTransformationCard: React.FC<CleanTransformationCardProps> = ({
@@ -16,6 +17,7 @@ export const CleanTransformationCard: React.FC<CleanTransformationCardProps> = (
   onOpenSaveModal,
   showDeepInspection,
   onToggleDeepInspection,
+  onEvolveThought,
 }) => {
   const [copied, setCopied] = useState<boolean>(false);
   const [selectedReformulationIndex, setSelectedReformulationIndex] = useState<number>(0);
@@ -97,11 +99,22 @@ export const CleanTransformationCard: React.FC<CleanTransformationCardProps> = (
           <button
             onClick={onOpenSaveModal}
             className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-medium text-apple-secondary hover:text-apple-text bg-apple-subtle dark:bg-apple-darkSubtle border border-apple-border/60 dark:border-apple-darkBorder transition-all"
-            title="Save thought to your Philosophical Notebook"
+            title="Save thought to your Notebook"
           >
             <Bookmark className="w-3.5 h-3.5 text-amber-500" />
             <span>Save</span>
           </button>
+
+          {onEvolveThought && (
+            <button
+              onClick={() => onEvolveThought(activeReformulation?.proposition || analysis.input)}
+              className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-medium text-apple-accent hover:text-white hover:bg-apple-accent bg-apple-accent/10 border border-apple-accent/25 transition-all"
+              title="Debug a further refinement of this proposition (Next Version)"
+            >
+              <GitBranch className="w-3.5 h-3.5" />
+              <span>Evolve Thought</span>
+            </button>
+          )}
 
           <button
             onClick={onReset}
@@ -158,11 +171,23 @@ export const CleanTransformationCard: React.FC<CleanTransformationCardProps> = (
             "{activeReformulation?.proposition || analysis.input}"
           </p>
 
-          {activeReformulation?.nonEquivalenceNote && (
-            <p className="text-[11px] text-apple-secondary italic">
-              Note: {activeReformulation.nonEquivalenceNote}
-            </p>
-          )}
+          <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-apple-border/40 dark:border-apple-darkBorder/40">
+            {activeReformulation?.nonEquivalenceNote ? (
+              <p className="text-[11px] text-apple-secondary italic">
+                Note: {activeReformulation.nonEquivalenceNote}
+              </p>
+            ) : <div />}
+
+            {onEvolveThought && (
+              <button
+                onClick={() => onEvolveThought(activeReformulation?.proposition || analysis.input)}
+                className="inline-flex items-center space-x-1.5 text-xs font-mono text-apple-accent hover:text-apple-accentHover transition-colors ml-auto"
+              >
+                <GitBranch className="w-3.5 h-3.5" />
+                <span>Evolve into next version →</span>
+              </button>
+            )}
+          </div>
         </div>
       </div>
 

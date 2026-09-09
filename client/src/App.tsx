@@ -171,6 +171,24 @@ export function App() {
     handleAnalyze(rawThought);
   };
 
+  const handleEvolveThought = (refinedText: string) => {
+    if (analysis) {
+      const defaultTag = "mode" in analysis ? analysis.mode.toUpperCase() : "Observation";
+      const title = analysis.input.length > 36 ? analysis.input.slice(0, 36) + "…" : analysis.input;
+      const existing = notebookEntries.find((e) => e.versions.some(v => v.rawThought === analysis.input));
+      if (existing) {
+        addVersionToEntry(existing.id, analysis, "Saved before evolving to next version");
+      } else {
+        createEntryFromAnalysis(title, defaultTag, analysis, "Saved before evolving to next version");
+      }
+      setNotebookEntries(getNotebookEntries());
+    }
+
+    setInput(refinedText);
+    setAnalysis(null);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   const handleExportNotebook = () => {
     const json = exportNotebookJson();
     const blob = new Blob([json], { type: "application/json" });
@@ -297,6 +315,7 @@ export function App() {
                       onOpenSaveModal={() => setIsSaveModalOpen(true)}
                       showDeepInspection={showDeepInspection}
                       onToggleDeepInspection={() => setShowDeepInspection(!showDeepInspection)}
+                      onEvolveThought={handleEvolveThought}
                     />
 
                     {/* 2. Deep Analytical Machinery (HIDDEN by default, shown only if user clicks) */}

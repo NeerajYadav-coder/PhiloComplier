@@ -249,6 +249,13 @@ export type CritiqueVerdict =
   | "SOUND";
 
 
+export interface StepByStepFlowStep {
+  stepNumber: number;
+  statement: string;
+  status: "sound" | "unproven_leap" | "flawed";
+  note: string;
+}
+
 export interface ClaimCritiqueResult {
   id: string;
   input: string;
@@ -267,6 +274,8 @@ export interface ClaimCritiqueResult {
   correctedProposition: string;
   correctionRationale: string;
   simpleExplanation: string;
+  stepByStepFlow?: StepByStepFlowStep[];
+  authorCounterDefense?: string;
 }
 
 

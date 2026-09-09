@@ -4,18 +4,22 @@ import { LLMConfig } from "./llmService.js";
 
 export const CRITIQUE_SYSTEM_PROMPT = `
 You are the Philosophical Text & Claim Critic of PHILOCOMPILER ("You Should Correct").
-Your purpose is to take any quote, philosophical argument, verse, or claim from previous thinkers (historical or modern: e.g. Nāgārjuna, René Descartes, Immanuel Kant, Spinoza, Plato, David Hume, etc.) and subject it to a strict logical audit.
+Your purpose is to take any quote, philosophical argument, verse, or claim from previous thinkers (historical or modern: e.g. Nāgārjuna, René Descartes, Immanuel Kant, Spinoza, Plato, David Hume, St. Anselm, Zeno, etc.) and subject it to a strict logical audit.
 
 CRITICAL INSTRUCTIONS:
 1. EVALUATE LOGICAL SOUNDNESS:
    Determine whether the claim holds logically, or whether it makes a false leap, confuses everyday grammar with reality, assumes what it hasn't proven, or argues in circles.
 2. POINT OUT WHERE IS THE PROBLEM:
    Pinpoint the EXACT phrase or step in the quote where the logic breaks down. Never speak in vague generalities. Show precisely where the thinker jumped from what is actually observed to an unproven assumption.
-3. EXPOSE SMUGGLED ASSUMPTIONS:
+3. PREMISE STEP-FLOW:
+   Break the thinker's claim into a 3-step logical progression (Step 1 -> Step 2 -> Conclusion). Mark each step's status as "sound", "unproven_leap", or "flawed", and provide a plain-English note explaining it.
+4. EXPOSE SMUGGLED ASSUMPTIONS:
    Reveal what the thinker took for granted without showing proof.
-4. PROVIDE THE CORRECTED PROPOSITION:
+5. PROVIDE THE CORRECTED PROPOSITION:
    Re-formulate the quote so that whatever was genuinely true or insightful in it is kept, but the logical flaw is completely removed.
-5. STRICT RULE ON LANGUAGE (SIMPLE & HUMAN):
+6. AUTHOR DEFENSE:
+   Briefly explain in 1-2 simple sentences how the author defended their claim and why they believed it was sound.
+7. STRICT RULE ON LANGUAGE (SIMPLE & HUMAN):
    Explain everything in simple, conversational everyday English that ANY curious reader can easily understand.
    DO NOT use dense academic or scholastic jargon (never use phrases like "illicit subject reification", "ontological status", "epistemic closure").
    Describe flaws using clear common-sense words (e.g. "Inventing a thinker where there is only thought", "Treating an empty word like a physical object", "Stretching an everyday observation into a cosmic rule").
@@ -46,6 +50,12 @@ Return a single complete JSON object with all required fields in simple, plain-E
     "flawType": "Plain-English name of the error (e.g. Inventing a Thinker Where There Is Only Thought, Treating 'Nothing' like a Real Object, False Leap from Observation to Cosmic Rule)...",
     "explanation": "Simple, crystal-clear explanation of exactly why this step fails logically..."
   },
+  "stepByStepFlow": [
+    { "stepNumber": 1, "statement": "Premise 1 statement...", "status": "sound", "note": "Plain explanation..." },
+    { "stepNumber": 2, "statement": "Premise 2 statement...", "status": "sound", "note": "Plain explanation..." },
+    { "stepNumber": 3, "statement": "Conclusion statement...", "status": "unproven_leap", "note": "Where the logic leaps..." }
+  ],
+  "authorCounterDefense": "How the author defended their claim in their own words...",
   "smuggledAssumptions": [
     "Hidden assumption 1 taken for granted without proof...",
     "Hidden assumption 2..."
@@ -73,6 +83,27 @@ export const CANONICAL_CRITIQUES: Record<string, ClaimCritiqueResult> = {
       flawType: "Inventing a 'Thinker' Where There Is Only 'Thought'",
       explanation: "Descartes noticed thoughts and doubts happening in immediate awareness. But because language always puts 'I' in front of verbs ('I walk', 'I think'), he assumed there must be an invisible, permanent soul-entity behind the thinking. In direct reality, thinking simply occurs—our grammar tricked him into inventing an invisible thinker."
     },
+    stepByStepFlow: [
+      {
+        stepNumber: 1,
+        statement: "Doubts and thoughts are undeniably occurring in awareness right now.",
+        status: "sound",
+        note: "Direct observation: experiences and thoughts are genuinely happening."
+      },
+      {
+        stepNumber: 2,
+        statement: "Our language structure connects actions to actors ('I think').",
+        status: "sound",
+        note: "Everyday grammar always puts a subject noun in front of a verb."
+      },
+      {
+        stepNumber: 3,
+        statement: "Therefore, an invisible, permanent soul-substance exists to do the thinking.",
+        status: "unproven_leap",
+        note: "Unproven leap: mistaking grammatical convenience for an invisible permanent entity."
+      }
+    ],
+    authorCounterDefense: "Descartes believed that even if a demon deceived him about everything in the world, the act of doubting itself could not occur without an existing thinking soul.",
     smuggledAssumptions: [
       "Assuming that wherever an action happens, a permanent owner or substance must be doing it.",
       "Assuming everyday grammar ('I think') reflects how consciousness actually works.",
@@ -97,6 +128,27 @@ export const CANONICAL_CRITIQUES: Record<string, ClaimCritiqueResult> = {
       flawType: "Confusing Cosmic Rules with Everyday Reality",
       explanation: "Nāgārjuna proves that things don't exist as isolated, standalone blocks that collide like magic bricks. Everything depends on everything else. But if you take this quote literally in daily life, it sounds like striking a match doesn't cause fire. In everyday life, cause and effect still work in dependable, regular patterns."
     },
+    stepByStepFlow: [
+      {
+        stepNumber: 1,
+        statement: "An effect cannot create itself (it would have to already exist beforehand).",
+        status: "sound",
+        note: "Logical rule: a thing cannot exist before its own creation."
+      },
+      {
+        stepNumber: 2,
+        statement: "An effect cannot come from a totally isolated, separate object.",
+        status: "sound",
+        note: "If two objects were completely isolated, no causal link could connect them."
+      },
+      {
+        stepNumber: 3,
+        statement: "Therefore, events emerge through a connected web of conditions rather than standalone objects.",
+        status: "sound",
+        note: "Valid philosophical insight, though counter-intuitive if applied casually to daily life."
+      }
+    ],
+    authorCounterDefense: "Nāgārjuna argued that if things had fixed independent essences, change and causation would be completely impossible.",
     smuggledAssumptions: [
       "Assumes his opponents define causes and effects as two completely isolated, separate objects.",
       "Assumes that if things aren't permanently separate, they cannot produce each other."
@@ -120,6 +172,27 @@ export const CANONICAL_CRITIQUES: Record<string, ClaimCritiqueResult> = {
       flawType: "Treating 'Nothing' Like a Real Object",
       explanation: "Parmenides treats 'nothing' like a spooky, invisible thing that you can't talk about without turning it into a real thing. But 'nothing' isn't an object—it's just a handy word we use to say something is missing (like 'there is no milk in the fridge'). He mistook a simple word of absence for a cosmic puzzle."
     },
+    stepByStepFlow: [
+      {
+        stepNumber: 1,
+        statement: "Whenever we speak or think, our words point to something.",
+        status: "sound",
+        note: "Descriptive truth about how speech and reference typically function."
+      },
+      {
+        stepNumber: 2,
+        statement: "If we speak of 'nothing', we are treating it like a target of thought.",
+        status: "sound",
+        note: "Grammar permits using 'nothing' in the grammatical position of an object."
+      },
+      {
+        stepNumber: 3,
+        statement: "Therefore, non-existence is impossible, and change is a total illusion.",
+        status: "unproven_leap",
+        note: "Confuses a simple everyday word describing absence with an actual cosmic substance."
+      }
+    ],
+    authorCounterDefense: "Parmenides insisted that thinking requires an object of thought, so thinking about what does not exist is a contradiction in terms.",
     smuggledAssumptions: [
       "Assuming every meaningful word must name a physical object.",
       "Assuming the word 'not' refers to an actual empty substance."
@@ -127,6 +200,138 @@ export const CANONICAL_CRITIQUES: Record<string, ClaimCritiqueResult> = {
     correctedProposition: "Saying 'nothing' simply describes the absence of specific things; it does not name a mysterious cosmic void.",
     correctionRationale: "Returns the word 'nothing' to its normal everyday job of describing absence, instead of inventing a spooky void.",
     simpleExplanation: "Parmenides thought 'nothing' was a thing that couldn't be talked about without turning it into 'something'. He confused a simple word of absence with an actual physical substance."
+  },
+
+  "hume-induction": {
+    id: "canonical-critique-hume",
+    input: "Because the sun has risen every morning so far, it is guaranteed to rise tomorrow.",
+    authorOrTradition: "David Hume (An Enquiry Concerning Human Understanding)",
+    timestamp: new Date().toISOString(),
+    engineUsed: "canonical_offline",
+    isLogicallyValid: false,
+    verdict: "LOGICALLY_FLAWED",
+    verdictSummary: "Confusing past habits and expectations with mathematical certainty.",
+    whereIsTheProblem: {
+      problematicPhrase: "it is guaranteed to rise tomorrow",
+      flawType: "Assuming the Future Must Mirror the Past Without Proof",
+      explanation: "We expect the sun to rise tomorrow because it has risen every day in human history. That is a dependable practical habit, but it is not a 100% mathematical guarantee. To claim it is logically guaranteed assumes nature will always behave the same, which is the very thing being debated."
+    },
+    stepByStepFlow: [
+      {
+        stepNumber: 1,
+        statement: "The sun has risen every single morning observed in human history.",
+        status: "sound",
+        note: "Direct, consistent observation of past events."
+      },
+      {
+        stepNumber: 2,
+        statement: "Humans naturally form a strong expectation that this pattern will continue.",
+        status: "sound",
+        note: "A helpful and necessary psychological habit of mind."
+      },
+      {
+        stepNumber: 3,
+        statement: "Therefore, the sun is logically guaranteed to rise tomorrow.",
+        status: "unproven_leap",
+        note: "Unproven jump: mistaking a strong practical expectation for a mathematical certainty."
+      }
+    ],
+    authorCounterDefense: "Common sense says that if a physical regularity has held true without exception for billions of days, doubting tomorrow's sunrise is completely unreasonable.",
+    smuggledAssumptions: [
+      "Assuming the laws of nature can never shift or change.",
+      "Assuming that because something happened 1,000 times before, it is impossible for it not to happen."
+    ],
+    correctedProposition: "Based on past observations, we reasonably expect the sun to rise tomorrow, but it is a strong expectation, not a mathematical certainty.",
+    correctionRationale: "Correctly distinguishes between highly reliable practical experience and strict logical proof.",
+    simpleExplanation: "Expecting the sun to rise is a smart habit, but we can't prove mathematically that the future will always repeat the past without exception."
+  },
+
+  "anselm-ontological": {
+    id: "canonical-critique-anselm",
+    input: "God is that than which nothing greater can be conceived; since existing in reality is greater than existing merely in thought, God must exist in reality.",
+    authorOrTradition: "St. Anselm of Canterbury (Proslogion)",
+    timestamp: new Date().toISOString(),
+    engineUsed: "canonical_offline",
+    isLogicallyValid: false,
+    verdict: "CATEGORY_ERROR",
+    verdictSummary: "Trying to define something into physical reality purely through words.",
+    whereIsTheProblem: {
+      problematicPhrase: "since existing in reality is greater than existing merely in thought",
+      flawType: "Defining an Idea into Real Existence",
+      explanation: "Anselm builds the property of 'real existence' into his definition of a supreme idea. But you cannot prove a real entity exists outside your mind just by adding the word 'existing' to your mental definition. Otherwise, you could define a 'perfect island' and claim it must physically exist in the ocean."
+    },
+    stepByStepFlow: [
+      {
+        stepNumber: 1,
+        statement: "We can conceive of an idea of the greatest possible being.",
+        status: "sound",
+        note: "A clear mental concept can be held in thought."
+      },
+      {
+        stepNumber: 2,
+        statement: "Existing in the real world is considered greater than existing only in thought.",
+        status: "sound",
+        note: "A comparison between an idea and an actual thing."
+      },
+      {
+        stepNumber: 3,
+        statement: "Therefore, this greatest being must physically exist in reality.",
+        status: "unproven_leap",
+        note: "You cannot leap from a mental definition to real-world existence without actual evidence."
+      }
+    ],
+    authorCounterDefense: "Anselm argued that if God existed only in the mind, you could imagine a greater being who also lived in reality, which contradicts the definition of God as the greatest.",
+    smuggledAssumptions: [
+      "Assuming 'existence' is an optional quality (like 'blue' or 'tall') that can be attached to an idea.",
+      "Assuming that having an idea in your head proves a matching object exists out in the world."
+    ],
+    correctedProposition: "We can imagine the concept of a greatest possible being, but whether such a being actually exists outside our minds requires evidence beyond definitions.",
+    correctionRationale: "Separates mental concepts and definitions from whether something physically exists in reality.",
+    simpleExplanation: "You can't prove something is real in the physical world just by defining it as 'the greatest thing ever'. Thinking of something perfect doesn't make it real outside your head."
+  },
+
+  "zeno-dichotomy": {
+    id: "canonical-critique-zeno",
+    input: "To reach a destination, an object must first reach halfway, and before that, a quarter way; therefore, motion can never begin or finish.",
+    authorOrTradition: "Zeno of Elea (Dichotomy Paradox)",
+    timestamp: new Date().toISOString(),
+    engineUsed: "canonical_offline",
+    isLogicallyValid: false,
+    verdict: "LOGICALLY_FLAWED",
+    verdictSummary: "Confusing dividing numbers on paper with walking across a real room.",
+    whereIsTheProblem: {
+      problematicPhrase: "therefore, motion can never begin or finish",
+      flawType: "Mistaking Infinite Math Divisions for Physical Obstacles",
+      explanation: "On paper, you can divide any distance into infinite fractions (1/2, 1/4, 1/8...). But an infinite series of fractions can add up to a simple, finite number (like 1 meter), which a walking person crosses in a finite amount of time (e.g. 1 second). Zeno confused mental math divisions with real-world roadblocks."
+    },
+    stepByStepFlow: [
+      {
+        stepNumber: 1,
+        statement: "Any distance between two points can be split into half, quarter, eighth, and so on.",
+        status: "sound",
+        note: "Mathematically, any continuous distance is infinitely divisible on paper."
+      },
+      {
+        stepNumber: 2,
+        statement: "To reach the end, an object must continuously traverse through this space.",
+        status: "sound",
+        note: "A moving body continuously traverses the space between start and finish."
+      },
+      {
+        stepNumber: 3,
+        statement: "Therefore, completing the journey requires an infinite amount of time and is impossible.",
+        status: "flawed",
+        note: "A sum of infinite decreasing fractions (1/2 + 1/4 + 1/8...) equals a finite number (1), crossed in finite time."
+      }
+    ],
+    authorCounterDefense: "Zeno argued that performing an infinite number of tasks in a finite time is an impossible contradiction for any physical body.",
+    smuggledAssumptions: [
+      "Assuming an infinite number of math steps requires an infinite amount of physical time.",
+      "Assuming that dividing space conceptually prevents physical movement."
+    ],
+    correctedProposition: "Distance can be divided into infinite mathematical fractions, but a moving object crosses those finite fractions continuously in finite time.",
+    correctionRationale: "Recognizes that continuous physical motion easily covers mathematically divisible space.",
+    simpleExplanation: "You can slice a 1-meter walk into infinite fractions on a piece of paper, but that doesn't stop your foot from taking one simple step across the room in one second."
   }
 };
 
@@ -150,6 +355,15 @@ export async function orchestrateClaimCritique(
   }
   if (norm.includes("what is not") || norm.includes("nothing can come")) {
     return CANONICAL_CRITIQUES["parmenides-nothing"];
+  }
+  if (norm.includes("sun has risen") || norm.includes("rise tomorrow") || norm.includes("guaranteed to rise")) {
+    return CANONICAL_CRITIQUES["hume-induction"];
+  }
+  if (norm.includes("greater can be conceived") || norm.includes("anselm") || (norm.includes("god") && norm.includes("thought") && norm.includes("reality"))) {
+    return CANONICAL_CRITIQUES["anselm-ontological"];
+  }
+  if (norm.includes("reach halfway") || norm.includes("quarter way") || norm.includes("zeno") || norm.includes("motion can never")) {
+    return CANONICAL_CRITIQUES["zeno-dichotomy"];
   }
 
   // Live LLM call
@@ -268,6 +482,27 @@ function generateHeuristicCritique(input: string, author?: string): ClaimCritiqu
       flawType: "Unproven Leap in Logic",
       explanation: "The sentence takes an idea that makes sense in a specific everyday setting and stretches it into a cosmic rule without showing evidence."
     },
+    stepByStepFlow: [
+      {
+        stepNumber: 1,
+        statement: `Observation or starting point: "${input.slice(0, 45)}...".`,
+        status: "sound",
+        note: "Initial observation or statement."
+      },
+      {
+        stepNumber: 2,
+        statement: "A connection is made without specifying the exact conditions required.",
+        status: "sound",
+        note: "Everyday mental inference."
+      },
+      {
+        stepNumber: 3,
+        statement: "Therefore, the claim is asserted as a universal, absolute fact.",
+        status: "unproven_leap",
+        note: "Unproven leap: going from a specific observation to an absolute cosmic law."
+      }
+    ],
+    authorCounterDefense: "The author believed the statement was self-evident from direct intuition or language conventions.",
     smuggledAssumptions: [
       "Assuming that everyday words describe ultimate cosmic facts.",
       "Assuming an idea that works locally must apply everywhere."

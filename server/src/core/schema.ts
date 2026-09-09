@@ -249,6 +249,13 @@ export const CritiqueVerdictEnum = z.enum([
   "SOUND",
 ]);
 
+export const StepByStepFlowStepSchema = z.object({
+  stepNumber: z.number(),
+  statement: z.string(),
+  status: z.enum(["sound", "unproven_leap", "flawed"]),
+  note: z.string(),
+});
+
 export const ClaimCritiqueResultSchema = z.object({
   id: z.string(),
   input: z.string(),
@@ -267,6 +274,8 @@ export const ClaimCritiqueResultSchema = z.object({
   correctedProposition: z.string(),
   correctionRationale: z.string(),
   simpleExplanation: z.string(),
+  stepByStepFlow: z.array(StepByStepFlowStepSchema).optional(),
+  authorCounterDefense: z.string().optional(),
 });
 
 
