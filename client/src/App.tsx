@@ -423,7 +423,7 @@ export function App() {
       {/* Footer */}
       <footer className="w-full border-t border-apple-border/50 dark:border-apple-darkBorder/50 py-5 text-center text-[11px] text-apple-secondary font-mono">
         <div className="max-w-4xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <span>PhiloCompiler • Wittgenstein Laboratory</span>
+          <span>PhiloCompiler • Created by NJ5.0</span>
           <span>"Preserve the intuition, debug the formulation."</span>
         </div>
       </footer>

@@ -1,6 +1,7 @@
 # PhiloCompiler
 
-> **A Computational Instrument for Philosophical-Linguistic Debugging**
+> **A Computational Instrument for Philosophical-Linguistic Debugging**  
+> *Created by NJ5.0*
 
 PhiloCompiler is an interactive computational instrument for examining language, propositions, assumptions, and logical form. It operationalizes analytical methods from **Ludwig Wittgenstein**, **Nāgārjuna (Madhyamaka)**, and disciplined observation into an Apple-inspired personal laboratory.
 
@@ -105,5 +106,6 @@ cd server && npm test
 
 ---
 
-## License
-MIT License. Created by [Neeraj Yadav](https://github.com/NeerajYadav-coder).
+## Author & License
+Created by **NJ5.0** ([Neeraj Yadav](https://github.com/NeerajYadav-coder)).  
+MIT License.
