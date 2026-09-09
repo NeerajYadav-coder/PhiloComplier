@@ -4,6 +4,7 @@ import { PropositionInput } from "./components/PropositionInput";
 import { CleanTransformationCard } from "./components/CleanTransformationCard";
 import { NagarjunaCard } from "./components/NagarjunaCard";
 import { ComparativeCard } from "./components/ComparativeCard";
+import { ClaimCritiqueView } from "./components/ClaimCritiqueView";
 import { SaveToNotebookModal } from "./components/SaveToNotebookModal";
 import { NotebookView } from "./components/NotebookView";
 import { EpistemicLadderView } from "./components/EpistemicLadderView";
@@ -23,12 +24,14 @@ import {
   ComparativeDiagnosticResult,
   AnyAnalysisResult,
   AnalysisMode,
-  CanonicalPresetMeta
+  CanonicalPresetMeta,
+  ClaimCritiqueResult
 } from "./types";
 import { NotebookEntry } from "./types/notebook";
 import {
   getNotebookEntries,
   createEntryFromAnalysis,
+  createEntryFromCritique,
   addVersionToEntry,
   deleteNotebookEntry,
   exportNotebookJson,
@@ -37,7 +40,7 @@ import {
 import { GitCommit, Search, Key, Sparkles, BookOpen } from "lucide-react";
 
 export function App() {
-  const [currentView, setCurrentView] = useState<"debugger" | "notebook">("debugger");
+  const [currentView, setCurrentView] = useState<"debugger" | "critic" | "notebook">("debugger");
   const [activeMode, setActiveMode] = useState<AnalysisMode>("wittgenstein");
   const [input, setInput] = useState<string>("");
   const [analysis, setAnalysis] = useState<AnyAnalysisResult | null>(null);
@@ -152,6 +155,11 @@ export function App() {
     setNotebookEntries(getNotebookEntries());
   };
 
+  const handleSaveCritiqueToNotebook = (critique: ClaimCritiqueResult) => {
+    createEntryFromCritique(critique);
+    setNotebookEntries(getNotebookEntries());
+  };
+
   const handleDeleteEntry = (entryId: string) => {
     deleteNotebookEntry(entryId);
     setNotebookEntries(getNotebookEntries());
@@ -196,7 +204,7 @@ export function App() {
 
   return (
     <div className="min-h-screen bg-apple-bg dark:bg-apple-darkBg text-apple-text dark:text-zinc-100 flex flex-col font-sans selection:bg-apple-accent/20 selection:text-apple-accent">
-      {/* Navigation Header with Debugger vs Notebook switcher */}
+      {/* Navigation Header with Debug Thought vs Critique Claim vs Notebook switcher */}
       <Header
         onOpenSettings={() => setIsSettingsOpen(true)}
         onOpenAbout={() => setIsAboutOpen(true)}
@@ -210,7 +218,7 @@ export function App() {
       {/* Main Content Area */}
       <main className="flex-1 max-w-4xl mx-auto w-full px-4 sm:px-6 py-10 sm:py-14 space-y-8">
         {currentView === "notebook" ? (
-          /* ================= NOTEBOOK VIEW ================= */
+          /* ================= FEATURE 2: NOTEBOOK VIEW ================= */
           <NotebookView
             entries={notebookEntries}
             onLoadIntoDebugger={handleLoadFromNotebook}
@@ -219,8 +227,15 @@ export function App() {
             onImport={handleImportNotebook}
             onGoToDebugger={() => setCurrentView("debugger")}
           />
+        ) : currentView === "critic" ? (
+          /* ================= FEATURE 3: CLAIM CRITIQUE VIEW ================= */
+          <ClaimCritiqueView
+            apiKey={apiKey}
+            model={model}
+            onSaveCritiqueToNotebook={handleSaveCritiqueToNotebook}
+          />
         ) : (
-          /* ================= DEBUGGER VIEW ================= */
+          /* ================= FEATURE 1: PROMPT YOUR INTUITION / DEBUGGER ================= */
           <>
             {/* Minimal Hero (only when no analysis is active) */}
             {!analysis && (
@@ -234,17 +249,13 @@ export function App() {
               </div>
             )}
 
-            {/* Input Box */}
+            {/* Clean Input Box */}
             <PropositionInput
               currentInput={input}
               onInputChange={setInput}
               onAnalyze={handleAnalyze}
               isLoading={isLoading}
               presets={presets}
-              activeMode={activeMode}
-              onModeChange={(newMode) => {
-                setActiveMode(newMode);
-              }}
             />
 
             {/* Error notification */}

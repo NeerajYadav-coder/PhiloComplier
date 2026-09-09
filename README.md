@@ -10,27 +10,28 @@ The instrument is built upon a fundamental ethos:
 
 ---
 
-## Key Capabilities
+## The Three Core Features
 
-### 1. Four Diagnostic Lenses
-- **✦ Wittgensteinian Mode**: Examines surface grammar vs. logical form, language-games, category errors, and the epistemic ladder from raw observation to metaphysical leap.
-- **☸ Nāgārjuna / Madhyamaka Mode**: Deconstructs assumptions of *svabhāva* (independent, inherent essence) into *pratītyasamutpāda* (relational dependent arising). Exposes logical reductio (*prasaṅga*) and fourfold negation (*catuṣkoṭi*).
-- **⚖ Comparative Mode (Wittgenstein × Nāgārjuna)**: Conducts simultaneous independent analyses through both traditions, mapping genuine therapeutic convergences and fundamental methodological divergences while rigorously guarding against false equivalence.
-- **📜 Kārikā Dialectical Mode**: Specialized analyzer for classical philosophical verses (e.g. *Mūlamadhyamakakārikā* MMK 1.1, MMK 10.1, MMK 24.18) with opponent-reductio structure.
+### 1. ✦ Prompt Your Intuition (`Debug Thought`)
+- Enter any spontaneous thought, observation, or intuition (e.g. *"Nature wants equilibrium"*, *"Time flows"*).
+- The engine preserves your authentic intuitive core while transforming the sentence within sound logical boundaries (inspired by Wittgensteinian ordinary language clarity).
+- Gives you a crisp **Logical Transformation**, the **Simple Everyday Reason**, and **Exposed Assumptions**.
+- Keeps heavy analytical machinery (Epistemic Ladder, Linguistic Linter, Truth Conditions) peacefully collapsed by default, letting you inspect deeper only when you choose.
 
-### 2. Apple-Inspired Calm UX
-- **Transformation First**: The user immediately sees their proposition transformed into clear logical or relational form, accompanied by a simple, human explanation in plain everyday words and exposed assumptions.
-- **On-Demand Inspection**: All heavy analytical machinery (Epistemic Ladder, Philosophical Linter, Catuṣkoṭi grid, Prasaṅga reductio) remains collapsed by default to keep the experience peaceful and burden-free.
+### 2. 📓 Notebook (`Thought Lineages & Version Evolution`)
+- Preserves your personal contemplations, propositions, and critiques across iterative versions ($v_1 \rightarrow v_2 \rightarrow v_3$).
+- Automated differential analysis tracks progress between iterations: *Intentionality Removed*, *Empirical Specificity Increased*, *Observational Boundary Clarified*, and *Metaphysical Scope Reduced*.
+- Completely private with local storage, tags, and JSON export/import.
 
-### 3. Personal Philosophical Notebook ($v_1 \rightarrow v_2 \rightarrow v_3$)
-- Save diagnosed thoughts with tags and personal contemplation notes.
-- Track thought refinements across versions with automatic differential analysis (*Intentionality Removed*, *Empirical Specificity Increased*, *Observational Boundary Clarified*, *Metaphysical Scope Reduced*).
-- Export and import private notebooks in JSON format.
-
-### 4. High-Speed Multi-Provider Engine
-- **Live Groq LLM Engine**: Fast structured inference via `openai/gpt-oss-120b` and `qwen/qwen3.8-27b`.
-- **Google Gemini Provider**: Optional alternative generative engine via Gemini 2.5.
-- **Zero-Config Offline Benchmarks**: 13 canonical pre-compiled presets spanning Wittgenstein, Nāgārjuna, and Comparative philosophy.
+### 3. ⚖ Critique Claim (`You Should Correct`)
+- Paste quotes, verses, or arguments from **any historical or modern thinker** (e.g. Nāgārjuna, René Descartes, Immanuel Kant, Baruch Spinoza, David Hume, Parmenides).
+- The logical filter determines:
+  1. **Is this claim logically correct or not?** (Clear Verdict Badge: *Logically Sound*, *Category Error*, *Logically Flawed*, *Valid Under Restricted Scope*, or *Circular Argument*).
+  2. **Where is the problem?** (Pinpoints the exact problematic phrase, names the flaw type, and provides a clear breakdown of where the leap or reification happens).
+  3. **Smuggled Assumptions** (Reveals what the thinker presupposed without justification).
+  4. **The Corrected Proposition** (Reformulates the quote into a sound, defensible form while keeping what was genuinely insightful).
+  5. **Everyday Explanation** (Explains the issue and correction in simple everyday language).
+  6. **Save to Notebook** with a single click under `#ThinkerCritique`.
 
 ---
 

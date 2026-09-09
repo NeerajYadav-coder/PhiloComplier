@@ -241,3 +241,32 @@ export const ComparativeDiagnosticResultSchema = z.object({
   comparativeVerdictRationale: z.string(),
 });
 
+export const CritiqueVerdictEnum = z.enum([
+  "LOGICALLY_FLAWED",
+  "VALID_UNDER_RESTRICTED_SCOPE",
+  "CATEGORY_ERROR",
+  "CIRCULAR_ARGUMENT",
+  "SOUND",
+]);
+
+export const ClaimCritiqueResultSchema = z.object({
+  id: z.string(),
+  input: z.string(),
+  authorOrTradition: z.string().optional(),
+  timestamp: z.string(),
+  engineUsed: z.enum(["gemini_live", "groq_live", "canonical_offline", "heuristic_fallback"]),
+  isLogicallyValid: z.boolean(),
+  verdict: CritiqueVerdictEnum,
+  verdictSummary: z.string(),
+  whereIsTheProblem: z.object({
+    problematicPhrase: z.string().optional(),
+    flawType: z.string(),
+    explanation: z.string(),
+  }),
+  smuggledAssumptions: z.array(z.string()),
+  correctedProposition: z.string(),
+  correctionRationale: z.string(),
+  simpleExplanation: z.string(),
+});
+
+

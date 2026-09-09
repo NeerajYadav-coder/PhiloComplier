@@ -1,13 +1,13 @@
 import React from "react";
-import { Sliders, BookOpen, ShieldCheck, Sparkles, Bookmark, Terminal } from "lucide-react";
+import { Sliders, BookOpen, ShieldCheck, Sparkles, Bookmark, Scale } from "lucide-react";
 
 interface HeaderProps {
   onOpenSettings: () => void;
   onOpenAbout: () => void;
   hasCustomKey: boolean;
   engineUsed?: string;
-  currentView: "debugger" | "notebook";
-  onSelectView: (view: "debugger" | "notebook") => void;
+  currentView: "debugger" | "critic" | "notebook";
+  onSelectView: (view: "debugger" | "critic" | "notebook") => void;
   notebookCount: number;
 }
 
@@ -46,7 +46,7 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
         </div>
 
-        {/* Center: View Switcher (Debugger vs Notebook) */}
+        {/* Center: View Switcher (Debug Thought vs Critique Claim vs Notebook) */}
         <div className="flex items-center p-1 rounded-xl bg-apple-subtle dark:bg-apple-darkSubtle border border-apple-border/70 dark:border-apple-darkBorder text-xs font-mono">
           <button
             onClick={() => onSelectView("debugger")}
@@ -55,9 +55,22 @@ export const Header: React.FC<HeaderProps> = ({
                 ? "bg-white dark:bg-apple-darkSurface text-apple-text dark:text-white font-semibold shadow-apple-sm"
                 : "text-apple-secondary hover:text-apple-text"
             }`}
+            title="Prompt your own intuition and debug grammatical illusions"
           >
-            <Terminal className="w-3.5 h-3.5" />
-            <span>Debugger</span>
+            <Sparkles className="w-3.5 h-3.5 text-blue-500" />
+            <span>Debug Thought</span>
+          </button>
+          <button
+            onClick={() => onSelectView("critic")}
+            className={`px-3 py-1.5 rounded-lg transition-all flex items-center space-x-1.5 ${
+              currentView === "critic"
+                ? "bg-white dark:bg-apple-darkSurface text-apple-text dark:text-white font-semibold shadow-apple-sm"
+                : "text-apple-secondary hover:text-apple-text"
+            }`}
+            title="Critique and correct quotes or claims from previous thinkers"
+          >
+            <Scale className="w-3.5 h-3.5 text-indigo-500" />
+            <span>Critique Claim</span>
           </button>
           <button
             onClick={() => onSelectView("notebook")}
@@ -66,9 +79,10 @@ export const Header: React.FC<HeaderProps> = ({
                 ? "bg-white dark:bg-apple-darkSurface text-apple-text dark:text-white font-semibold shadow-apple-sm"
                 : "text-apple-secondary hover:text-apple-text"
             }`}
+            title="Your saved thought lineages and versions"
           >
             <Bookmark className="w-3.5 h-3.5 text-amber-500" />
-            <span>Notebook</span>
+            <span className="hidden sm:inline">Notebook</span>
             <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-black/5 dark:bg-white/10 text-apple-secondary">
               {notebookCount}
             </span>

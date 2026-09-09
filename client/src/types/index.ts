@@ -225,3 +225,30 @@ export type AnyAnalysisResult =
   | NagarjunaDiagnosticResult
   | ComparativeDiagnosticResult;
 
+export type CritiqueVerdict =
+  | "LOGICALLY_FLAWED"
+  | "VALID_UNDER_RESTRICTED_SCOPE"
+  | "CATEGORY_ERROR"
+  | "CIRCULAR_ARGUMENT"
+  | "SOUND";
+
+export interface ClaimCritiqueResult {
+  id: string;
+  input: string;
+  authorOrTradition?: string;
+  timestamp: string;
+  engineUsed: "gemini_live" | "groq_live" | "canonical_offline" | "heuristic_fallback";
+  isLogicallyValid: boolean;
+  verdict: CritiqueVerdict;
+  verdictSummary: string;
+  whereIsTheProblem: {
+    problematicPhrase: string;
+    flawType: string;
+    explanation: string;
+  };
+  smuggledAssumptions: string[];
+  correctedProposition: string;
+  correctionRationale: string;
+  simpleExplanation: string;
+}
+

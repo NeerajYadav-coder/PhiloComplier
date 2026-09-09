@@ -1,25 +1,21 @@
 import React, { useState, useEffect, useRef } from "react";
-import { ArrowRight, Loader2, ChevronDown, Sparkles, Scale, Compass, ScrollText } from "lucide-react";
-import { CanonicalPresetMeta, AnalysisMode } from "../types";
+import { ArrowRight, Loader2, ChevronDown } from "lucide-react";
+import { CanonicalPresetMeta } from "../types";
 
 interface PropositionInputProps {
   onAnalyze: (input: string) => void;
   isLoading: boolean;
-  presets: CanonicalPresetMeta[];
+  presets?: CanonicalPresetMeta[];
   currentInput: string;
   onInputChange: (val: string) => void;
-  activeMode: AnalysisMode;
-  onModeChange: (mode: AnalysisMode) => void;
 }
 
 export const PropositionInput: React.FC<PropositionInputProps> = ({
   onAnalyze,
   isLoading,
-  presets,
+  presets = [],
   currentInput,
   onInputChange,
-  activeMode,
-  onModeChange,
 }) => {
   const [showAllPresets, setShowAllPresets] = useState<boolean>(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -42,98 +38,15 @@ export const PropositionInput: React.FC<PropositionInputProps> = ({
     }
   };
 
-  // Dynamic curated presets per mode
-  const modePresets: Record<AnalysisMode, string[]> = {
-    wittgenstein: [
-      "Nature wants equilibrium.",
-      "Time flows.",
-      "Thoughts arise without my choosing them."
-    ],
-    nagarjuna: [
-      "The soul is an independent entity.",
-      "The seed produces the sprout by its own inherent power.",
-      "Suffering is an intrinsic quality of life."
-    ],
-    comparative: [
-      "The observer exists independently of what is observed.",
-      "Language mirrors the fundamental structure of reality.",
-      "Mind exists prior to and separate from external objects."
-    ],
-    karika: [
-      "Whatever is dependently co-arisen, that is explained to be emptiness.",
-      "Neither from itself, nor from another... does anything arise.",
-      "If fire were identical with fuel, the consumer and consumed would be one."
-    ]
-  };
-
-  const placeholders: Record<AnalysisMode, string> = {
-    wittgenstein: "Enter a thought, observation, or question... (e.g. 'Nature wants equilibrium.')",
-    nagarjuna: "Enter an assumption of independent existence... (e.g. 'The soul is an independent entity.')",
-    comparative: "Enter a proposition to examine through both lenses... (e.g. 'The observer exists independently of what is observed.')",
-    karika: "Enter a classical verse or philosophical claim... (e.g. 'Whatever is dependently co-arisen, that is explained to be emptiness.')"
-  };
-
-  const buttonLabels: Record<AnalysisMode, string> = {
-    wittgenstein: "Debug Proposition",
-    nagarjuna: "Deconstruct Svabhāva",
-    comparative: "Compare Lenses",
-    karika: "Analyze Kārikā"
-  };
-
-  const featuredPresets = modePresets[activeMode] || modePresets.wittgenstein;
+  const curatedPresets = [
+    "Nature wants equilibrium.",
+    "Time flows.",
+    "Thoughts arise without my choosing them.",
+    "The universe has a cause."
+  ];
 
   return (
     <div className="space-y-3 max-w-3xl mx-auto w-full">
-      {/* Mode Selector Pill Bar */}
-      <div className="flex items-center justify-center sm:justify-start space-x-1.5 p-1 rounded-2xl bg-black/[0.03] dark:bg-white/[0.04] border border-apple-border/50 dark:border-apple-darkBorder/50 w-fit mx-auto sm:mx-0">
-        <button
-          onClick={() => onModeChange("wittgenstein")}
-          className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${
-            activeMode === "wittgenstein"
-              ? "bg-white dark:bg-apple-darkSurface text-apple-text dark:text-white shadow-apple-sm font-semibold"
-              : "text-apple-secondary hover:text-apple-text"
-          }`}
-        >
-          <Sparkles className="w-3.5 h-3.5 text-blue-500" />
-          <span>Wittgenstein</span>
-        </button>
-
-        <button
-          onClick={() => onModeChange("nagarjuna")}
-          className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${
-            activeMode === "nagarjuna"
-              ? "bg-white dark:bg-apple-darkSurface text-apple-text dark:text-white shadow-apple-sm font-semibold"
-              : "text-apple-secondary hover:text-apple-text"
-          }`}
-        >
-          <Compass className="w-3.5 h-3.5 text-amber-500" />
-          <span>Nāgārjuna</span>
-        </button>
-
-        <button
-          onClick={() => onModeChange("comparative")}
-          className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${
-            activeMode === "comparative"
-              ? "bg-white dark:bg-apple-darkSurface text-apple-text dark:text-white shadow-apple-sm font-semibold"
-              : "text-apple-secondary hover:text-apple-text"
-          }`}
-        >
-          <Scale className="w-3.5 h-3.5 text-indigo-500" />
-          <span>Comparative</span>
-        </button>
-
-        <button
-          onClick={() => onModeChange("karika")}
-          className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${
-            activeMode === "karika"
-              ? "bg-white dark:bg-apple-darkSurface text-apple-text dark:text-white shadow-apple-sm font-semibold"
-              : "text-apple-secondary hover:text-apple-text"
-          }`}
-        >
-          <ScrollText className="w-3.5 h-3.5 text-emerald-500" />
-          <span>Kārikā</span>
-        </button>
-      </div>
 
       {/* Main Clean Input Box */}
       <div className="rounded-2xl p-5 bg-white dark:bg-apple-darkSurface border border-apple-border dark:border-apple-darkBorder shadow-apple hover:border-apple-accent/40 focus-within:border-apple-accent transition-all">
@@ -142,7 +55,7 @@ export const PropositionInput: React.FC<PropositionInputProps> = ({
           value={currentInput}
           onChange={(e) => onInputChange(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder={placeholders[activeMode]}
+          placeholder="Enter any spontaneous thought, observation, or intuition... (e.g. 'Nature wants equilibrium.')"
           rows={2}
           className="w-full resize-none bg-transparent font-serif text-lg sm:text-xl text-apple-text dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none leading-relaxed"
         />
@@ -160,11 +73,11 @@ export const PropositionInput: React.FC<PropositionInputProps> = ({
             {isLoading ? (
               <>
                 <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                <span>Analyzing...</span>
+                <span>Debugging...</span>
               </>
             ) : (
               <>
-                <span>{buttonLabels[activeMode]}</span>
+                <span>✦ Debug Thought</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </>
             )}
@@ -178,7 +91,7 @@ export const PropositionInput: React.FC<PropositionInputProps> = ({
           <span className="text-[11px] font-mono uppercase tracking-wider text-apple-secondary/80 mr-1">
             Try:
           </span>
-          {featuredPresets.map((presetText, idx) => (
+          {curatedPresets.map((presetText, idx) => (
             <button
               key={idx}
               onClick={() => {
@@ -192,7 +105,7 @@ export const PropositionInput: React.FC<PropositionInputProps> = ({
           ))}
         </div>
 
-        {presets.length > 3 && (
+        {presets.length > 0 && (
           <button
             onClick={() => setShowAllPresets(!showAllPresets)}
             className="text-[11px] font-mono text-apple-accent hover:underline flex items-center space-x-1 ml-auto"
@@ -207,11 +120,7 @@ export const PropositionInput: React.FC<PropositionInputProps> = ({
       {showAllPresets && (
         <div className="p-3 rounded-2xl bg-white dark:bg-apple-darkSurface border border-apple-border dark:border-apple-darkBorder shadow-apple-sm animate-in fade-in duration-200">
           <div className="text-[10px] font-mono uppercase tracking-wider text-apple-secondary font-semibold mb-2 px-1">
-            {activeMode === "nagarjuna" || activeMode === "karika"
-              ? "Madhyamaka / MMK Canonical Cases:"
-              : activeMode === "comparative"
-              ? "Comparative Benchmark Cases:"
-              : "Wittgensteinian Benchmark Cases:"}
+            Canonical Wittgensteinian Benchmark Cases:
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-1.5">
             {presets.map((preset) => (

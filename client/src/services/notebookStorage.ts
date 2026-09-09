@@ -1,5 +1,5 @@
 import { NotebookEntry, ThoughtVersion, VersionDiff } from "../types/notebook";
-import { PhilosophicalAnalysisResult, AnyAnalysisResult } from "../types";
+import { PhilosophicalAnalysisResult, AnyAnalysisResult, ClaimCritiqueResult } from "../types";
 
 const STORAGE_KEY = "philocompiler_notebook_v1";
 
@@ -301,3 +301,41 @@ export function importNotebookJson(jsonString: string): boolean {
     return false;
   }
 }
+
+export function createEntryFromCritique(
+  critique: ClaimCritiqueResult,
+  userNotes?: string
+): NotebookEntry {
+  const entries = getNotebookEntries();
+  const version: ThoughtVersion = {
+    versionNumber: 1,
+    rawThought: critique.input,
+    transformedThought: critique.correctedProposition,
+    verdict: critique.verdict.replace(/_/g, " "),
+    reasonSummary: `${critique.whereIsTheProblem.problematicPhrase} (${critique.whereIsTheProblem.flawType}): ${critique.whereIsTheProblem.explanation}`,
+    keyAssumptions: critique.smuggledAssumptions,
+    preservedIntuition: critique.simpleExplanation,
+    timestamp: critique.timestamp || new Date().toISOString(),
+    userNotes: userNotes?.trim() || undefined,
+  };
+
+  const authorTag = critique.authorOrTradition
+    ? critique.authorOrTradition.split(/[\s(]/)[0].replace(/[^a-zA-Z0-9]/g, "")
+    : "Critique";
+
+  const newEntry: NotebookEntry = {
+    id: `critique-${Date.now()}`,
+    title: critique.authorOrTradition
+      ? `${critique.authorOrTradition.split("(")[0].trim()}: "${critique.input.slice(0, 24)}..."`
+      : `Critique: "${critique.input.slice(0, 28)}..."`,
+    tag: authorTag || "Critique",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    versions: [version]
+  };
+
+  const updated = [newEntry, ...entries];
+  saveNotebookEntries(updated);
+  return newEntry;
+}
+

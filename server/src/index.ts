@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { orchestrateAnalysis } from "./services/analyzer.js";
+import { orchestrateClaimCritique, CANONICAL_CRITIQUES } from "./services/critiqueService.js";
 import { CANONICAL_PRESETS } from "./core/canonicalData.js";
 import { CANONICAL_NAGARJUNA, CANONICAL_COMPARATIVE } from "./core/canonicalNagarjuna.js";
 
@@ -27,16 +28,16 @@ app.get("/api/health", (_req, res) => {
   res.json({
     status: "ok",
     instrument: "PhiloCompiler",
-    version: "0.2.0-v2",
+    version: "0.3.0",
     hasServerApiKey: hasEnvKey,
     activeProvider,
     defaultModel: process.env.DEFAULT_GROQ_MODEL || "openai/gpt-oss-120b",
-    supportedModes: ["wittgenstein", "nagarjuna", "comparative", "karika"],
+    features: ["thought_debugger", "claim_critic", "notebook"],
     timestamp: new Date().toISOString()
   });
 });
 
-// Canonical benchmark presets list (supports ?mode=wittgenstein|nagarjuna|comparative|karika)
+// Canonical benchmark presets list
 app.get("/api/canonical", (req, res) => {
   const mode = req.query.mode as string | undefined;
 
@@ -74,6 +75,19 @@ app.get("/api/canonical", (req, res) => {
   res.json(presets);
 });
 
+// Canonical critique benchmarks list for Feature 3
+app.get("/api/canonical-critiques", (_req, res) => {
+  res.json(
+    Object.entries(CANONICAL_CRITIQUES).map(([key, val]) => ({
+      id: key,
+      author: val.authorOrTradition,
+      input: val.input,
+      verdict: val.verdict,
+      problemSummary: val.whereIsTheProblem.flawType
+    }))
+  );
+});
+
 // Full canonical preset detail
 app.get("/api/canonical/:id", (req, res) => {
   const preset = CANONICAL_PRESETS[req.params.id];
@@ -83,7 +97,7 @@ app.get("/api/canonical/:id", (req, res) => {
   res.json(preset);
 });
 
-// Main philosophical debugging endpoint
+// Feature 1: Main philosophical debugging endpoint (prompt your intuition)
 app.post("/api/analyze", async (req, res) => {
   try {
     const { input, mode, forceCanonical, apiKey, model } = req.body;
@@ -112,9 +126,36 @@ app.post("/api/analyze", async (req, res) => {
   }
 });
 
+// Feature 3: Evaluate and correct previous thinkers' work ("You Should Correct")
+app.post("/api/critique", async (req, res) => {
+  try {
+    const { input, author, apiKey, model } = req.body;
+
+    if (!input || typeof input !== "string" || !input.trim()) {
+      return res.status(400).json({ error: "A valid philosophical claim or quote is required to critique." });
+    }
+
+    const customKeyFromHeader = req.headers["x-gemini-api-key"] as string | undefined;
+    const effectiveKey = apiKey || customKeyFromHeader;
+
+    const result = await orchestrateClaimCritique(input.trim(), author, {
+      apiKey: effectiveKey,
+      model
+    });
+
+    return res.json(result);
+  } catch (error: any) {
+    console.error("Critique endpoint error:", error);
+    return res.status(500).json({
+      error: error.message || "An unexpected error occurred during claim critique."
+    });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`\n======================================================`);
   console.log(`☵ PHILOCOMPILER ENGINE ONLINE [Port ${PORT}]`);
   console.log(`A Computational Instrument for Philosophical Debugging`);
   console.log(`======================================================\n`);
 });
+
