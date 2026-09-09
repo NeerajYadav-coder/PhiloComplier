@@ -57,7 +57,7 @@ export const SaveToNotebookModal: React.FC<SaveToNotebookModalProps> = ({
           <div className="flex items-center space-x-2">
             <Bookmark className="w-4 h-4 text-apple-accent" />
             <h3 className="text-sm font-semibold tracking-tight text-apple-text dark:text-white uppercase font-mono">
-              Save to Philosophical Notebook
+              Save to Notebook
             </h3>
           </div>
           <button
@@ -126,12 +126,12 @@ export const SaveToNotebookModal: React.FC<SaveToNotebookModalProps> = ({
 
             <div className="space-y-1">
               <label className="font-mono text-apple-secondary uppercase text-[10px] font-semibold block">
-                Personal Observation Notes (Optional)
+                Personal Notes (Optional)
               </label>
               <textarea
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                placeholder="What prompted this inquiry? Any subjective or contemplative context..."
+                placeholder="Any notes or context on what made you write this..."
                 rows={2}
                 className="w-full px-3 py-2 rounded-xl border border-apple-border dark:border-apple-darkBorder bg-apple-subtle/40 dark:bg-apple-darkSubtle/40 text-xs text-apple-text dark:text-zinc-100 focus:outline-none focus:border-apple-accent resize-none font-sans"
               />
@@ -141,7 +141,7 @@ export const SaveToNotebookModal: React.FC<SaveToNotebookModalProps> = ({
           <div className="space-y-3 text-xs">
             <div className="space-y-1">
               <label className="font-mono text-apple-secondary uppercase text-[10px] font-semibold block">
-                Select Thought Lineage to Refine
+                Choose Saved Thought to Update
               </label>
               <select
                 value={selectedEntryId}
@@ -157,17 +157,17 @@ export const SaveToNotebookModal: React.FC<SaveToNotebookModalProps> = ({
             </div>
 
             <div className="p-3 rounded-xl bg-apple-accent/5 border border-apple-accent/20 text-apple-accent text-[11px] font-mono">
-              Will save as <strong>Version {nextVersionNum}</strong> of "{selectedEntry?.title}". The engine will track what changed from Version {nextVersionNum - 1}.
+              Will save as <strong>Version {nextVersionNum}</strong> of "{selectedEntry?.title}". You can see how your thought evolved over time.
             </div>
 
             <div className="space-y-1">
               <label className="font-mono text-apple-secondary uppercase text-[10px] font-semibold block">
-                Notes on what changed in this version (Optional)
+                What changed in this version (Optional)
               </label>
               <textarea
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                placeholder="e.g. Removed the intentional verb 'wants' and narrowed scope..."
+                placeholder="e.g. Replaced confusing phrasing with simple, clear wording..."
                 rows={2}
                 className="w-full px-3 py-2 rounded-xl border border-apple-border dark:border-apple-darkBorder bg-apple-subtle/40 dark:bg-apple-darkSubtle/40 text-xs text-apple-text dark:text-zinc-100 focus:outline-none focus:border-apple-accent resize-none font-sans"
               />

@@ -19,10 +19,10 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
             </div>
             <div>
               <h3 className="text-sm font-semibold tracking-tight text-apple-text dark:text-white uppercase font-mono">
-                PhiloCompiler Ethos & Architecture
+                About PhiloCompiler
               </h3>
               <p className="text-[11px] text-apple-secondary">
-                A Personal Philosophical Laboratory & Engineering Instrument
+                Clear your thinking. Spot hidden assumptions. Untangle confusing language.
               </p>
             </div>
           </div>
@@ -37,51 +37,51 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
         {/* Central Idea */}
         <div className="space-y-3">
           <h4 className="text-xs font-mono uppercase text-apple-secondary font-semibold">
-            The Core Question
+            The Core Idea
           </h4>
           <blockquote className="p-4 rounded-2xl bg-apple-subtle/60 dark:bg-apple-darkSubtle/60 border border-apple-border/70 dark:border-apple-darkBorder/70 text-sm font-serif italic text-apple-text dark:text-zinc-100 leading-relaxed">
-            "Can philosophical methods for examining language, propositions, assumptions, logical form, and pseudo-problems be operationalized into an interactive computational instrument?"
+            "Most confusion in our thoughts comes from tricks played by language. When we untangle the grammar, uncover hidden assumptions, and keep what we really meant, thinking becomes clean, simple, and effortless."
           </blockquote>
         </div>
 
         {/* Guiding Axioms */}
         <div className="space-y-3">
           <h4 className="text-xs font-mono uppercase text-apple-secondary font-semibold">
-            Guiding Axioms & Rules of Inquiry
+            Simple Rules for Clear Thinking
           </h4>
           <div className="space-y-2 text-xs text-apple-text/90 dark:text-zinc-300">
             <div className="p-3 rounded-xl bg-apple-subtle/30 dark:bg-apple-darkSubtle/30 border border-apple-border/40 dark:border-apple-darkBorder/40 flex items-start space-x-2.5">
               <CheckCircle2 className="w-4 h-4 text-apple-accent shrink-0 mt-0.5" />
               <div>
-                <strong>Do not mistake grammatical form for ontological structure.</strong> Language allows us to slot abstract nouns ("time", "nature", "nothing") into subject positions, deceiving thought into treating them as moving substances or agents.
+                <strong>Don't confuse grammar with physical reality.</strong> Just because language lets us use words like "time", "nature", or "nothing" as subjects doesn't mean they are physical objects with feelings or actions.
               </div>
             </div>
 
             <div className="p-3 rounded-xl bg-apple-subtle/30 dark:bg-apple-darkSubtle/30 border border-apple-border/40 dark:border-apple-darkBorder/40 flex items-start space-x-2.5">
               <CheckCircle2 className="w-4 h-4 text-apple-accent shrink-0 mt-0.5" />
               <div>
-                <strong>Do not mistake an inference for an observation.</strong> Distinguish what was directly experienced in observation from what the mind subsequently constructed around it.
+                <strong>Separate what you directly see from what you assume.</strong> Distinguish what was genuinely experienced from the mental stories and interpretations added on top.
               </div>
             </div>
 
             <div className="p-3 rounded-xl bg-apple-subtle/30 dark:bg-apple-darkSubtle/30 border border-apple-border/40 dark:border-apple-darkBorder/40 flex items-start space-x-2.5">
               <CheckCircle2 className="w-4 h-4 text-apple-accent shrink-0 mt-0.5" />
               <div>
-                <strong>Before answering, debug the question.</strong> Never rush to answer a question before examining what the question presupposes and what kind of answer could count.
+                <strong>Check the question before rushing to answer.</strong> Many confusing problems disappear when you realize the question itself had misleading assumptions built into it.
               </div>
             </div>
 
             <div className="p-3 rounded-xl bg-apple-subtle/30 dark:bg-apple-darkSubtle/30 border border-apple-border/40 dark:border-apple-darkBorder/40 flex items-start space-x-2.5">
               <CheckCircle2 className="w-4 h-4 text-apple-accent shrink-0 mt-0.5" />
               <div>
-                <strong>Preserve the intuition, debug the formulation.</strong> Never discard a profound human insight merely because its initial linguistic formulation was defective or clumsy.
+                <strong>Keep the intuition, fix the wording.</strong> Never discard a real human insight just because the first attempt to put it into words was clumsy or confusing.
               </div>
             </div>
 
             <div className="p-3 rounded-xl bg-apple-subtle/30 dark:bg-apple-darkSubtle/30 border border-apple-border/40 dark:border-apple-darkBorder/40 flex items-start space-x-2.5">
               <CheckCircle2 className="w-4 h-4 text-apple-accent shrink-0 mt-0.5" />
               <div>
-                <strong>Do not destroy poetic language.</strong> Poetic and aesthetic statements ("The mountain is silent") are not defective physics; avoid scientistic reductionism.
+                <strong>Don't ruin poetry with literal nitpicking.</strong> Metaphors and poetic expressions ("The mountain is silent") are beautiful ways to communicate feelings, not broken science statements.
               </div>
             </div>
           </div>

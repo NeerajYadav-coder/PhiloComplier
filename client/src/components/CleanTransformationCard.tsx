@@ -36,26 +36,26 @@ export const CleanTransformationCard: React.FC<CleanTransformationCardProps> = (
       case "EMPIRICALLY TESTABLE":
         return {
           bg: "bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 border-emerald-500/20",
-          label: "Logically Sound",
+          label: "Clear & Sound",
         };
       case "CATEGORYALLY PROBLEMATIC":
       case "PSEUDO-PROPOSITION SUSPECTED":
         return {
           bg: "bg-rose-500/10 text-rose-800 dark:text-rose-300 border-rose-500/20",
-          label: "Grammatical Category Trap",
+          label: "Confusing Grammar with Reality",
         };
       case "METAPHORICAL":
       case "POETIC":
         return {
           bg: "bg-indigo-500/10 text-indigo-800 dark:text-indigo-300 border-indigo-500/20",
-          label: "Metaphorical Expression",
+          label: "Metaphor, Not Literal Fact",
         };
       case "AMBIGUOUS":
       case "UNDER-SPECIFIED":
       default:
         return {
           bg: "bg-zinc-500/10 text-zinc-800 dark:text-zinc-300 border-zinc-500/20",
-          label: "Clarification Required",
+          label: "Needs More Specific Details",
         };
     }
   };
@@ -71,7 +71,7 @@ export const CleanTransformationCard: React.FC<CleanTransformationCardProps> = (
             {badge.label}
           </span>
           <span className="text-[11px] font-mono text-apple-secondary hidden sm:inline">
-            • Wittgensteinian Reformulation
+            • Refined Formulation
           </span>
         </div>
 
@@ -119,7 +119,7 @@ export const CleanTransformationCard: React.FC<CleanTransformationCardProps> = (
         {/* Original */}
         <div className="text-xs text-apple-secondary flex items-center space-x-2">
           <span className="uppercase font-mono tracking-wider text-[10px] font-semibold text-apple-secondary">
-            Original Formulation:
+            What You Said:
           </span>
           <span className="font-serif italic text-apple-text/70 dark:text-zinc-400">
             "{analysis.input}"
@@ -131,7 +131,7 @@ export const CleanTransformationCard: React.FC<CleanTransformationCardProps> = (
           <div className="flex items-center justify-between">
             <span className="text-xs font-mono font-semibold uppercase tracking-wider text-apple-accent flex items-center space-x-1.5">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>Transformed into Clear Logical Form</span>
+              <span>Clear, Refined Version</span>
             </span>
 
             {/* Mode toggles if multiple reformulations exist */}
@@ -172,7 +172,7 @@ export const CleanTransformationCard: React.FC<CleanTransformationCardProps> = (
         <div className="p-4 rounded-2xl bg-white dark:bg-apple-darkSurface border border-apple-border/70 dark:border-apple-darkBorder/70 space-y-1.5">
           <div className="flex items-center space-x-1.5 text-xs font-mono uppercase text-apple-secondary font-semibold">
             <AlertCircle className="w-3.5 h-3.5 text-amber-500" />
-            <span>Why the change?</span>
+            <span>What was confusing before & why this is clearer:</span>
           </div>
           <p className="text-xs sm:text-sm text-apple-text/90 dark:text-zinc-300 font-sans leading-relaxed">
             {analysis.intuitionPreservation.apparentLinguisticProblem || analysis.verdictRationale}
@@ -183,7 +183,7 @@ export const CleanTransformationCard: React.FC<CleanTransformationCardProps> = (
         <div className="p-4 rounded-2xl bg-white dark:bg-apple-darkSurface border border-apple-border/70 dark:border-apple-darkBorder/70 space-y-1.5">
           <div className="flex items-center space-x-1.5 text-xs font-mono uppercase text-apple-secondary font-semibold">
             <Key className="w-3.5 h-3.5 text-indigo-500" />
-            <span>Assumptions in your wording:</span>
+            <span>Assumptions you might be making:</span>
           </div>
           <div className="text-xs sm:text-sm text-apple-text/90 dark:text-zinc-300 font-sans leading-relaxed space-y-1">
             {analysis.hiddenAssumptions.slice(0, 2).map((item, idx) => (
@@ -201,7 +201,7 @@ export const CleanTransformationCard: React.FC<CleanTransformationCardProps> = (
         <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
         <div className="space-y-0.5">
           <span className="font-semibold font-mono text-[11px] uppercase tracking-wider text-emerald-700 dark:text-emerald-400 block">
-            Your Core Intuition Is Preserved
+            What You Really Meant (Intuition Kept Intact)
           </span>
           <p className="leading-relaxed opacity-95">
             "{analysis.intuitionPreservation.underlyingIntuition}"
@@ -215,7 +215,7 @@ export const CleanTransformationCard: React.FC<CleanTransformationCardProps> = (
           onClick={onToggleDeepInspection}
           className="inline-flex items-center space-x-2 px-4 py-2 rounded-xl text-xs font-mono text-apple-secondary hover:text-apple-text hover:bg-apple-subtle dark:hover:bg-apple-darkSubtle border border-apple-border/60 dark:border-apple-darkBorder transition-all"
         >
-          <span>{showDeepInspection ? "Hide Deep Diagnostics" : "Inspect Deep Analytical Machinery (Ladder, Terms, Type Errors)"}</span>
+          <span>{showDeepInspection ? "Hide Detailed Breakdown" : "Explore Detailed Breakdown (Step-by-Step Logic, Words & Checks)"}</span>
           {showDeepInspection ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
         </button>
       </div>

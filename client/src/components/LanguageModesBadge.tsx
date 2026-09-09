@@ -9,10 +9,27 @@ interface LanguageModesBadgeProps {
 }
 
 export const LanguageModesBadge: React.FC<LanguageModesBadgeProps> = ({ modes }) => {
+  const getModeName = (mode: string) => {
+    switch (mode) {
+      case "empirical":
+        return "Observable Fact";
+      case "phenomenological":
+        return "Direct Experience";
+      case "metaphysical":
+        return "Abstract Claim";
+      case "poetic":
+        return "Poetic / Metaphor";
+      case "ordinary_language":
+        return "Everyday Speech";
+      default:
+        return mode;
+    }
+  };
+
   return (
     <div className="rounded-2xl p-5 bg-white dark:bg-apple-darkSurface border border-apple-border dark:border-apple-darkBorder shadow-apple-sm">
       <div className="text-xs uppercase font-mono tracking-wider text-apple-secondary font-semibold mb-3">
-        Detected Modes of Language
+        Types of Language in This Sentence
       </div>
       <div className="flex flex-wrap gap-2">
         {modes.map((item, idx) => (
@@ -21,7 +38,7 @@ export const LanguageModesBadge: React.FC<LanguageModesBadgeProps> = ({ modes })
             className="group relative inline-flex items-center px-3 py-1.5 rounded-xl text-xs font-medium bg-apple-subtle dark:bg-apple-darkSubtle border border-apple-border/70 dark:border-apple-darkBorder text-apple-text dark:text-zinc-200 cursor-default transition-all hover:border-apple-secondary"
           >
             <span className="w-1.5 h-1.5 rounded-full bg-apple-secondary mr-2 group-hover:bg-apple-accent transition-colors" />
-            <span className="capitalize font-mono">{item.mode}</span>
+            <span className="font-mono">{getModeName(item.mode)}</span>
 
             {/* Subtle floating detail */}
             <span className="hidden sm:inline-block ml-2 text-[11px] text-apple-secondary">

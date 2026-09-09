@@ -114,14 +114,14 @@ export const ClaimCritiqueView: React.FC<ClaimCritiqueViewProps> = ({
         <div className="text-center max-w-xl mx-auto space-y-2 py-2">
           <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800 text-indigo-800 dark:text-indigo-300 text-xs font-mono mb-1">
             <Scale className="w-3.5 h-3.5" />
-            <span>Audit Any Thinker's Saying or Verse</span>
+            <span>Check Any Saying or Quote</span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-serif font-normal tracking-tight text-apple-text dark:text-white">
             Critique Claim
           </h2>
           <p className="text-xs sm:text-sm text-apple-secondary leading-relaxed">
-            Paste any quote, argument, or saying from historical or modern philosophers (Nāgārjuna, Descartes, Kant, Spinoza, etc.).
-            Filter whether it is logically sound, pinpoint where the flaw lies, and obtain the corrected proposition.
+            Paste any quote or saying from any thinker (like Descartes, Nāgārjuna, Kant, or Spinoza).
+            Check if it really makes sense, see exactly where the wording trips up, and get the clean, corrected version.
           </p>
         </div>
       )}
@@ -136,7 +136,7 @@ export const ClaimCritiqueView: React.FC<ClaimCritiqueViewProps> = ({
               value={claimText}
               onChange={(e) => setClaimText(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Paste any quote, verse, or philosophical claim to audit... (e.g. 'I think, therefore I am.', 'Neither from itself, nor from another... does anything arise.')"
+              placeholder="Paste any quote or saying here... (e.g. 'I think, therefore I am.', 'What is not cannot be thought', 'Everything happens for a reason')"
               rows={2}
               className="w-full resize-none bg-transparent font-serif text-lg sm:text-xl text-apple-text dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none leading-relaxed"
             />
@@ -149,7 +149,7 @@ export const ClaimCritiqueView: React.FC<ClaimCritiqueViewProps> = ({
                   type="text"
                   value={authorText}
                   onChange={(e) => setAuthorText(e.target.value)}
-                  placeholder="Thinker / Source (optional: e.g. René Descartes, Nāgārjuna MMK)"
+                  placeholder="Who said this? (optional: e.g. René Descartes, Nāgārjuna, Kant)"
                   className="w-full text-xs font-sans bg-transparent text-apple-text dark:text-zinc-200 placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none"
                 />
               </div>
@@ -167,11 +167,11 @@ export const ClaimCritiqueView: React.FC<ClaimCritiqueViewProps> = ({
                   {isLoading ? (
                     <>
                       <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                      <span>Auditing Logic...</span>
+                      <span>Checking Logic...</span>
                     </>
                   ) : (
                     <>
-                      <span>⚖ Critique & Correct</span>
+                      <span>⚖ Check & Correct Logic</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </>
                   )}
@@ -221,10 +221,10 @@ export const ClaimCritiqueView: React.FC<ClaimCritiqueViewProps> = ({
           <Loader2 className="w-6 h-6 animate-spin mx-auto text-indigo-600" />
           <div className="space-y-1">
             <h4 className="text-sm font-serif font-medium text-apple-text dark:text-white">
-              Auditing Logical Validity & Category Boundaries...
+              Checking the logic & spotting hidden tricks...
             </h4>
             <p className="text-xs text-apple-secondary max-w-md mx-auto">
-              Checking for category errors, subject-reification, circular reasoning, and smuggled assumptions to pinpoint where the problem lies.
+              Looking for false leaps, words used like physical objects, and hidden assumptions to show you where the reasoning trips up.
             </p>
           </div>
         </div>

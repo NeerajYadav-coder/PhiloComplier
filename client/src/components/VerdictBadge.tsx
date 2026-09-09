@@ -15,28 +15,28 @@ export const VerdictBadge: React.FC<VerdictBadgeProps> = ({ verdict, rationale }
         return {
           bg: "bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border-emerald-500/20",
           icon: <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />,
-          label: verdict.replace(/_/g, " "),
+          label: verdict === "EMPIRICALLY TESTABLE" ? "Testable by Experience" : "Clear & Sound",
         };
       case "CATEGORYALLY PROBLEMATIC":
       case "PSEUDO-PROPOSITION SUSPECTED":
         return {
           bg: "bg-rose-500/10 dark:bg-rose-500/20 text-rose-800 dark:text-rose-300 border-rose-500/20",
           icon: <AlertCircle className="w-4 h-4 text-rose-600 dark:text-rose-400" />,
-          label: verdict.replace(/_/g, " "),
+          label: verdict === "CATEGORYALLY PROBLEMATIC" ? "Confusing Grammar with Reality" : "Misleading Question / False Puzzle",
         };
       case "METAPHORICAL":
       case "POETIC":
         return {
           bg: "bg-indigo-500/10 dark:bg-indigo-500/20 text-indigo-800 dark:text-indigo-300 border-indigo-500/20",
           icon: <Feather className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />,
-          label: verdict.replace(/_/g, " "),
+          label: verdict === "POETIC" ? "Poetic Expression" : "Metaphor, Not Literal Fact",
         };
       case "FRAMEWORK-DEPENDENT":
       case "INTERPRETIVELY CONTESTED":
         return {
           bg: "bg-amber-500/10 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300 border-amber-500/20",
           icon: <Compass className="w-4 h-4 text-amber-600 dark:text-amber-400" />,
-          label: verdict.replace(/_/g, " "),
+          label: verdict === "FRAMEWORK-DEPENDENT" ? "Depends on Point of View" : "Open to Interpretation",
         };
       case "AMBIGUOUS":
       case "UNDER-SPECIFIED":
@@ -45,7 +45,7 @@ export const VerdictBadge: React.FC<VerdictBadgeProps> = ({ verdict, rationale }
         return {
           bg: "bg-zinc-500/10 dark:bg-zinc-500/20 text-zinc-800 dark:text-zinc-300 border-zinc-500/20",
           icon: <HelpCircle className="w-4 h-4 text-zinc-600 dark:text-zinc-400" />,
-          label: verdict.replace(/_/g, " "),
+          label: verdict === "AMBIGUOUS" ? "Could Mean Multiple Things" : "Needs More Specific Details",
         };
     }
   };
@@ -57,7 +57,7 @@ export const VerdictBadge: React.FC<VerdictBadgeProps> = ({ verdict, rationale }
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-apple-border/40 dark:border-apple-darkBorder/40">
         <div className="flex items-center space-x-2">
           <span className="text-xs uppercase font-mono tracking-wider text-apple-secondary font-semibold">
-            Epistemic Diagnostic Verdict
+            How This Thought Holds Up
           </span>
         </div>
         <div className={`inline-flex items-center space-x-2 px-3 py-1 rounded-full text-xs font-medium border ${config.bg}`}>

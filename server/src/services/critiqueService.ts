@@ -4,19 +4,21 @@ import { LLMConfig } from "./llmService.js";
 
 export const CRITIQUE_SYSTEM_PROMPT = `
 You are the Philosophical Text & Claim Critic of PHILOCOMPILER ("You Should Correct").
-Your purpose is to take any quote, philosophical argument, verse, or claim from previous thinkers (historical or modern: e.g. Nāgārjuna, René Descartes, Immanuel Kant, Spinoza, Plato, David Hume, etc.) and subject it to a strict logical-linguistic audit.
+Your purpose is to take any quote, philosophical argument, verse, or claim from previous thinkers (historical or modern: e.g. Nāgārjuna, René Descartes, Immanuel Kant, Spinoza, Plato, David Hume, etc.) and subject it to a strict logical audit.
 
 CRITICAL INSTRUCTIONS:
 1. EVALUATE LOGICAL SOUNDNESS:
-   Determine whether the claim holds logically, or whether it commits a logical fallacy, reification, category mistake, circularity, or illicit inference jump.
+   Determine whether the claim holds logically, or whether it makes a false leap, confuses everyday grammar with reality, assumes what it hasn't proven, or argues in circles.
 2. POINT OUT WHERE IS THE PROBLEM:
-   Pinpoint the EXACT phrase, term, or premise where the argument breaks down. Do not speak in vague generalities. Show exactly where the thinker leapt from observation to unverified metaphysics or conflated grammar with reality.
+   Pinpoint the EXACT phrase or step in the quote where the logic breaks down. Never speak in vague generalities. Show precisely where the thinker jumped from what is actually observed to an unproven assumption.
 3. EXPOSE SMUGGLED ASSUMPTIONS:
-   Reveal what the thinker presupposed or smuggled in without justification.
+   Reveal what the thinker took for granted without showing proof.
 4. PROVIDE THE CORRECTED PROPOSITION:
-   Re-formulate the claim so that what is genuinely true or insightful in it is preserved, but the logical flaw or category error is completely removed.
-5. SIMPLE, DIRECT, HUMAN LANGUAGE:
-   Explain the diagnosis in plain everyday words without unnecessary academic jargon.
+   Re-formulate the quote so that whatever was genuinely true or insightful in it is kept, but the logical flaw is completely removed.
+5. STRICT RULE ON LANGUAGE (SIMPLE & HUMAN):
+   Explain everything in simple, conversational everyday English that ANY curious reader can easily understand.
+   DO NOT use dense academic or scholastic jargon (never use phrases like "illicit subject reification", "ontological status", "epistemic closure").
+   Describe flaws using clear common-sense words (e.g. "Inventing a thinker where there is only thought", "Treating an empty word like a physical object", "Stretching an everyday observation into a cosmic rule").
 
 You must output STRICT, VALID JSON conforming to ClaimCritiqueResultSchema. No markdown fences, ONLY pure JSON.
 `;
@@ -29,7 +31,7 @@ CLAIM / WORK:
 "${input}"
 ${author ? `ATTRIBUTED AUTHOR / TRADITION: ${author}` : ""}
 
-Return a single complete JSON object with all required fields:
+Return a single complete JSON object with all required fields in simple, plain-English language:
 {
   "id": "critique-${Date.now()}",
   "input": "${input.replace(/"/g, '\\"')}",
@@ -38,18 +40,18 @@ Return a single complete JSON object with all required fields:
   "engineUsed": "groq_live",
   "isLogicallyValid": false,
   "verdict": "LOGICALLY_FLAWED" | "VALID_UNDER_RESTRICTED_SCOPE" | "CATEGORY_ERROR" | "CIRCULAR_ARGUMENT" | "SOUND",
-  "verdictSummary": "Crisp one-sentence summary of whether this claim is logically sound...",
+  "verdictSummary": "Crisp one-sentence answer to whether this claim is logically sound...",
   "whereIsTheProblem": {
     "problematicPhrase": "The exact phrase or step in the quote that fails...",
-    "flawType": "Name of the logical error (e.g. Subject-Reification, False Dichotomy, Category Mistake, Illicit Inference Jump)...",
-    "explanation": "Clear explanation of exactly why this step fails logically..."
+    "flawType": "Plain-English name of the error (e.g. Inventing a Thinker Where There Is Only Thought, Treating 'Nothing' like a Real Object, False Leap from Observation to Cosmic Rule)...",
+    "explanation": "Simple, crystal-clear explanation of exactly why this step fails logically..."
   },
   "smuggledAssumptions": [
-    "Smuggled assumption 1...",
-    "Smuggled assumption 2..."
+    "Hidden assumption 1 taken for granted without proof...",
+    "Hidden assumption 2..."
   ],
   "correctedProposition": "The corrected, logically sound formulation...",
-  "correctionRationale": "Why this corrected version is logically sound...",
+  "correctionRationale": "Why this corrected version actually works...",
   "simpleExplanation": "Simple everyday language explanation of the error and the fix..."
 }
 `;
@@ -65,19 +67,19 @@ export const CANONICAL_CRITIQUES: Record<string, ClaimCritiqueResult> = {
     engineUsed: "canonical_offline",
     isLogicallyValid: false,
     verdict: "CATEGORY_ERROR",
-    verdictSummary: "Illicit leap from the occurrence of thinking to the existence of a permanent, substantial 'I'.",
+    verdictSummary: "Jumping from noticing that thoughts exist to claiming an invisible, permanent soul is doing the thinking.",
     whereIsTheProblem: {
       problematicPhrase: "therefore I am [a substance]",
-      flawType: "Illicit Subject Reification & Category Error",
-      explanation: "Descartes observes the direct occurrence of doubt/thought, but grammatical subject-predicate structure tricks him into assuming every verb requires an enduring metaphysical subject. As Lichtenberg and Russell observed, the valid observation is merely 'There is thinking going on', not 'There is an immortal ego-entity doing it'."
+      flawType: "Inventing a 'Thinker' Where There Is Only 'Thought'",
+      explanation: "Descartes noticed thoughts and doubts happening in immediate awareness. But because language always puts 'I' in front of verbs ('I walk', 'I think'), he assumed there must be an invisible, permanent soul-entity behind the thinking. In direct reality, thinking simply occurs—our grammar tricked him into inventing an invisible thinker."
     },
     smuggledAssumptions: [
-      "Every action/process must belong to a permanent substantial entity.",
-      "Grammatical structure ('I think') reflects metaphysical reality.",
-      "Thinking cannot be a dynamic decentralized process."
+      "Assuming that wherever an action happens, a permanent owner or substance must be doing it.",
+      "Assuming everyday grammar ('I think') reflects how consciousness actually works.",
+      "Assuming thoughts cannot arise and pass on their own without a permanent soul."
     ],
-    correctedProposition: "Thoughts and doubts occur in immediate awareness, without necessitating a permanent metaphysical soul-entity behind them.",
-    correctionRationale: "Strips the unwarranted metaphysical leap while preserving the undeniable first-person reality of cognitive emergence.",
+    correctedProposition: "Thoughts and doubts occur in immediate awareness, without needing an invisible permanent soul behind them.",
+    correctionRationale: "Preserves the real observation (thoughts are undeniably happening) while dropping the unproven claim that an invisible ghost-entity is doing the thinking.",
     simpleExplanation: "Descartes saw thinking happening, but jumped to the conclusion that an invisible 'soul person' was doing the thinking. Grammar tricked him into creating a thinker where there was only thought."
   },
 
@@ -89,19 +91,19 @@ export const CANONICAL_CRITIQUES: Record<string, ClaimCritiqueResult> = {
     engineUsed: "canonical_offline",
     isLogicallyValid: true,
     verdict: "VALID_UNDER_RESTRICTED_SCOPE",
-    verdictSummary: "Logically sound reductio against substantial causation, but invalid if taken as denying conventional causal regularity.",
+    verdictSummary: "Accurate when proving things are interconnected, but misleading if taken as saying everyday causes don't work.",
     whereIsTheProblem: {
       problematicPhrase: "does anything anywhere ever arise",
-      flawType: "Scope Ambiguity between Substantial vs Conventional Production",
-      explanation: "Nāgārjuna's fourfold negation is airtight against theories of 'inherent' self-causation (Sāṃkhya) and other-causation (Nyāya). However, if generalized carelessly into everyday life, it sounds like an absurd denial that lighting a match produces fire. It is valid only as a critique of metaphysical svabhāva."
+      flawType: "Confusing Cosmic Rules with Everyday Reality",
+      explanation: "Nāgārjuna proves that things don't exist as isolated, standalone blocks that collide like magic bricks. Everything depends on everything else. But if you take this quote literally in daily life, it sounds like striking a match doesn't cause fire. In everyday life, cause and effect still work in dependable, regular patterns."
     },
     smuggledAssumptions: [
-      "Assumes opponents define cause and effect as two self-standing substances.",
-      "Relies on the classical Indian excluded middle of production."
+      "Assumes his opponents define causes and effects as two completely isolated, separate objects.",
+      "Assumes that if things aren't permanently separate, they cannot produce each other."
     ],
-    correctedProposition: "Things do not arise through the collision of self-standing metaphysical substances; events emerge as mutually conditioned relational sequences.",
-    correctionRationale: "Clarifies that causality is a useful conventional description of regular relations, not a metaphysical mechanism between isolated objects.",
-    simpleExplanation: "Nāgārjuna proves that causes aren't separate magical bricks hitting other bricks. But we must be clear: things still happen dependently in regular patterns."
+    correctedProposition: "Things do not arise through the collision of isolated objects; events emerge through connected, dependent conditions.",
+    correctionRationale: "Explains causality as a dependable web of conditions rather than a magical collision between isolated objects.",
+    simpleExplanation: "Nāgārjuna proves that causes aren't separate magical bricks hitting other bricks. But we must be clear: things still happen dependently in regular, predictable patterns."
   },
 
   "parmenides-nothing": {
@@ -112,19 +114,19 @@ export const CANONICAL_CRITIQUES: Record<string, ClaimCritiqueResult> = {
     engineUsed: "canonical_offline",
     isLogicallyValid: false,
     verdict: "LOGICALLY_FLAWED",
-    verdictSummary: "Reification of the word 'nothing' into a mysterious substantive entity.",
+    verdictSummary: "Treating the simple word 'nothing' as if it were a mysterious physical object.",
     whereIsTheProblem: {
       problematicPhrase: "What is not cannot be thought",
-      flawType: "Reification of the Negative Operator",
-      explanation: "Parmenides treats 'what is not' as if it were a strange kind of object that fails to be, rather than recognizing 'not' as a logical operator used to deny predicates. Saying 'There is no elephant in the room' does not require a ghostly thing called 'non-elephant' to exist."
+      flawType: "Treating 'Nothing' Like a Real Object",
+      explanation: "Parmenides treats 'nothing' like a spooky, invisible thing that you can't talk about without turning it into a real thing. But 'nothing' isn't an object—it's just a handy word we use to say something is missing (like 'there is no milk in the fridge'). He mistook a simple word of absence for a cosmic puzzle."
     },
     smuggledAssumptions: [
-      "Every meaningful word must name an existing object.",
-      "Negation is an entity rather than a logical operator."
+      "Assuming every meaningful word must name a physical object.",
+      "Assuming the word 'not' refers to an actual empty substance."
     ],
-    correctedProposition: "Negative statements describe the absence of specific conditions; they do not refer to a metaphysical void or impossible object.",
-    correctionRationale: "Restores negation to its proper logical role as a syntactic operator rather than an ontological obstacle.",
-    simpleExplanation: "Parmenides thought 'nothing' was a thing that couldn't be talked about without turning it into 'something'. He confused a linguistic negation with a physical substance."
+    correctedProposition: "Saying 'nothing' simply describes the absence of specific things; it does not name a mysterious cosmic void.",
+    correctionRationale: "Returns the word 'nothing' to its normal everyday job of describing absence, instead of inventing a spooky void.",
+    simpleExplanation: "Parmenides thought 'nothing' was a thing that couldn't be talked about without turning it into 'something'. He confused a simple word of absence with an actual physical substance."
   }
 };
 
@@ -260,18 +262,18 @@ function generateHeuristicCritique(input: string, author?: string): ClaimCritiqu
     engineUsed: "heuristic_fallback",
     isLogicallyValid: false,
     verdict: "LOGICALLY_FLAWED",
-    verdictSummary: "Claim contains an unverified inference leap or treats a grammatical abstraction as an ontological entity.",
+    verdictSummary: "The statement makes a big jump from a small observation to a sweeping universal rule.",
     whereIsTheProblem: {
       problematicPhrase: input.slice(0, 30) + "...",
-      flawType: "Unwarranted Categorical Inference",
-      explanation: "The proposition moves from a localized observation or linguistic convention to an unrestricted metaphysical conclusion without sufficient justification."
+      flawType: "Unproven Leap in Logic",
+      explanation: "The sentence takes an idea that makes sense in a specific everyday setting and stretches it into a cosmic rule without showing evidence."
     },
     smuggledAssumptions: [
-      "Assumes surface grammar maps directly to ontological structure.",
-      "Presupposes categorical boundaries without providing falsification criteria."
+      "Assuming that everyday words describe ultimate cosmic facts.",
+      "Assuming an idea that works locally must apply everywhere."
     ],
-    correctedProposition: `Under clarified logical boundaries, "${input}" reflects a contextual convention rather than an absolute metaphysical truth.`,
-    correctionRationale: "Restricts the assertion to its defensible empirical or phenomenological domain.",
-    simpleExplanation: "The claim takes a concept that makes sense in a limited situation and stretches it into a cosmic rule without proving the connection."
+    correctedProposition: `In clear terms, "${input}" describes a specific situation rather than an absolute rule of the universe.`,
+    correctionRationale: "Keeps the assertion grounded in what can actually be seen, tested, or demonstrated.",
+    simpleExplanation: "The claim takes an idea that works in a limited situation and turns it into a cosmic law without proving the connection."
   };
 }

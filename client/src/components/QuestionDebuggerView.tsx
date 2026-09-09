@@ -15,7 +15,7 @@ export const QuestionDebuggerView: React.FC<QuestionDebuggerViewProps> = ({ diag
         <div className="flex items-center space-x-2">
           <HelpCircle className="w-4 h-4 text-apple-accent" />
           <h3 className="text-xs uppercase font-mono tracking-wider text-apple-secondary font-semibold">
-            Question Diagnostic: Before Answering, Debug the Question
+            Question Breakdown: Checking the Question First
           </h3>
         </div>
         {diagnostic.wellFormednessVerdict && (
@@ -43,7 +43,7 @@ export const QuestionDebuggerView: React.FC<QuestionDebuggerViewProps> = ({ diag
         {diagnostic.requestedExplanationType && (
           <div className="p-3.5 rounded-xl bg-apple-subtle/50 dark:bg-apple-darkSubtle/50 border border-apple-border/60 dark:border-apple-darkBorder/60 space-y-1">
             <span className="text-apple-secondary uppercase font-mono text-[10px] block">
-              Requested Explanation Type
+              What Kind of Answer Is Needed
             </span>
             <span className="font-mono text-sm font-semibold text-apple-text dark:text-white">
               {diagnostic.requestedExplanationType}
@@ -54,7 +54,7 @@ export const QuestionDebuggerView: React.FC<QuestionDebuggerViewProps> = ({ diag
         {diagnostic.spatialOrMetaphoricalShift && (
           <div className="p-3.5 rounded-xl bg-apple-subtle/50 dark:bg-apple-darkSubtle/50 border border-apple-border/60 dark:border-apple-darkBorder/60 space-y-1">
             <span className="text-apple-secondary uppercase font-mono text-[10px] block">
-              Metaphorical / Spatial Displacement
+              Hidden Metaphor or Picture
             </span>
             <span className="text-apple-text/90 dark:text-zinc-200 font-sans">
               {diagnostic.spatialOrMetaphoricalShift}
@@ -67,7 +67,7 @@ export const QuestionDebuggerView: React.FC<QuestionDebuggerViewProps> = ({ diag
       {diagnostic.clarificationSubQuestions && diagnostic.clarificationSubQuestions.length > 0 && (
         <div className="space-y-2">
           <span className="text-xs uppercase font-mono text-apple-secondary font-semibold block">
-            Clarification Sub-Questions (Disentangling the Query)
+            Better Questions to Ask Instead
           </span>
           <div className="space-y-1.5">
             {diagnostic.clarificationSubQuestions.map((subQ, idx) => (
@@ -86,7 +86,7 @@ export const QuestionDebuggerView: React.FC<QuestionDebuggerViewProps> = ({ diag
       {/* 4. Diagnostic advice */}
       {diagnostic.diagnosticAdvice && (
         <div className="text-xs text-apple-secondary italic pt-2 border-t border-apple-border/40 dark:border-apple-darkBorder/40">
-          <span className="font-semibold not-italic font-sans text-apple-text dark:text-zinc-300">Methodological Advice: </span>
+          <span className="font-semibold not-italic font-sans text-apple-text dark:text-zinc-300">Helpful Advice: </span>
           {diagnostic.diagnosticAdvice}
         </div>
       )}

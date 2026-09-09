@@ -30,8 +30,10 @@ CRITICAL ARCHITECTURAL PRINCIPLES:
     W004: Observation to metaphysical inference jump
     W005: Causation or principle extended beyond its valid domain
     INFO: Intuition preserved / legitimate poetic expression.
-12. SIMPLE, DIRECT, HUMAN LANGUAGE:
-    Explain reasons, assumptions, and reformulations in direct, simple, crystal-clear everyday words. Avoid bloated scholastic jargon. Be crisp, incisive, and intuitive.
+12. STRICT MANDATE ON LANGUAGE (SIMPLE, DIRECT & HUMAN):
+    Explain all reasons, assumptions, linguistic traps, and reformulations in direct, simple, crystal-clear everyday English.
+    NEVER hide behind dense academic, scholastic, or technical jargon. Write as if speaking to an intelligent friend who wants clear, common-sense insight.
+    Make the diagnosis immediately obvious, clear, and relatable without needing any philosophy background.
 
 You must output STRICT, VALID JSON conforming to the requested schema. No markdown backticks, no markdown framing, ONLY pure JSON.
 `;

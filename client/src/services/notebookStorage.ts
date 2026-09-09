@@ -27,18 +27,18 @@ export function calculateVersionDiff(prev: ThoughtVersion, nextRaw: string, next
   // Human-readable summary
   const summaryParts: string[] = [];
   if (intentionalityRemoved) {
-    summaryParts.push("Removed psychological intentionality (nature doesn't 'desire' things)");
+    summaryParts.push("Removed human-like intentions (nature doesn't 'desire' things)");
   }
   if (empiricalSpecificityIncreased) {
-    summaryParts.push("Grounded the claim in physical feedback dynamics rather than abstract will");
+    summaryParts.push("Made the description more concrete and testable by observation");
   }
   if (observationalBoundaryClarified) {
-    summaryParts.push("Clarified direct observation vs mental inference");
+    summaryParts.push("Separated what is directly seen from what is assumed");
   }
 
   const summary = summaryParts.length > 0
     ? summaryParts.join("; ") + "."
-    : "Refined linguistic precision and clarified the logical boundaries of the assertion.";
+    : "Made the wording clearer and removed confusing assumptions.";
 
   return {
     summary,
@@ -52,7 +52,7 @@ export function calculateVersionDiff(prev: ThoughtVersion, nextRaw: string, next
 const SEED_ENTRIES: NotebookEntry[] = [
   {
     id: "entry-nature-equilibrium",
-    title: "Nature and Equilibrium",
+    title: "Nature and Balance",
     tag: "Nature",
     createdAt: "2026-09-08T10:15:00.000Z",
     updatedAt: "2026-09-08T11:30:00.000Z",
@@ -61,41 +61,41 @@ const SEED_ENTRIES: NotebookEntry[] = [
         versionNumber: 1,
         rawThought: "Nature wants balance.",
         transformedThought: "Natural processes tend toward equilibrium.",
-        verdict: "CATEGORY MISTAKE",
-        reasonSummary: "The word 'wants' treats nature like a person who has goals. Physics operates by thermodynamic regularities, not psychological desire.",
-        keyAssumptions: ["Assumes Nature is an active agent capable of desire."],
-        preservedIntuition: "Systems exhibit stabilizing tendencies after disturbance.",
+        verdict: "CONFUSING GRAMMAR WITH REALITY",
+        reasonSummary: "The word 'wants' treats nature like a person with conscious desires. Natural processes follow physical laws, not personal intentions.",
+        keyAssumptions: ["Assumes Nature is an active person capable of desire."],
+        preservedIntuition: "Systems naturally tend to stabilize after being disturbed.",
         timestamp: "2026-09-08T10:15:00.000Z",
         userNotes: "First spontaneous thought while watching a pendulum come to rest."
       },
       {
         versionNumber: 2,
         rawThought: "Nature tends toward balance.",
-        transformedThought: "Certain ecological and thermodynamic systems exhibit negative feedback loops that stabilize against perturbation.",
-        verdict: "EMPIRICALLY TESTABLE",
-        reasonSummary: "Much better: strips intentionality, but still treats 'Nature' as a single collective whole.",
-        keyAssumptions: ["Assumes balance is universal rather than local to homeostatic systems."],
-        preservedIntuition: "Negative feedback stabilizes open thermodynamic systems.",
+        transformedThought: "Many natural systems have self-regulating cycles that help restore balance when disturbed.",
+        verdict: "TESTABLE BY EXPERIENCE",
+        reasonSummary: "Much clearer: removes personal desires, focusing instead on how actual physical systems work.",
+        keyAssumptions: ["Assumes balance applies everywhere rather than to specific systems."],
+        preservedIntuition: "Natural feedback loops keep systems stable.",
         timestamp: "2026-09-08T11:00:00.000Z",
-        userNotes: "Refined to remove 'wants'. Still needed more empirical specificity.",
+        userNotes: "Refined to remove 'wants'. Still needed more specific details.",
         diffFromPrevious: {
-          summary: "Removed psychological intentionality ('wants'); replaced with physical tendencies.",
+          summary: "Removed personal desires ('wants'); replaced with observable system tendencies.",
           intentionalityRemoved: true,
           empiricalSpecificityIncreased: true
         }
       },
       {
         versionNumber: 3,
-        rawThought: "Certain natural systems exhibit stabilizing dynamics under specific conditions.",
-        transformedThought: "Disturbed homeostatic and dissipative systems repeatedly relax into stable attractor basins.",
-        verdict: "CLEAR",
-        reasonSummary: "Fully rigorous proposition: distinguishes specific feedback systems from cosmological generalities.",
-        keyAssumptions: ["Applies specifically to systems with attractor basins."],
-        preservedIntuition: "The authentic phenomenon of stabilizing feedback loops is preserved with complete scientific clarity.",
+        rawThought: "Certain natural systems return to balance under specific conditions.",
+        transformedThought: "When balanced systems like forests or temperatures are disturbed, feedback loops work to restore equilibrium.",
+        verdict: "CLEAR & SOUND",
+        reasonSummary: "Crystal clear: focuses on specific, observable feedback rather than vague claims about the whole universe.",
+        keyAssumptions: ["Applies specifically to systems with stabilizing feedback."],
+        preservedIntuition: "The authentic insight—that natural systems regulate themselves—is kept with total clarity.",
         timestamp: "2026-09-08T11:30:00.000Z",
-        userNotes: "Final formulation: intuition completely intact without any anthropomorphic baggage.",
+        userNotes: "Final wording: genuine insight kept intact without confusing personification.",
         diffFromPrevious: {
-          summary: "Grounded in specific dynamical systems; eliminated vague cosmic generalizations.",
+          summary: "Grounded in specific observable systems; eliminated vague cosmic generalizations.",
           metaphysicalScopeReduced: true,
           empiricalSpecificityIncreased: true
         }
@@ -104,32 +104,32 @@ const SEED_ENTRIES: NotebookEntry[] = [
   },
   {
     id: "entry-thought-emergence",
-    title: "Thought Emergence & Agency",
+    title: "How Thoughts Arise",
     tag: "Mind",
     createdAt: "2026-09-08T14:20:00.000Z",
     updatedAt: "2026-09-08T14:45:00.000Z",
     versions: [
       {
         versionNumber: 1,
-        rawThought: "Thoughts arise without my choosing them.",
-        transformedThought: "In direct introspective observation, thoughts appear in awareness without an antecedent conscious act of authoring.",
-        verdict: "CLEAR",
-        reasonSummary: "Sound phenomenological description of introspective awareness, though vulnerable to being misinterpreted as fatalism.",
-        keyAssumptions: ["Choosing a thought beforehand is conceptually incoherent (infinite regress)."],
-        preservedIntuition: "Cognition is a spontaneous flow rather than deliberate homunculus puppetry.",
+        rawThought: "Thoughts come into my head on their own.",
+        transformedThought: "When paying attention to the mind, thoughts appear in awareness spontaneously before we actively decide to think them.",
+        verdict: "CLEAR & SOUND",
+        reasonSummary: "Accurately describes what you notice when observing your own mind, without making unproven leaps.",
+        keyAssumptions: ["You cannot choose a thought before it occurs."],
+        preservedIntuition: "Thoughts emerge spontaneously rather than being planned step-by-step in advance.",
         timestamp: "2026-09-08T14:20:00.000Z",
-        userNotes: "Noticed during breath meditation."
+        userNotes: "Noticed during quiet reflection."
       },
       {
         versionNumber: 2,
-        rawThought: "Introspective observation witnesses thought emergence without an antecedent choosing act.",
-        transformedThought: "First-person awareness reports thought emergence as spontaneous, while second-order cognitive reflection governs subsequent evaluation and veto.",
-        verdict: "CLEAR",
-        reasonSummary: "Carefully separates spontaneous thought emergence from subsequent deliberate reasoning.",
-        keyAssumptions: ["Distinguishes generation from subsequent evaluation."],
-        preservedIntuition: "Keeps observational truth without collapsing into fatalistic determinism.",
+        rawThought: "Observing the mind shows thoughts pop up on their own, even though we can still evaluate them.",
+        transformedThought: "Thoughts pop up spontaneously in awareness, but we can still reflect on them and choose how to act.",
+        verdict: "CLEAR & SOUND",
+        reasonSummary: "Carefully separates the spontaneous arrival of thoughts from our conscious ability to reflect and choose actions.",
+        keyAssumptions: ["Distinguishes where thoughts begin from how we respond to them."],
+        preservedIntuition: "Keeps the real observation without mistakenly concluding that we have zero control over our choices.",
         timestamp: "2026-09-08T14:45:00.000Z",
-        userNotes: "Protected the observation from turning into fatalism.",
+        userNotes: "Protected the observation from turning into helplessness.",
         diffFromPrevious: {
           summary: "Clarified direct observation vs mental inference; added distinction between emergence and evaluation.",
           observationalBoundaryClarified: true
@@ -178,10 +178,10 @@ function extractGenericVersion(
       verdict: analysis.madhyamakaVerdict.replace(/_/g, " "),
       reasonSummary: analysis.svabhavaCritiqueSummary,
       keyAssumptions: [
-        `Assumed svabhāva: ${analysis.assumedIntrinsicEntity}`,
+        `Assumed fixed essence: ${analysis.assumedIntrinsicEntity}`,
         ...analysis.dependentConditionsUncovered.slice(0, 2)
       ],
-      preservedIntuition: "Emptiness (śūnyatā) as relational open-endedness rather than nothingness.",
+      preservedIntuition: "Everything exists in connection with other things, rather than having a rigid, isolated existence.",
       timestamp: new Date().toISOString(),
       userNotes: userNotes?.trim() || undefined,
       diffFromPrevious: diff
@@ -197,7 +197,7 @@ function extractGenericVersion(
       verdict: analysis.verdict.replace(/_/g, " "),
       reasonSummary: analysis.comparativeVerdictRationale || analysis.falseEquivalenceWarning,
       keyAssumptions: analysis.convergences.slice(0, 3),
-      preservedIntuition: "Dual therapeutic deconstruction of essentialist reification.",
+      preservedIntuition: "Both perspectives untangle tricky grammar and bring thought back to what can be clearly observed or experienced.",
       timestamp: new Date().toISOString(),
       userNotes: userNotes?.trim() || undefined,
       diffFromPrevious: diff

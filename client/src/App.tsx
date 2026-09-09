@@ -244,7 +244,7 @@ export function App() {
                   PhiloCompiler
                 </h2>
                 <p className="text-xs sm:text-sm text-apple-secondary leading-relaxed">
-                  Transform your thoughts into clear logical form. Preserve your authentic intuition while debugging deceptive grammar.
+                  Put your thought or observation into words. We'll keep what you really meant, point out tricky grammar or hidden assumptions, and give you a clean, clear version.
                 </p>
               </div>
             )}
@@ -304,10 +304,10 @@ export function App() {
                       <div className="space-y-6 pt-4 border-t border-apple-border/50 dark:border-apple-darkBorder/50 animate-in fade-in duration-300">
                     <div className="text-center space-y-1">
                       <h3 className="text-xs font-mono uppercase tracking-wider text-apple-secondary font-semibold">
-                        Deep Analytical Machinery
+                        Detailed Breakdown & Diagnostics
                       </h3>
                       <p className="text-[11px] text-apple-secondary">
-                        Inspect the underlying philosophical engine, epistemic ladder, and linter warnings
+                        Inspect the step-by-step logic, tricky words, and underlying checks.
                       </p>
                     </div>
 
@@ -322,7 +322,7 @@ export function App() {
                         }`}
                       >
                         <GitCommit className="w-3.5 h-3.5 text-apple-accent" />
-                        <span>Epistemic Ladder</span>
+                        <span>Step-by-Step Logic</span>
                       </button>
 
                       <button
@@ -334,7 +334,7 @@ export function App() {
                         }`}
                       >
                         <Search className="w-3.5 h-3.5 text-indigo-500" />
-                        <span>Language & Grammar</span>
+                        <span>Words & Grammar</span>
                       </button>
 
                       <button
@@ -346,7 +346,7 @@ export function App() {
                         }`}
                       >
                         <Key className="w-3.5 h-3.5 text-amber-500" />
-                        <span>All Assumptions ({analysis.hiddenAssumptions.length})</span>
+                        <span>Hidden Assumptions ({analysis.hiddenAssumptions.length})</span>
                       </button>
 
                       <button
@@ -358,7 +358,7 @@ export function App() {
                         }`}
                       >
                         <Sparkles className="w-3.5 h-3.5 text-emerald-500" />
-                        <span>Intuition Diff</span>
+                        <span>Intuition Kept Intact</span>
                       </button>
 
                       <button
@@ -370,7 +370,7 @@ export function App() {
                         }`}
                       >
                         <BookOpen className="w-3.5 h-3.5 text-purple-500" />
-                        <span>Wittgenstein & Linter</span>
+                        <span>Logic Checks & Warnings</span>
                       </button>
                     </div>
 

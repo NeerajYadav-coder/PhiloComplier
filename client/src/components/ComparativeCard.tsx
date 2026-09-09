@@ -40,18 +40,18 @@ export const ComparativeCard: React.FC<ComparativeCardProps> = ({
       case "COMPLEMENTARY_DIAGNOSTICS":
         return {
           bg: "bg-indigo-500/10 text-indigo-800 dark:text-indigo-300 border-indigo-500/20",
-          label: "Complementary Diagnostics",
+          label: "Both Complement Each Other",
         };
       case "MUTUAL_CRITIQUE_CONVERGENT":
         return {
           bg: "bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 border-emerald-500/20",
-          label: "Therapeutic Convergence",
+          label: "Both Reach the Same Conclusion",
         };
       case "DIVERGENT_PERSPECTIVES":
       default:
         return {
           bg: "bg-amber-500/10 text-amber-800 dark:text-amber-300 border-amber-500/20",
-          label: "Methodologically Distinct",
+          label: "Different Perspectives",
         };
     }
   };
@@ -67,7 +67,7 @@ export const ComparativeCard: React.FC<ComparativeCardProps> = ({
             {badge.label}
           </span>
           <span className="text-[11px] font-mono text-apple-secondary hidden sm:inline">
-            • Comparative Synthesis (Wittgenstein × Nāgārjuna)
+            • Comparing Two Perspectives
           </span>
         </div>
 
@@ -93,7 +93,7 @@ export const ComparativeCard: React.FC<ComparativeCardProps> = ({
           <button
             onClick={onOpenSaveModal}
             className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-medium text-apple-secondary hover:text-apple-text bg-apple-subtle dark:bg-apple-darkSubtle border border-apple-border/60 dark:border-apple-darkBorder transition-all"
-            title="Save thought to your Philosophical Notebook"
+            title="Save thought to your Notebook"
           >
             <Bookmark className="w-3.5 h-3.5 text-amber-500" />
             <span>Save</span>
@@ -113,7 +113,7 @@ export const ComparativeCard: React.FC<ComparativeCardProps> = ({
       {/* Original Thought */}
       <div className="text-xs text-apple-secondary flex items-center space-x-2">
         <span className="uppercase font-mono tracking-wider text-[10px] font-semibold text-apple-secondary">
-          Investigated Proposition:
+          What You Said:
         </span>
         <span className="font-serif italic text-apple-text/70 dark:text-zinc-400">
           "{analysis.input}"
@@ -127,7 +127,7 @@ export const ComparativeCard: React.FC<ComparativeCardProps> = ({
           <div className="space-y-2.5">
             <div className="flex items-center space-x-1.5 text-xs font-mono font-semibold uppercase tracking-wider text-blue-700 dark:text-blue-400">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>Wittgenstein: Grammatical Clarification</span>
+              <span>Wittgenstein's Clear Version</span>
             </div>
             <p className="text-base sm:text-lg font-serif text-apple-text dark:text-white leading-relaxed">
               "{analysis.wittgensteinTransformation}"
@@ -136,7 +136,7 @@ export const ComparativeCard: React.FC<ComparativeCardProps> = ({
 
           <div className="pt-2 border-t border-blue-500/15">
             <span className="text-[10px] font-mono uppercase text-apple-secondary font-semibold block mb-1">
-              Everyday Diagnosis:
+              Why This is Clearer:
             </span>
             <p className="text-xs text-apple-text/80 dark:text-zinc-300 font-sans leading-relaxed">
               {analysis.wittgensteinReason}
@@ -144,12 +144,12 @@ export const ComparativeCard: React.FC<ComparativeCardProps> = ({
           </div>
         </div>
 
-        {/* Right: Nāgārjuna (Madhyamaka) */}
+        {/* Right: Nāgārjuna */}
         <div className="p-5 sm:p-6 rounded-2xl bg-amber-500/[0.03] dark:bg-amber-500/[0.06] border border-amber-500/20 space-y-3.5 flex flex-col justify-between">
           <div className="space-y-2.5">
             <div className="flex items-center space-x-1.5 text-xs font-mono font-semibold uppercase tracking-wider text-amber-700 dark:text-amber-400">
               <Scale className="w-3.5 h-3.5" />
-              <span>Nāgārjuna: Relational Dependent Arising</span>
+              <span>Nāgārjuna's Connected View</span>
             </div>
             <p className="text-base sm:text-lg font-serif text-apple-text dark:text-white leading-relaxed">
               "{analysis.nagarjunaTransformation}"
@@ -158,7 +158,7 @@ export const ComparativeCard: React.FC<ComparativeCardProps> = ({
 
           <div className="pt-2 border-t border-amber-500/15">
             <span className="text-[10px] font-mono uppercase text-apple-secondary font-semibold block mb-1">
-              Everyday Diagnosis:
+              Why This is Clearer:
             </span>
             <p className="text-xs text-apple-text/80 dark:text-zinc-300 font-sans leading-relaxed">
               {analysis.nagarjunaReason}
@@ -173,7 +173,7 @@ export const ComparativeCard: React.FC<ComparativeCardProps> = ({
         <div className="p-4 rounded-2xl bg-white dark:bg-apple-darkSurface border border-apple-border/70 dark:border-apple-darkBorder/70 space-y-2">
           <div className="flex items-center space-x-1.5 text-xs font-mono uppercase text-emerald-700 dark:text-emerald-400 font-semibold">
             <ArrowRightLeft className="w-3.5 h-3.5" />
-            <span>Key Convergences (Anti-Essentialism)</span>
+            <span>Where Both Agree</span>
           </div>
           <div className="space-y-1.5">
             {analysis.convergences.map((point, idx) => (
@@ -189,7 +189,7 @@ export const ComparativeCard: React.FC<ComparativeCardProps> = ({
         <div className="p-4 rounded-2xl bg-white dark:bg-apple-darkSurface border border-apple-border/70 dark:border-apple-darkBorder/70 space-y-2">
           <div className="flex items-center space-x-1.5 text-xs font-mono uppercase text-indigo-700 dark:text-indigo-400 font-semibold">
             <Scale className="w-3.5 h-3.5" />
-            <span>Key Divergences (Method & Scope)</span>
+            <span>Where They Differ</span>
           </div>
           <div className="space-y-1.5">
             {analysis.divergences.map((point, idx) => (
@@ -207,7 +207,7 @@ export const ComparativeCard: React.FC<ComparativeCardProps> = ({
         <AlertTriangle className="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
         <div className="space-y-0.5">
           <span className="font-semibold font-mono text-[11px] uppercase tracking-wider text-rose-700 dark:text-rose-400 block">
-            Academic Caution: Guarding Against False Equivalence
+            Important Difference to Keep in Mind
           </span>
           <p className="leading-relaxed opacity-95">
             {analysis.falseEquivalenceWarning}
@@ -221,7 +221,7 @@ export const ComparativeCard: React.FC<ComparativeCardProps> = ({
           onClick={() => setShowDeepVerdict(!showDeepVerdict)}
           className="inline-flex items-center space-x-2 px-4 py-2 rounded-xl text-xs font-mono text-apple-secondary hover:text-apple-text hover:bg-apple-subtle dark:hover:bg-apple-darkSubtle border border-apple-border/60 dark:border-apple-darkBorder transition-all"
         >
-          <span>{showDeepVerdict ? "Hide Comparative Rationale" : "Inspect Detailed Comparative Synthesis & Verdict"}</span>
+          <span>{showDeepVerdict ? "Hide Comparison Notes" : "Show Detailed Comparison & Notes"}</span>
           {showDeepVerdict ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
         </button>
       </div>
@@ -230,7 +230,7 @@ export const ComparativeCard: React.FC<ComparativeCardProps> = ({
         <div className="p-5 rounded-2xl bg-apple-subtle/40 dark:bg-apple-darkSubtle/40 border border-apple-border dark:border-apple-darkBorder space-y-2 animate-fade-in">
           <span className="text-xs font-mono font-semibold uppercase tracking-wider text-apple-secondary flex items-center space-x-1.5">
             <Info className="w-3.5 h-3.5 text-indigo-500" />
-            <span>Dual Analytical Synthesis</span>
+            <span>Detailed Comparison Summary</span>
           </span>
           <p className="text-sm font-sans text-apple-text dark:text-zinc-200 leading-relaxed">
             {analysis.comparativeVerdictRationale}

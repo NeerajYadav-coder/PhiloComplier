@@ -58,10 +58,10 @@ export const NotebookView: React.FC<NotebookViewProps> = ({
       <div className="rounded-3xl p-12 text-center bg-white dark:bg-apple-darkSurface border border-apple-border dark:border-apple-darkBorder shadow-apple-sm space-y-4 max-w-xl mx-auto">
         <BookOpen className="w-8 h-8 text-apple-secondary mx-auto" />
         <h3 className="text-lg font-serif font-medium text-apple-text dark:text-white">
-          Your Philosophical Notebook is Empty
+          Your Notebook is Empty
         </h3>
         <p className="text-xs text-apple-secondary max-w-md mx-auto leading-relaxed">
-          Subject a spontaneous thought to the debugger, then click "Save to Notebook" to begin tracking your thoughts and their refinements over time.
+          Check any thought with the debugger, then click "Save to Notebook" to track your thoughts and clear versions over time.
         </p>
         <button
           onClick={onGoToDebugger}
@@ -85,7 +85,7 @@ export const NotebookView: React.FC<NotebookViewProps> = ({
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search thoughts, observations, or reformulations..."
+              placeholder="Search thoughts and clear versions..."
               className="w-full pl-9 pr-3 py-2 rounded-xl border border-apple-border dark:border-apple-darkBorder bg-white dark:bg-apple-darkSurface text-xs text-apple-text dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:border-apple-accent shadow-apple-sm"
             />
           </div>
@@ -194,7 +194,7 @@ export const NotebookView: React.FC<NotebookViewProps> = ({
                   title="Open this thought in the Debugger"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
-                  <span>Refine in Debugger</span>
+                  <span>Open in Debugger</span>
                 </button>
 
                 <button
@@ -210,7 +210,7 @@ export const NotebookView: React.FC<NotebookViewProps> = ({
             {/* Version Stepper Tabs (v1 -> v2 -> v3) */}
             <div className="space-y-2">
               <div className="text-[10px] font-mono uppercase tracking-wider text-apple-secondary font-semibold">
-                Refinement Lineage ({activeEntry.versions.length} {activeEntry.versions.length === 1 ? "Version" : "Versions"}):
+                Versions ({activeEntry.versions.length} {activeEntry.versions.length === 1 ? "Version" : "Versions"}):
               </div>
               <div className="flex items-center space-x-1.5 overflow-x-auto pb-1">
                 {activeEntry.versions.map((ver, idx) => (
@@ -244,22 +244,22 @@ export const NotebookView: React.FC<NotebookViewProps> = ({
                 <div className="flex flex-wrap gap-1.5 pt-1">
                   {activeVersion.diffFromPrevious.intentionalityRemoved && (
                     <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-indigo-800 dark:text-indigo-300">
-                      ✓ Intentionality Removed
+                      ✓ Removed Intentional Words
                     </span>
                   )}
                   {activeVersion.diffFromPrevious.empiricalSpecificityIncreased && (
                     <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-300">
-                      ✓ Empirical Specificity Increased
+                      ✓ More Specific & Observable
                     </span>
                   )}
                   {activeVersion.diffFromPrevious.observationalBoundaryClarified && (
                     <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300">
-                      ✓ Observational Boundary Clarified
+                      ✓ Clearer Boundary
                     </span>
                   )}
                   {activeVersion.diffFromPrevious.metaphysicalScopeReduced && (
                     <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300">
-                      ✓ Metaphysical Scope Reduced
+                      ✓ Kept Grounded & Realistic
                     </span>
                   )}
                 </div>
@@ -270,7 +270,7 @@ export const NotebookView: React.FC<NotebookViewProps> = ({
             <div className="space-y-4">
               <div className="p-4 rounded-2xl bg-apple-subtle/50 dark:bg-apple-darkSubtle/50 border border-apple-border/60 dark:border-apple-darkBorder/60 space-y-1">
                 <span className="text-[10px] uppercase font-mono tracking-wider text-apple-secondary font-semibold block">
-                  Raw Formulation (v{activeVersion.versionNumber}):
+                  Original Wording (v{activeVersion.versionNumber}):
                 </span>
                 <p className="font-serif italic text-sm sm:text-base text-apple-text dark:text-zinc-200">
                   "{activeVersion.rawThought}"
@@ -280,7 +280,7 @@ export const NotebookView: React.FC<NotebookViewProps> = ({
               <div className="p-5 rounded-2xl bg-emerald-500/[0.04] dark:bg-emerald-500/[0.08] border border-emerald-500/20 space-y-1.5">
                 <div className="flex items-center space-x-1.5 text-[10px] uppercase font-mono tracking-wider text-emerald-700 dark:text-emerald-400 font-semibold">
                   <Sparkles className="w-3.5 h-3.5" />
-                  <span>Wittgensteinian Logical Form:</span>
+                  <span>Clear, Refined Version:</span>
                 </div>
                 <p className="font-serif text-base sm:text-lg text-apple-text dark:text-white leading-relaxed">
                   "{activeVersion.transformedThought}"
@@ -292,7 +292,7 @@ export const NotebookView: React.FC<NotebookViewProps> = ({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
               <div className="p-3.5 rounded-xl bg-white dark:bg-apple-darkSurface border border-apple-border/70 dark:border-apple-darkBorder/70 space-y-1">
                 <span className="font-mono text-[10px] uppercase text-apple-secondary font-semibold block">
-                  Reason for Transformation:
+                  Why This is Clearer:
                 </span>
                 <p className="text-apple-text/90 dark:text-zinc-300 font-sans leading-relaxed">
                   {activeVersion.reasonSummary}
@@ -301,7 +301,7 @@ export const NotebookView: React.FC<NotebookViewProps> = ({
 
               <div className="p-3.5 rounded-xl bg-white dark:bg-apple-darkSurface border border-apple-border/70 dark:border-apple-darkBorder/70 space-y-1">
                 <span className="font-mono text-[10px] uppercase text-apple-secondary font-semibold block">
-                  Core Assumptions Exposed:
+                  Assumptions Behind the Thought:
                 </span>
                 <div className="text-apple-text/90 dark:text-zinc-300 font-sans space-y-0.5">
                   {activeVersion.keyAssumptions.map((a, i) => (
@@ -318,7 +318,7 @@ export const NotebookView: React.FC<NotebookViewProps> = ({
             {activeVersion.userNotes && (
               <div className="p-3.5 rounded-xl bg-black/[0.02] dark:bg-white/[0.02] border border-apple-border/50 dark:border-apple-darkBorder/50 text-xs space-y-1">
                 <span className="font-mono text-[10px] uppercase text-apple-secondary font-semibold block">
-                  Personal Contemplative Context:
+                  Your Notes:
                 </span>
                 <p className="italic text-apple-secondary font-sans leading-relaxed">
                   "{activeVersion.userNotes}"

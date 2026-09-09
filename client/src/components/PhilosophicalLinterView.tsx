@@ -36,11 +36,11 @@ export const PhilosophicalLinterView: React.FC<PhilosophicalLinterViewProps> = (
         <div className="flex items-center space-x-2">
           <Terminal className="w-4 h-4 text-apple-accent" />
           <h3 className="text-xs uppercase font-mono tracking-wider text-apple-secondary font-semibold">
-            Philosophical Linter Diagnostics
+            Logic & Language Checks
           </h3>
         </div>
         <span className="text-xs font-mono text-apple-secondary">
-          {warnings.length} {warnings.length === 1 ? "Diagnostic" : "Diagnostics"}
+          {warnings.length} {warnings.length === 1 ? "Notice" : "Notices"}
         </span>
       </div>
 
@@ -68,7 +68,7 @@ export const PhilosophicalLinterView: React.FC<PhilosophicalLinterViewProps> = (
 
               {warn.suggestion && (
                 <div className="text-[11px] text-apple-secondary font-mono pt-1 border-t border-apple-border/30 dark:border-apple-darkBorder/30 pl-1">
-                  💡 Suggestion: {warn.suggestion}
+                  💡 Tip: {warn.suggestion}
                 </div>
               )}
             </div>

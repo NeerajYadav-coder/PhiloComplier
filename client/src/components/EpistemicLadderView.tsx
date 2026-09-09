@@ -50,16 +50,16 @@ export const EpistemicLadderView: React.FC<EpistemicLadderViewProps> = ({
       <div className="flex items-center justify-between mb-4">
         <div>
           <h3 className="text-xs uppercase font-mono tracking-wider text-apple-secondary font-semibold">
-            Epistemic Ladder & Inferential Boundary
+            From What You See to What You Conclude
           </h3>
           <p className="text-xs text-apple-secondary mt-0.5">
-            Deconstructing direct observation from mental interpretation and metaphysical assertions
+            See step-by-step how your mind moves from raw experience to personal interpretation and big conclusions.
           </p>
         </div>
         {hasInferenceJump && (
           <span className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-xs font-mono bg-amber-500/10 text-amber-800 dark:text-amber-300 border border-amber-500/20">
             <AlertTriangle className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-            <span>Inferential Jump Detected</span>
+            <span>Big Jump in Logic</span>
           </span>
         )}
       </div>
@@ -76,7 +76,17 @@ export const EpistemicLadderView: React.FC<EpistemicLadderViewProps> = ({
               <div className="flex items-center space-x-2">
                 <span className={`inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-md text-[11px] font-mono uppercase font-medium border ${getStepBadgeColor(step.level)}`}>
                   {getStepIcon(step.level)}
-                  <span>{step.level.replace(/_/g, " ")}</span>
+                  <span>
+                    {step.level === "OBSERVATION"
+                      ? "Direct Observation"
+                      : step.level === "DESCRIPTION"
+                      ? "Description"
+                      : step.level === "INTERPRETATION"
+                      ? "Interpretation"
+                      : step.level === "INFERENCE"
+                      ? "Deduction"
+                      : "Big Unproven Claim"}
+                  </span>
                 </span>
               </div>
 
@@ -89,7 +99,7 @@ export const EpistemicLadderView: React.FC<EpistemicLadderViewProps> = ({
                   <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
                   <div className="space-y-0.5">
                     <span className="font-semibold font-mono tracking-tight block">
-                      BOUNDARY CROSSING ALERT
+                      UNPROVEN JUMP IN LOGIC
                     </span>
                     <p className="leading-relaxed opacity-95">{step.jumpAlert}</p>
                   </div>

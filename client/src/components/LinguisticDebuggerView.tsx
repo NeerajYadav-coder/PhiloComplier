@@ -19,10 +19,10 @@ export const LinguisticDebuggerView: React.FC<LinguisticDebuggerViewProps> = ({
       <div className="rounded-2xl p-6 bg-white dark:bg-apple-darkSurface border border-apple-border dark:border-apple-darkBorder shadow-apple-sm">
         <div className="mb-4">
           <h3 className="text-xs uppercase font-mono tracking-wider text-apple-secondary font-semibold">
-            Terms in Use & Grammatical Roles
+            Key Words & Their Roles
           </h3>
           <p className="text-xs text-apple-secondary mt-0.5">
-            What philosophical work is each word performing in this concrete proposition?
+            How each word in your sentence is behaving and where it might be loaded.
           </p>
         </div>
 
@@ -38,7 +38,7 @@ export const LinguisticDebuggerView: React.FC<LinguisticDebuggerViewProps> = ({
                 </span>
                 {term.isPhilosophicallyLoaded && (
                   <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/20">
-                    Philosophically Loaded
+                    Tricky / Heavily Loaded Word
                   </span>
                 )}
               </div>
@@ -51,7 +51,7 @@ export const LinguisticDebuggerView: React.FC<LinguisticDebuggerViewProps> = ({
               {term.potentialGrammaticalIllusion && (
                 <div className="text-xs text-rose-700 dark:text-rose-300 bg-rose-50 dark:bg-rose-950/20 p-2 rounded-lg border border-rose-200 dark:border-rose-900/40 mt-1">
                   <span className="font-semibold block text-[10px] uppercase font-mono text-rose-600 dark:text-rose-400">
-                    Grammatical Illusion Risk:
+                    Language Trap:
                   </span>
                   {term.potentialGrammaticalIllusion}
                 </div>
@@ -66,16 +66,16 @@ export const LinguisticDebuggerView: React.FC<LinguisticDebuggerViewProps> = ({
         <div className="mb-4">
           <div className="flex items-center justify-between">
             <h3 className="text-xs uppercase font-mono tracking-wider text-apple-secondary font-semibold">
-              Surface Grammar vs. Logical Form
+              Everyday Grammar vs. What Is Actually Happening
             </h3>
             {grammar.isGrammarMisleading && (
               <span className="text-xs font-mono px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-700 dark:text-rose-300 border border-rose-500/20">
-                Misleading Grammar Detected
+                Tricky Grammar Found
               </span>
             )}
           </div>
           <p className="text-xs text-apple-secondary mt-0.5">
-            Examines whether the grammatical construction tricks thought into mistaking linguistic syntax for ontological structure
+            Checks whether the way we phrase things tricks us into imagining an object or agent that isn't really there.
           </p>
         </div>
 
@@ -86,7 +86,7 @@ export const LinguisticDebuggerView: React.FC<LinguisticDebuggerViewProps> = ({
 
           <div className="p-3.5 rounded-lg bg-white dark:bg-apple-darkSurface border border-apple-border dark:border-apple-darkBorder text-xs space-y-1 font-mono">
             <span className="text-apple-secondary text-[10px] uppercase tracking-wider block">
-              Formal Comparison
+              Grammar vs Reality Comparison
             </span>
             <p className="text-apple-text/90 dark:text-zinc-200">
               {grammar.grammaticalVsLogicalForm}
@@ -95,7 +95,7 @@ export const LinguisticDebuggerView: React.FC<LinguisticDebuggerViewProps> = ({
 
           {grammar.analogousMisleadingUse && (
             <div className="text-xs text-apple-secondary italic bg-black/[0.02] dark:bg-white/[0.02] p-2.5 rounded-lg border border-apple-border/40 dark:border-apple-darkBorder/40">
-              <span className="font-semibold not-italic text-apple-text dark:text-zinc-300 font-sans">Wittgensteinian Analogy: </span>
+              <span className="font-semibold not-italic text-apple-text dark:text-zinc-300 font-sans">Everyday Analogy: </span>
               {grammar.analogousMisleadingUse}
             </div>
           )}
@@ -108,14 +108,14 @@ export const LinguisticDebuggerView: React.FC<LinguisticDebuggerViewProps> = ({
           <div className="flex items-center space-x-2 mb-3">
             <Terminal className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
             <h3 className="text-xs uppercase font-mono tracking-wider text-indigo-950 dark:text-indigo-300 font-semibold">
-              Philosophical Type Error Analogy
+              Mixing Incompatible Categories
             </h3>
             <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
-              Compiler Diagnostic
+              Logic Check
             </span>
           </div>
           <p className="text-xs text-apple-secondary mb-4">
-            Software engineering metaphor evaluating categories, scope, domains, and operators without equating language to literal code
+            Checking whether two concepts that don't belong together are being forced into the same sentence.
           </p>
 
           <div className="space-y-2 font-mono text-xs p-4 rounded-xl bg-zinc-950 text-zinc-100 dark:bg-black border border-zinc-800">

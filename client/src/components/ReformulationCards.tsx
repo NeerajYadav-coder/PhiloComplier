@@ -32,10 +32,10 @@ export const ReformulationCards: React.FC<ReformulationCardsProps> = ({
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-xs uppercase font-mono tracking-wider text-apple-secondary font-semibold">
-            Reconstruction Engine: Alternative Formulations
+            Alternative Ways to Say This
           </h3>
           <p className="text-xs text-apple-secondary mt-0.5">
-            How language can express the intuition under different conceptual frameworks
+            Different clear ways to express what you really meant
           </p>
         </div>
       </div>
@@ -43,7 +43,7 @@ export const ReformulationCards: React.FC<ReformulationCardsProps> = ({
       <div className="flex items-center space-x-2 p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-900 dark:text-amber-200">
         <AlertCircle className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
         <span className="font-sans">
-          <strong>Crucial Principle:</strong> These reformulations are <em>not equivalent</em>. Each shifts the ontological commitments, empirical scope, and affective resonance.
+          <strong>Helpful Note:</strong> Each version has a slightly different focus—pick the one that best captures what you want to communicate.
         </span>
       </div>
 
@@ -67,7 +67,7 @@ export const ReformulationCards: React.FC<ReformulationCardsProps> = ({
                 onClick={() => onSelectReformulation(ref.proposition)}
                 className="inline-flex items-center space-x-1.5 text-xs font-mono text-apple-accent hover:text-apple-accentHover transition-colors self-start sm:self-auto"
               >
-                <span>Debug this formulation</span>
+                <span>Try this version</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
             </div>
@@ -79,13 +79,13 @@ export const ReformulationCards: React.FC<ReformulationCardsProps> = ({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs pt-1">
               <div className="p-2.5 rounded-lg bg-black/[0.02] dark:bg-white/[0.02] border border-apple-border/40 dark:border-apple-darkBorder/40">
                 <span className="font-mono text-[10px] uppercase text-emerald-700 dark:text-emerald-400 block font-semibold">
-                  Preserves:
+                  What this keeps:
                 </span>
                 <span className="text-apple-text/80 dark:text-zinc-300 font-sans">{ref.whatIsPreserved}</span>
               </div>
               <div className="p-2.5 rounded-lg bg-black/[0.02] dark:bg-white/[0.02] border border-apple-border/40 dark:border-apple-darkBorder/40">
                 <span className="font-mono text-[10px] uppercase text-rose-700 dark:text-rose-400 block font-semibold">
-                  Alters / Surrenders:
+                  What changes or drops:
                 </span>
                 <span className="text-apple-text/80 dark:text-zinc-300 font-sans">{ref.whatIsAlteredOrLost}</span>
               </div>

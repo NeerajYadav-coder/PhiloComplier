@@ -55,7 +55,7 @@ export const PropositionInput: React.FC<PropositionInputProps> = ({
           value={currentInput}
           onChange={(e) => onInputChange(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Enter any spontaneous thought, observation, or intuition... (e.g. 'Nature wants equilibrium.')"
+          placeholder="Type any thought, belief, or observation... (e.g. 'Nature wants balance', 'Time is flowing by', 'Thoughts come on their own')"
           rows={2}
           className="w-full resize-none bg-transparent font-serif text-lg sm:text-xl text-apple-text dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none leading-relaxed"
         />
@@ -110,7 +110,7 @@ export const PropositionInput: React.FC<PropositionInputProps> = ({
             onClick={() => setShowAllPresets(!showAllPresets)}
             className="text-[11px] font-mono text-apple-accent hover:underline flex items-center space-x-1 ml-auto"
           >
-            <span>{showAllPresets ? "Hide benchmark cases" : `Canonical benchmark cases`}</span>
+            <span>{showAllPresets ? "Hide standard cases" : "Standard benchmark cases"}</span>
             <ChevronDown className={`w-3 h-3 transition-transform ${showAllPresets ? "rotate-180" : ""}`} />
           </button>
         )}
@@ -120,7 +120,7 @@ export const PropositionInput: React.FC<PropositionInputProps> = ({
       {showAllPresets && (
         <div className="p-3 rounded-2xl bg-white dark:bg-apple-darkSurface border border-apple-border dark:border-apple-darkBorder shadow-apple-sm animate-in fade-in duration-200">
           <div className="text-[10px] font-mono uppercase tracking-wider text-apple-secondary font-semibold mb-2 px-1">
-            Canonical Wittgensteinian Benchmark Cases:
+            Standard Benchmark Cases:
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-1.5">
             {presets.map((preset) => (

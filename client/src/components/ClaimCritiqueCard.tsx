@@ -43,32 +43,32 @@ export const ClaimCritiqueCard: React.FC<ClaimCritiqueCardProps> = ({
         return {
           bg: "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200",
           dot: "bg-emerald-500",
-          label: "Logically Sound"
+          label: "Logically Sound & Clear"
         };
       case "VALID_UNDER_RESTRICTED_SCOPE":
         return {
           bg: "bg-teal-50 dark:bg-teal-950/40 border-teal-200 dark:border-teal-800 text-teal-800 dark:text-teal-200",
           dot: "bg-teal-500",
-          label: "Valid Under Restricted Scope"
+          label: "True Only in a Specific Context"
         };
       case "CATEGORY_ERROR":
         return {
           bg: "bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-200",
           dot: "bg-rose-500",
-          label: "Category Error"
+          label: "Confusing Grammar with Reality"
         };
       case "CIRCULAR_ARGUMENT":
         return {
           bg: "bg-purple-50 dark:bg-purple-950/40 border-purple-200 dark:border-purple-800 text-purple-800 dark:text-purple-200",
           dot: "bg-purple-500",
-          label: "Circular Argument"
+          label: "Circular Reasoning (Proving A with A)"
         };
       case "LOGICALLY_FLAWED":
       default:
         return {
           bg: "bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-200",
           dot: "bg-amber-500",
-          label: "Logically Flawed"
+          label: "Flawed Logic / Unproven Leap"
         };
     }
   };
@@ -86,7 +86,7 @@ export const ClaimCritiqueCard: React.FC<ClaimCritiqueCardProps> = ({
               ⚖
             </span>
             <span className="text-xs font-mono font-semibold uppercase tracking-wider text-apple-secondary">
-              Philosophical Claim Critic
+              Claim Critic
             </span>
             {critique.authorOrTradition && (
               <>
@@ -111,7 +111,7 @@ export const ClaimCritiqueCard: React.FC<ClaimCritiqueCardProps> = ({
         {/* The Original Claim Quoted */}
         <div className="space-y-2">
           <div className="text-[11px] font-mono uppercase tracking-wider text-apple-secondary">
-            Original Text / Claim Examined:
+            The Original Claim:
           </div>
           <blockquote className="p-4 rounded-2xl bg-black/[0.02] dark:bg-white/[0.03] border-l-4 border-indigo-400 dark:border-indigo-600 font-serif text-lg sm:text-xl text-apple-text dark:text-zinc-100 italic leading-relaxed">
             "{critique.input}"
@@ -121,7 +121,7 @@ export const ClaimCritiqueCard: React.FC<ClaimCritiqueCardProps> = ({
         {/* Verdict Summary */}
         <div className="p-4 rounded-2xl bg-apple-subtle/50 dark:bg-apple-darkSubtle/50 border border-apple-border/60 dark:border-apple-darkBorder space-y-1">
           <div className="text-[10px] font-mono uppercase tracking-wider text-apple-secondary font-semibold">
-            Audit Verdict
+            Verdict: Is this logically sound?
           </div>
           <p className="text-sm font-medium text-apple-text dark:text-zinc-100 leading-snug">
             {critique.verdictSummary}
@@ -133,7 +133,7 @@ export const ClaimCritiqueCard: React.FC<ClaimCritiqueCardProps> = ({
           <div className="flex items-center space-x-2">
             <AlertTriangle className="w-4 h-4 text-amber-500" />
             <h4 className="text-xs font-mono uppercase tracking-wider text-apple-text dark:text-zinc-200 font-bold">
-              Where Is The Problem?
+              Where is the problem?
             </h4>
           </div>
 
@@ -141,7 +141,7 @@ export const ClaimCritiqueCard: React.FC<ClaimCritiqueCardProps> = ({
             {/* Problematic Phrase & Flaw Name */}
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-xs font-mono text-amber-800 dark:text-amber-200">
-                Problematic Step:
+                The exact phrase where it trips up:
               </span>
               <span className="px-2.5 py-1 rounded-lg bg-amber-200/60 dark:bg-amber-900/60 font-mono text-xs font-bold text-amber-900 dark:text-amber-100 border border-amber-300 dark:border-amber-800">
                 "{critique.whereIsTheProblem.problematicPhrase}"
@@ -165,7 +165,7 @@ export const ClaimCritiqueCard: React.FC<ClaimCritiqueCardProps> = ({
             <div className="flex items-center space-x-2">
               <Info className="w-4 h-4 text-blue-500" />
               <h4 className="text-xs font-mono uppercase tracking-wider text-apple-text dark:text-zinc-200 font-bold">
-                Smuggled / Unjustified Assumptions
+                Hidden assumptions taken for granted without proof:
               </h4>
             </div>
 
@@ -188,7 +188,7 @@ export const ClaimCritiqueCard: React.FC<ClaimCritiqueCardProps> = ({
           <div className="flex items-center space-x-2">
             <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
             <h4 className="text-xs font-mono uppercase tracking-wider text-emerald-800 dark:text-emerald-300 font-bold">
-              The Corrected Proposition
+              The Corrected, Sound Version
             </h4>
           </div>
 
@@ -199,7 +199,7 @@ export const ClaimCritiqueCard: React.FC<ClaimCritiqueCardProps> = ({
 
             <div className="pt-2 border-t border-emerald-200/60 dark:border-emerald-900/60 space-y-1">
               <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-800 dark:text-emerald-400 font-semibold">
-                Why this is logically sound:
+                Why this version actually works:
               </span>
               <p className="text-xs text-emerald-900 dark:text-emerald-200 leading-relaxed font-sans">
                 {critique.correctionRationale}
@@ -211,7 +211,7 @@ export const ClaimCritiqueCard: React.FC<ClaimCritiqueCardProps> = ({
         {/* 4. SIMPLE EVERYDAY EXPLANATION */}
         <div className="space-y-2 pt-2">
           <h4 className="text-[11px] font-mono uppercase tracking-wider text-apple-secondary font-semibold">
-            Simple Plain-Language Breakdown
+            Everyday Translation
           </h4>
           <p className="text-xs sm:text-sm text-apple-secondary dark:text-zinc-300 leading-relaxed italic bg-black/[0.02] dark:bg-white/[0.02] p-4 rounded-xl border border-apple-border/40 dark:border-apple-darkBorder/40">
             "{critique.simpleExplanation}"

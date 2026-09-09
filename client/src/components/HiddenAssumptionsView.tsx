@@ -19,26 +19,26 @@ export const HiddenAssumptionsView: React.FC<HiddenAssumptionsViewProps> = ({ as
         return {
           color: "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800",
           icon: <CheckCircle2 className="w-3 h-3 text-emerald-600" />,
-          label: "Independently Justified",
+          label: "Well-Supported",
         };
       case "UNJUSTIFIED":
         return {
           color: "bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800",
           icon: <AlertCircle className="w-3 h-3 text-rose-600" />,
-          label: "Unjustified Presupposition",
+          label: "Unproven Assumption",
         };
       case "FRAMEWORK_ASSUMPTION":
         return {
           color: "bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800",
           icon: <Key className="w-3 h-3 text-amber-600" />,
-          label: "Framework Axiom",
+          label: "Point of View Assumption",
         };
       case "OPEN_QUESTION":
       default:
         return {
           color: "bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border-zinc-200 dark:border-zinc-700",
           icon: <HelpCircle className="w-3 h-3 text-zinc-500" />,
-          label: "Open Philosophical Question",
+          label: "Still Open to Debate",
         };
     }
   };
@@ -48,10 +48,10 @@ export const HiddenAssumptionsView: React.FC<HiddenAssumptionsViewProps> = ({ as
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-xs uppercase font-mono tracking-wider text-apple-secondary font-semibold">
-            Hidden Assumptions & Presuppositions
+            Hidden Assumptions You Take for Granted
           </h3>
           <p className="text-xs text-apple-secondary mt-0.5">
-            Exposing the implicit axioms upon which the claim's apparent coherence depends
+            Things this thought secretly relies on to sound true.
           </p>
         </div>
         <span className="text-xs font-mono px-2 py-0.5 rounded-full bg-apple-subtle dark:bg-apple-darkSubtle border border-apple-border dark:border-apple-darkBorder text-apple-secondary">
