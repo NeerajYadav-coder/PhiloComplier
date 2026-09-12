@@ -1,7 +1,8 @@
 # PhiloCompiler
 
 > **A Computational Instrument for Philosophical-Linguistic Debugging**  
-> *Created by NJ5.0*
+> *Created by NJ5.0*  
+> 🌐 **Live Application:** [https://philocomplier.neerajbhaiya1508.workers.dev](https://philocomplier.neerajbhaiya1508.workers.dev)
 
 PhiloCompiler is an interactive computational instrument for examining language, propositions, assumptions, and logical form. It operationalizes analytical methods from **Ludwig Wittgenstein**, **Nāgārjuna (Madhyamaka)**, and disciplined observation into an Apple-inspired personal laboratory.
 
@@ -91,8 +92,11 @@ cd client && npm run dev
 Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 ### Standalone Frontend Deployment (Zero Backend Needed)
-PhiloCompiler is engineered to run **100% client-side directly in any modern browser**:
-- **Zero Backend Required**: You can deploy the `client` folder to **Vercel**, **Netlify**, **Cloudflare Pages**, or **GitHub Pages** as a static site.
+PhiloCompiler is live in production:
+👉 **[https://philocomplier.neerajbhaiya1508.workers.dev](https://philocomplier.neerajbhaiya1508.workers.dev)**
+
+The application is engineered to run **100% client-side directly in any modern browser**:
+- **Zero Backend Required**: Deployed via **Cloudflare Workers/Pages**, and also deployable to **Vercel**, **Netlify**, or **GitHub Pages** as a static site.
 - **User-Provided API Keys**: Each user can enter their own free Groq or Google Gemini API key in the in-app Settings modal (⚙️).
 - **100% Private**: API keys are stored strictly on the user's device in `localStorage` and sent directly to the AI provider via CORS—never passing through any intermediary server.
 - **Offline Presets**: All 15+ canonical thought benchmarks and historical thinker critiques (Descartes, Hume, Anselm, Nāgārjuna, Zeno, Parmenides) run completely offline out-of-the-box without requiring an API key.
