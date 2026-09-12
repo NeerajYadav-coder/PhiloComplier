@@ -8,7 +8,6 @@ interface SettingsModalProps {
   onSaveApiKey: (key: string) => void;
   model: string;
   onSaveModel: (model: string) => void;
-  serverHasKey: boolean;
 }
 
 export const SettingsModal: React.FC<SettingsModalProps> = ({

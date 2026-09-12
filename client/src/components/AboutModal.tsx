@@ -87,37 +87,34 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
           </div>
         </div>
 
-        {/* Roadmap Preview */}
+        {/* The 3 Core Pillars */}
         <div className="p-4 rounded-2xl bg-black/[0.02] dark:bg-white/[0.02] border border-apple-border/60 dark:border-apple-darkBorder/60 space-y-2 text-xs">
           <span className="font-mono text-[10px] uppercase text-apple-secondary font-semibold block">
-            Incremental Development Strategy
+            The Three Core Instruments
           </span>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 font-mono text-[11px]">
-            <div className="p-2 rounded bg-white dark:bg-apple-darkSurface border border-apple-accent/40 text-apple-accent font-semibold">
-              V0 • Wittgenstein (Current)
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px] font-sans">
+            <div className="p-3 rounded-xl bg-white dark:bg-apple-darkSurface border border-apple-border/60 space-y-1">
+              <span className="font-semibold text-apple-text dark:text-zinc-100 block">✦ Debug Thought</span>
+              <p className="text-apple-secondary text-[10px] leading-relaxed">Prompt your intuition, spot grammatical traps, and see clean, grounded propositions.</p>
             </div>
-            <div className="p-2 rounded bg-white dark:bg-apple-darkSurface border border-apple-border text-apple-secondary">
-              V1 • Notebook & Versions
+            <div className="p-3 rounded-xl bg-white dark:bg-apple-darkSurface border border-apple-border/60 space-y-1">
+              <span className="font-semibold text-apple-text dark:text-zinc-100 block">⚖ Critique Claim</span>
+              <p className="text-apple-secondary text-[10px] leading-relaxed">Audit quotes from any thinker (Descartes, Hume, Nāgārjuna) and pinpoint broken logic.</p>
             </div>
-            <div className="p-2 rounded bg-white dark:bg-apple-darkSurface border border-apple-border text-apple-secondary">
-              V2 • Nāgārjuna & Kārikā
-            </div>
-            <div className="p-2 rounded bg-white dark:bg-apple-darkSurface border border-apple-border text-apple-secondary">
-              V3 • Argument Graph
-            </div>
-            <div className="p-2 rounded bg-white dark:bg-apple-darkSurface border border-apple-border text-apple-secondary">
-              V4 • Multi-Philosopher
-            </div>
-            <div className="p-2 rounded bg-white dark:bg-apple-darkSurface border border-apple-border text-apple-secondary">
-              V5 • Research Dataset
+            <div className="p-3 rounded-xl bg-white dark:bg-apple-darkSurface border border-apple-border/60 space-y-1">
+              <span className="font-semibold text-apple-text dark:text-zinc-100 block">📓 Notebook</span>
+              <p className="text-apple-secondary text-[10px] leading-relaxed">Track your thought evolution over time with versions, diffs, and serene reading.</p>
             </div>
           </div>
         </div>
 
-        <div className="flex justify-end pt-2">
+        <div className="flex items-center justify-between pt-2">
+          <span className="text-[11px] text-apple-secondary font-mono">
+            Created by <span className="font-semibold text-apple-text dark:text-zinc-200">NJ5.0</span>
+          </span>
           <button
             onClick={onClose}
-            className="px-5 py-2 rounded-xl text-xs font-medium text-white bg-apple-text dark:bg-white dark:text-black hover:opacity-90 transition-opacity"
+            className="px-5 py-2 rounded-xl text-xs font-medium text-white bg-apple-text dark:bg-white dark:text-black hover:opacity-90 transition-opacity shadow-apple-sm"
           >
             Close Guide
           </button>

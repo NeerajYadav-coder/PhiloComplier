@@ -71,21 +71,13 @@ export function App() {
 
   // Settings state
   const [apiKey, setApiKey] = useState<string>(() => localStorage.getItem("philocompiler_gemini_key") || "");
-  const [model, setModel] = useState<string>(() => localStorage.getItem("philocompiler_gemini_model") || "openai/gpt-oss-120b");
-  const [serverHasKey, setServerHasKey] = useState<boolean>(false);
+  const [model, setModel] = useState<string>(() => localStorage.getItem("philocompiler_gemini_model") || "llama-3.3-70b-versatile");
 
   // Active deep tab: strictly ONE tab visible when deep inspection is opened
   const [activeTab, setActiveTab] = useState<"ladder" | "linguistics" | "assumptions" | "reformulations" | "wittgenstein">("ladder");
 
-  // Load presets, notebook entries, & check server health on mount and mode changes
+  // Load notebook entries on mount
   useEffect(() => {
-    fetch("/api/health")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.hasServerApiKey) setServerHasKey(true);
-      })
-      .catch((err) => console.warn("Could not reach health check:", err));
-
     setNotebookEntries(getNotebookEntries());
   }, []);
 
@@ -524,7 +516,6 @@ export function App() {
         onSaveApiKey={handleSaveApiKey}
         model={model}
         onSaveModel={handleSaveModel}
-        serverHasKey={serverHasKey}
       />
 
       {/* About Modal */}
