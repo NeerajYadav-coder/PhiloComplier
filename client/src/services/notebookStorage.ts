@@ -216,7 +216,14 @@ function extractGenericVersion(
     preservedIntuition: analysis.intuitionPreservation.underlyingIntuition,
     timestamp: new Date().toISOString(),
     userNotes: userNotes?.trim() || undefined,
-    diffFromPrevious: diff
+    diffFromPrevious: diff,
+    toneVoices: analysis.toneVoices,
+    stressTest: analysis.stressTest ? {
+      skepticObjection: analysis.stressTest.skepticObjection,
+      shieldResponse: analysis.stressTest.shieldResponse,
+      solidityRating: analysis.stressTest.solidityRating,
+      solidityNote: analysis.stressTest.solidityNote
+    } : undefined
   };
 }
 
@@ -317,6 +324,13 @@ export function createEntryFromCritique(
     preservedIntuition: critique.simpleExplanation,
     timestamp: critique.timestamp || new Date().toISOString(),
     userNotes: userNotes?.trim() || undefined,
+    toneVoices: critique.toneVoices,
+    stressTest: critique.stressTest ? {
+      skepticObjection: critique.stressTest.skepticObjection,
+      shieldResponse: critique.stressTest.shieldResponse,
+      solidityRating: critique.stressTest.solidityRating,
+      solidityNote: critique.stressTest.solidityNote
+    } : undefined
   };
 
   const authorTag = critique.authorOrTradition

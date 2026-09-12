@@ -1,6 +1,19 @@
 import React, { useState } from "react";
 import { PhilosophicalAnalysisResult, Reformulation } from "../types";
-import { Check, Copy, RotateCcw, Sparkles, AlertCircle, Key, ChevronDown, ChevronUp, Bookmark, GitBranch } from "lucide-react";
+import {
+  Check,
+  Copy,
+  RotateCcw,
+  Sparkles,
+  AlertCircle,
+  Key,
+  ChevronDown,
+  ChevronUp,
+  Bookmark,
+  GitBranch,
+  Zap,
+  Volume2
+} from "lucide-react";
 
 interface CleanTransformationCardProps {
   analysis: PhilosophicalAnalysisResult;
@@ -21,13 +34,24 @@ export const CleanTransformationCard: React.FC<CleanTransformationCardProps> = (
 }) => {
   const [copied, setCopied] = useState<boolean>(false);
   const [selectedReformulationIndex, setSelectedReformulationIndex] = useState<number>(0);
+  const [activeVoice, setActiveVoice] = useState<"everyday" | "balanced" | "airtight">("balanced");
+  const [showStressTest, setShowStressTest] = useState<boolean>(false);
 
   const activeReformulation: Reformulation | undefined =
     analysis.reformulations[selectedReformulationIndex] || analysis.reformulations[0];
 
+  // Derive the active proposition based on chosen clarity voice or default reformulation
+  const currentProposition = (() => {
+    if (analysis.toneVoices) {
+      if (activeVoice === "everyday") return analysis.toneVoices.everyday;
+      if (activeVoice === "airtight") return analysis.toneVoices.airtight;
+      if (activeVoice === "balanced") return analysis.toneVoices.balanced;
+    }
+    return activeReformulation?.proposition || analysis.input;
+  })();
+
   const handleCopy = () => {
-    if (!activeReformulation) return;
-    navigator.clipboard.writeText(activeReformulation.proposition);
+    navigator.clipboard.writeText(currentProposition);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -67,7 +91,7 @@ export const CleanTransformationCard: React.FC<CleanTransformationCardProps> = (
   return (
     <div className="rounded-3xl p-6 sm:p-8 bg-white dark:bg-apple-darkSurface border border-apple-border dark:border-apple-darkBorder shadow-apple-lg space-y-6">
       {/* Top action row */}
-      <div className="flex items-center justify-between gap-2 border-b border-apple-border/40 dark:border-apple-darkBorder/40 pb-4">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-apple-border/40 dark:border-apple-darkBorder/40 pb-4">
         <div className="flex items-center space-x-2">
           <span className={`text-xs font-mono font-medium px-2.5 py-1 rounded-full border ${badge.bg}`}>
             {badge.label}
@@ -77,7 +101,22 @@ export const CleanTransformationCard: React.FC<CleanTransformationCardProps> = (
           </span>
         </div>
 
-        <div className="flex items-center space-x-2">
+        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+          {analysis.stressTest && (
+            <button
+              onClick={() => setShowStressTest(!showStressTest)}
+              className={`inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all border ${
+                showStressTest
+                  ? "bg-amber-500/15 text-amber-900 dark:text-amber-200 border-amber-500/35 shadow-apple-sm"
+                  : "bg-apple-subtle dark:bg-apple-darkSubtle text-apple-secondary hover:text-apple-text border-apple-border/60 dark:border-apple-darkBorder"
+              }`}
+              title="Test this thought against real-world counter-arguments"
+            >
+              <Zap className="w-3.5 h-3.5 text-amber-500" />
+              <span>{showStressTest ? "Hide Skeptic Check" : "⚡ Stress-Test"}</span>
+            </button>
+          )}
+
           <button
             onClick={handleCopy}
             className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-medium text-apple-secondary hover:text-apple-text bg-apple-subtle dark:bg-apple-darkSubtle border border-apple-border/60 dark:border-apple-darkBorder transition-all"
@@ -91,7 +130,7 @@ export const CleanTransformationCard: React.FC<CleanTransformationCardProps> = (
             ) : (
               <>
                 <Copy className="w-3.5 h-3.5" />
-                <span>Copy Result</span>
+                <span>Copy</span>
               </>
             )}
           </button>
@@ -107,12 +146,12 @@ export const CleanTransformationCard: React.FC<CleanTransformationCardProps> = (
 
           {onEvolveThought && (
             <button
-              onClick={() => onEvolveThought(activeReformulation?.proposition || analysis.input)}
+              onClick={() => onEvolveThought(currentProposition)}
               className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-medium text-apple-accent hover:text-white hover:bg-apple-accent bg-apple-accent/10 border border-apple-accent/25 transition-all"
               title="Debug a further refinement of this proposition (Next Version)"
             >
               <GitBranch className="w-3.5 h-3.5" />
-              <span>Evolve Thought</span>
+              <span>Evolve</span>
             </button>
           )}
 
@@ -140,15 +179,51 @@ export const CleanTransformationCard: React.FC<CleanTransformationCardProps> = (
         </div>
 
         {/* Transformed Card */}
-        <div className="p-5 sm:p-6 rounded-2xl bg-apple-subtle/50 dark:bg-apple-darkSubtle/50 border border-apple-border/70 dark:border-apple-darkBorder/70 space-y-3">
-          <div className="flex items-center justify-between">
+        <div className="p-5 sm:p-6 rounded-2xl bg-apple-subtle/50 dark:bg-apple-darkSubtle/50 border border-apple-border/70 dark:border-apple-darkBorder/70 space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
             <span className="text-xs font-mono font-semibold uppercase tracking-wider text-apple-accent flex items-center space-x-1.5">
               <Sparkles className="w-3.5 h-3.5" />
               <span>Clear, Refined Version</span>
             </span>
 
-            {/* Mode toggles if multiple reformulations exist */}
-            {analysis.reformulations.length > 1 && (
+            {/* Tone Voice Selector: Everyday | Balanced | Airtight */}
+            {analysis.toneVoices ? (
+              <div className="flex items-center space-x-1 p-0.5 rounded-xl bg-black/[0.04] dark:bg-white/[0.06] border border-apple-border/40 dark:border-apple-darkBorder/40">
+                <button
+                  onClick={() => setActiveVoice("everyday")}
+                  className={`px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all ${
+                    activeVoice === "everyday"
+                      ? "bg-white dark:bg-apple-darkSurface text-apple-text dark:text-white shadow-apple-sm font-semibold"
+                      : "text-apple-secondary hover:text-apple-text"
+                  }`}
+                  title="How you'd explain it to a friend over coffee"
+                >
+                  ☕ Everyday
+                </button>
+                <button
+                  onClick={() => setActiveVoice("balanced")}
+                  className={`px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all ${
+                    activeVoice === "balanced"
+                      ? "bg-white dark:bg-apple-darkSurface text-apple-text dark:text-white shadow-apple-sm font-semibold"
+                      : "text-apple-secondary hover:text-apple-text"
+                  }`}
+                  title="Balanced logical proposition"
+                >
+                  ⚖ Balanced
+                </button>
+                <button
+                  onClick={() => setActiveVoice("airtight")}
+                  className={`px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all ${
+                    activeVoice === "airtight"
+                      ? "bg-white dark:bg-apple-darkSurface text-apple-text dark:text-white shadow-apple-sm font-semibold"
+                      : "text-apple-secondary hover:text-apple-text"
+                  }`}
+                  title="Explicit boundaries preventing edge-case attacks"
+                >
+                  🛡 Airtight
+                </button>
+              </div>
+            ) : analysis.reformulations.length > 1 ? (
               <div className="flex items-center space-x-1">
                 {analysis.reformulations.map((ref, idx) => (
                   <button
@@ -164,11 +239,11 @@ export const CleanTransformationCard: React.FC<CleanTransformationCardProps> = (
                   </button>
                 ))}
               </div>
-            )}
+            ) : null}
           </div>
 
           <p className="text-lg sm:text-xl font-serif text-apple-text dark:text-white leading-relaxed font-normal">
-            "{activeReformulation?.proposition || analysis.input}"
+            "{currentProposition}"
           </p>
 
           <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-apple-border/40 dark:border-apple-darkBorder/40">
@@ -180,7 +255,7 @@ export const CleanTransformationCard: React.FC<CleanTransformationCardProps> = (
 
             {onEvolveThought && (
               <button
-                onClick={() => onEvolveThought(activeReformulation?.proposition || analysis.input)}
+                onClick={() => onEvolveThought(currentProposition)}
                 className="inline-flex items-center space-x-1.5 text-xs font-mono text-apple-accent hover:text-apple-accentHover transition-colors ml-auto"
               >
                 <GitBranch className="w-3.5 h-3.5" />
@@ -190,6 +265,58 @@ export const CleanTransformationCard: React.FC<CleanTransformationCardProps> = (
           </div>
         </div>
       </div>
+
+      {/* The Friendly Skeptic (Stress-Test Card) - Hidden by default, smooth disclosure */}
+      {showStressTest && analysis.stressTest && (
+        <div className="p-5 sm:p-6 rounded-2xl bg-amber-500/[0.04] dark:bg-amber-500/[0.07] border border-amber-500/25 space-y-4 animate-in fade-in duration-200">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="flex items-center space-x-2">
+              <span className="w-5 h-5 rounded-full bg-amber-500/20 text-amber-800 dark:text-amber-200 flex items-center justify-center text-xs font-mono">
+                ⚡
+              </span>
+              <span className="text-xs font-mono font-semibold uppercase tracking-wider text-amber-900 dark:text-amber-200">
+                The Friendly Skeptic Check
+              </span>
+            </div>
+            <span className="text-xs font-medium px-2.5 py-0.5 rounded-full border bg-white/70 dark:bg-black/30 border-amber-500/30 text-amber-900 dark:text-amber-200">
+              {analysis.stressTest.solidityRating === "ROCK_SOLID"
+                ? "🟢 Rock Solid (Common Sense & Logic)"
+                : analysis.stressTest.solidityRating === "NEEDS_BOUNDARY"
+                ? "🟡 Needs Clear Boundaries"
+                : "🟣 Subjective Perspective"}
+            </span>
+          </div>
+
+          <div className="space-y-3">
+            {/* The Skeptic's Objection */}
+            <div className="space-y-1">
+              <div className="text-[11px] font-mono uppercase tracking-wider text-amber-800 dark:text-amber-300 font-semibold">
+                The #1 objection someone will raise:
+              </div>
+              <p className="text-sm font-sans text-apple-text dark:text-zinc-100 leading-relaxed italic bg-white/60 dark:bg-black/20 p-3.5 rounded-xl border border-amber-500/15">
+                "{analysis.stressTest.skepticObjection}"
+              </p>
+            </div>
+
+            {/* Your Shield */}
+            <div className="space-y-1">
+              <div className="text-[11px] font-mono uppercase tracking-wider text-emerald-800 dark:text-emerald-400 font-semibold">
+                How to defend your statement in conversation:
+              </div>
+              <p className="text-sm font-sans text-apple-text dark:text-zinc-100 leading-relaxed bg-white/60 dark:bg-black/20 p-3.5 rounded-xl border border-emerald-500/20">
+                {analysis.stressTest.shieldResponse}
+              </p>
+            </div>
+
+            {/* Advice Note */}
+            {analysis.stressTest.solidityNote && (
+              <p className="text-[11px] text-apple-secondary italic pt-0.5">
+                Tip: {analysis.stressTest.solidityNote}
+              </p>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* 2. The Reason & The Assumptions in Simple, Human Words */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">

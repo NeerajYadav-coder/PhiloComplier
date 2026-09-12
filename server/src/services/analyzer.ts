@@ -150,44 +150,70 @@ export async function orchestrateAnalysis(
   const canonicalMatch = getCanonicalPreset(trimmed);
 
   if (canonicalMatch && (forceCanonical || !hasConfiguredKey)) {
-    return {
+    return ensureToneVoicesAndStressTest({
       ...canonicalMatch.analysis,
       id: `canonical-${Date.now()}`,
       input: trimmed,
       timestamp: new Date().toISOString(),
       engineUsed: "canonical_offline"
-    };
+    });
   }
 
   if (hasConfiguredKey && !forceCanonical) {
     try {
       const result = await callLLMAnalysis(trimmed, { apiKey, model });
-      return result;
+      return ensureToneVoicesAndStressTest(result);
     } catch (err: any) {
       console.warn("Live LLM analysis failed, falling back to heuristic engine:", err.message);
       if (canonicalMatch) {
-        return {
+        return ensureToneVoicesAndStressTest({
           ...canonicalMatch.analysis,
           id: `fallback-canonical-${Date.now()}`,
           input: trimmed,
           timestamp: new Date().toISOString(),
           engineUsed: "canonical_offline"
-        };
+        });
       }
     }
   }
 
   if (canonicalMatch) {
-    return {
+    return ensureToneVoicesAndStressTest({
       ...canonicalMatch.analysis,
       id: `preset-${Date.now()}`,
       input: trimmed,
       timestamp: new Date().toISOString(),
       engineUsed: "canonical_offline"
-    };
+    });
   }
 
   return generateHeuristicAnalysis(trimmed);
+}
+
+function ensureToneVoicesAndStressTest(analysis: PhilosophicalAnalysisResult): PhilosophicalAnalysisResult {
+  const primaryReformulation = analysis.reformulations[0]?.proposition || analysis.input;
+  const empiricalReformulation = analysis.reformulations.find(r => r.mode === "empirical")?.proposition;
+
+  const toneVoices = analysis.toneVoices || {
+    everyday: analysis.intuitionPreservation?.underlyingIntuition
+      ? `In plain terms: "${analysis.intuitionPreservation.underlyingIntuition}"`
+      : primaryReformulation,
+    balanced: primaryReformulation,
+    airtight: empiricalReformulation || `${primaryReformulation} (bounded strictly by observable contexts).`
+  };
+
+  const stressTest = analysis.stressTest || {
+    skepticObjection: `A skeptic would ask: "How do you know this isn't just an arbitrary preference or an oversimplified metaphor?"`,
+    shieldResponse: `You can answer: "We are not asserting a cosmic dogma; we are simply separating our direct observation from grammatical traps."`,
+    solidityRating: (analysis.verdict === "CLEAR" || analysis.verdict === "EMPIRICALLY TESTABLE") ? "ROCK_SOLID" : "NEEDS_BOUNDARY",
+    solidityNote: analysis.verdictRationale || "Grounded when kept within its proper everyday language context."
+  };
+
+  return {
+    ...analysis,
+    toneVoices,
+    stressTest
+  };
 }
 
 function generateHeuristicAnalysis(input: string): PhilosophicalAnalysisResult {
@@ -318,6 +344,17 @@ function generateHeuristicAnalysis(input: string): PhilosophicalAnalysisResult {
         whatIsAlteredOrLost: "Objective cosmological certainty."
       }
     ],
+    toneVoices: {
+      everyday: `In everyday life, what we usually mean when we say "${input}" is that our experience feels consistent and meaningful.`,
+      balanced: `In direct experience, conditions associated with "${input}" are observed, without asserting an absolute metaphysical rule.`,
+      airtight: `Under specific local observational conditions, events corresponding to "${input}" occur, though this does not imply an unconditional universal law.`
+    },
+    stressTest: {
+      skepticObjection: `A skeptic would ask: "How do you know this isn't just subjective wishful thinking or a trick of language rather than an objective fact?"`,
+      shieldResponse: `You can answer: "I am not claiming an absolute cosmic rule; I am simply pointing out how this pattern reliably shows up in our practical experience."`,
+      solidityRating: "NEEDS_BOUNDARY",
+      solidityNote: "Sound as a practical observation, but needs a clear boundary so it doesn't get mistaken for a mathematical certainty."
+    },
     linterWarnings: [
       {
         code: "W001",

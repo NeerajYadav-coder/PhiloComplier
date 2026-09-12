@@ -17,6 +17,17 @@ export interface ThoughtVersion {
   timestamp: string;
   userNotes?: string;
   diffFromPrevious?: VersionDiff;
+  toneVoices?: {
+    everyday: string;
+    balanced: string;
+    airtight: string;
+  };
+  stressTest?: {
+    skepticObjection: string;
+    shieldResponse: string;
+    solidityRating: string;
+    solidityNote: string;
+  };
 }
 
 export interface NotebookEntry {

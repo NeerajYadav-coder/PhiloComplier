@@ -114,6 +114,8 @@ export const QuestionDiagnosticSchema = z.object({
       "EPISTEMIC",
       "LINGUISTIC",
       "DOMAIN_ERROR",
+      "NONE",
+      "N/A",
     ])
     .optional(),
   spatialOrMetaphoricalShift: z.string().optional(),
@@ -164,6 +166,19 @@ export const WittgensteinianDiagnosticSchema = z.object({
   primaryTension: z.string(),
 });
 
+export const ToneVoicesSchema = z.object({
+  everyday: z.string(),
+  balanced: z.string(),
+  airtight: z.string(),
+});
+
+export const StressTestAnalysisSchema = z.object({
+  skepticObjection: z.string(),
+  shieldResponse: z.string(),
+  solidityRating: z.enum(["ROCK_SOLID", "NEEDS_BOUNDARY", "SUBJECTIVE_EXPERIENCE"]),
+  solidityNote: z.string(),
+});
+
 export const PhilosophicalAnalysisResultSchema = z.object({
   id: z.string(),
   input: z.string(),
@@ -188,6 +203,8 @@ export const PhilosophicalAnalysisResultSchema = z.object({
   wittgensteinDiagnostic: WittgensteinianDiagnosticSchema,
   intuitionPreservation: IntuitionPreservationSchema,
   reformulations: z.array(ReformulationSchema),
+  toneVoices: ToneVoicesSchema.optional(),
+  stressTest: StressTestAnalysisSchema.optional(),
   linterWarnings: z.array(LinterWarningSchema),
   unresolvedQuestions: z.array(z.string()),
   humilityNote: z.string(),
@@ -276,6 +293,8 @@ export const ClaimCritiqueResultSchema = z.object({
   simpleExplanation: z.string(),
   stepByStepFlow: z.array(StepByStepFlowStepSchema).optional(),
   authorCounterDefense: z.string().optional(),
+  toneVoices: ToneVoicesSchema.optional(),
+  stressTest: StressTestAnalysisSchema.optional(),
 });
 
 

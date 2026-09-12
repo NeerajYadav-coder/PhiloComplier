@@ -95,7 +95,7 @@ export interface TruthFalsityConditions {
 
 export interface QuestionDiagnostic {
   isQuestion: boolean;
-  requestedExplanationType?: "CAUSAL" | "ONTOLOGICAL" | "TELEOLOGICAL" | "EPISTEMIC" | "LINGUISTIC" | "DOMAIN_ERROR";
+  requestedExplanationType?: "CAUSAL" | "ONTOLOGICAL" | "TELEOLOGICAL" | "EPISTEMIC" | "LINGUISTIC" | "DOMAIN_ERROR" | "NONE" | "N/A";
   spatialOrMetaphoricalShift?: string;
   whatWouldCountAsAnAnswer?: string;
   clarificationSubQuestions?: string[];
@@ -160,9 +160,24 @@ export interface PhilosophicalAnalysisResult {
   wittgensteinDiagnostic: WittgensteinianDiagnostic;
   intuitionPreservation: IntuitionPreservation;
   reformulations: Reformulation[];
+  toneVoices?: ToneVoices;
+  stressTest?: StressTestAnalysis;
   linterWarnings: LinterWarning[];
   unresolvedQuestions: string[];
   humilityNote: string;
+}
+
+export interface ToneVoices {
+  everyday: string; // Plain English conversation with a friend
+  balanced: string; // Clear, grounded proposition
+  airtight: string; // Explicitly shielded with boundary conditions against edge-case attacks
+}
+
+export interface StressTestAnalysis {
+  skepticObjection: string; // The #1 real-world counter-example or objection
+  shieldResponse: string; // How to defend and answer the objection without getting trapped
+  solidityRating: "ROCK_SOLID" | "NEEDS_BOUNDARY" | "SUBJECTIVE_EXPERIENCE";
+  solidityNote: string; // Brief plain-English rationale for the rating
 }
 
 export interface CanonicalPresetMeta {
@@ -259,5 +274,7 @@ export interface ClaimCritiqueResult {
   simpleExplanation: string;
   stepByStepFlow?: StepByStepFlowStep[];
   authorCounterDefense?: string;
+  toneVoices?: ToneVoices;
+  stressTest?: StressTestAnalysis;
 }
 

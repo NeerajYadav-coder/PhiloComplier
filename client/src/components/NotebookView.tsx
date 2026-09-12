@@ -16,7 +16,8 @@ import {
   CheckCircle2,
   AlertCircle,
   Columns2,
-  FileText
+  FileText,
+  Zap
 } from "lucide-react";
 
 interface NotebookViewProps {
@@ -66,8 +67,16 @@ ${activeVersion.reasonSummary}
 **Assumptions Behind Thought:**
 ${activeVersion.keyAssumptions.map(a => `- ${a}`).join("\n")}
 
-${activeVersion.userNotes ? `**Notes:**\n${activeVersion.userNotes}\n` : ""}
----
+${activeVersion.toneVoices ? `**Clarity Voices:**
+- **Everyday:** "${activeVersion.toneVoices.everyday}"
+- **Balanced:** "${activeVersion.toneVoices.balanced}"
+- **Airtight:** "${activeVersion.toneVoices.airtight}"
+` : ""}${activeVersion.stressTest ? `**The Friendly Skeptic Check:**
+- **Solidity Rating:** ${activeVersion.stressTest.solidityRating}
+- **Objection:** "${activeVersion.stressTest.skepticObjection}"
+- **Shield Response:** "${activeVersion.stressTest.shieldResponse}"
+- **Tip:** ${activeVersion.stressTest.solidityNote}
+` : ""}${activeVersion.userNotes ? `**Notes:**\n${activeVersion.userNotes}\n` : ""}---
 *Exported from PhiloCompiler*
 `;
     const blob = new Blob([md], { type: "text/markdown" });
@@ -405,6 +414,54 @@ ${activeVersion.userNotes ? `**Notes:**\n${activeVersion.userNotes}\n` : ""}
                 </div>
               </div>
             </div>
+
+            {/* Tone Voices (if recorded) */}
+            {activeVersion.toneVoices && (
+              <div className="p-4 rounded-2xl bg-black/[0.02] dark:bg-white/[0.03] border border-apple-border/60 dark:border-apple-darkBorder/60 space-y-2 text-xs">
+                <span className="font-mono text-[10px] uppercase text-apple-secondary font-semibold block">
+                  Clarity Voices:
+                </span>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                  <div className="p-2.5 rounded-xl bg-white/70 dark:bg-apple-darkSurface border border-apple-border/50 dark:border-apple-darkBorder/50 space-y-1">
+                    <span className="font-semibold text-apple-text dark:text-zinc-200 block text-[11px]">☕ Everyday:</span>
+                    <p className="text-apple-secondary font-serif italic text-[11px] leading-relaxed">"{activeVersion.toneVoices.everyday}"</p>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-white/70 dark:bg-apple-darkSurface border border-apple-border/50 dark:border-apple-darkBorder/50 space-y-1">
+                    <span className="font-semibold text-apple-text dark:text-zinc-200 block text-[11px]">⚖ Balanced:</span>
+                    <p className="text-apple-secondary font-serif text-[11px] leading-relaxed">"{activeVersion.toneVoices.balanced}"</p>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-white/70 dark:bg-apple-darkSurface border border-apple-border/50 dark:border-apple-darkBorder/50 space-y-1">
+                    <span className="font-semibold text-apple-text dark:text-zinc-200 block text-[11px]">🛡 Airtight:</span>
+                    <p className="text-apple-secondary font-serif text-[11px] leading-relaxed">"{activeVersion.toneVoices.airtight}"</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* The Friendly Skeptic Check (if recorded) */}
+            {activeVersion.stressTest && (
+              <div className="p-4 rounded-2xl bg-amber-500/[0.04] dark:bg-amber-500/[0.07] border border-amber-500/25 space-y-2.5 text-xs">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-1.5 font-mono text-[10px] uppercase text-amber-900 dark:text-amber-200 font-semibold">
+                    <Zap className="w-3.5 h-3.5 text-amber-500" />
+                    <span>The Friendly Skeptic Check</span>
+                  </div>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full border border-amber-500/30 bg-white/80 dark:bg-black/40 text-amber-900 dark:text-amber-200">
+                    {activeVersion.stressTest.solidityRating === "ROCK_SOLID" ? "🟢 Rock Solid" : activeVersion.stressTest.solidityRating === "NEEDS_BOUNDARY" ? "🟡 Needs Boundary" : "🟣 Subjective"}
+                  </span>
+                </div>
+                <div className="space-y-1.5">
+                  <div>
+                    <span className="font-semibold text-amber-800 dark:text-amber-300 block text-[11px]">The Objection:</span>
+                    <p className="italic text-apple-text dark:text-zinc-200 text-xs">"{activeVersion.stressTest.skepticObjection}"</p>
+                  </div>
+                  <div>
+                    <span className="font-semibold text-emerald-800 dark:text-emerald-400 block text-[11px]">The Shield:</span>
+                    <p className="text-apple-text dark:text-zinc-200 text-xs">{activeVersion.stressTest.shieldResponse}</p>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Personal contemplative notes */}
             {activeVersion.userNotes && (

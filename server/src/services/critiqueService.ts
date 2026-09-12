@@ -62,7 +62,18 @@ Return a single complete JSON object with all required fields in simple, plain-E
   ],
   "correctedProposition": "The corrected, logically sound formulation...",
   "correctionRationale": "Why this corrected version actually works...",
-  "simpleExplanation": "Simple everyday language explanation of the error and the fix..."
+  "simpleExplanation": "Simple everyday language explanation of the error and the fix...",
+  "toneVoices": {
+    "everyday": "How to phrase the corrected proposition in warm, casual conversational English...",
+    "balanced": "Clear, grounded proposition with natural boundary criteria...",
+    "airtight": "Explicitly guarded formulation with clear conditions preventing edge-case attacks..."
+  },
+  "stressTest": {
+    "skepticObjection": "The #1 real-world counter-example or objection someone would raise against this corrected claim...",
+    "shieldResponse": "How the corrected claim easily answers this objection...",
+    "solidityRating": "ROCK_SOLID" | "NEEDS_BOUNDARY" | "SUBJECTIVE_EXPERIENCE",
+    "solidityNote": "Plain English rationale for the rating..."
+  }
 }
 `;
 }
@@ -111,7 +122,18 @@ export const CANONICAL_CRITIQUES: Record<string, ClaimCritiqueResult> = {
     ],
     correctedProposition: "Thoughts and doubts occur in immediate awareness, without needing an invisible permanent soul behind them.",
     correctionRationale: "Preserves the real observation (thoughts are undeniably happening) while dropping the unproven claim that an invisible ghost-entity is doing the thinking.",
-    simpleExplanation: "Descartes saw thinking happening, but jumped to the conclusion that an invisible 'soul person' was doing the thinking. Grammar tricked him into creating a thinker where there was only thought."
+    simpleExplanation: "Descartes saw thinking happening, but jumped to the conclusion that an invisible 'soul person' was doing the thinking. Grammar tricked him into creating a thinker where there was only thought.",
+    toneVoices: {
+      everyday: "I know thoughts and doubts are happening right now, even if I don't know what kind of thing I am.",
+      balanced: "Thoughts and doubts occur in immediate awareness, without needing an invisible permanent soul behind them.",
+      airtight: "The occurrence of thought strictly confirms experiential awareness, but does not entail an immaterial, indivisible thinking substance."
+    },
+    stressTest: {
+      skepticObjection: "If there is no 'I' doing the thinking, who is experiencing these words right now?",
+      shieldResponse: "Experience is happening right now, but calling it an 'I' is just a grammatical shortcut—just like saying 'it is raining' doesn't mean a physical entity called 'It' is pouring water.",
+      solidityRating: "ROCK_SOLID",
+      solidityNote: "Distinguishing immediate conscious experience from an unproven ghost-entity is completely sound."
+    }
   },
 
   "nagarjuna-causation": {
@@ -155,7 +177,18 @@ export const CANONICAL_CRITIQUES: Record<string, ClaimCritiqueResult> = {
     ],
     correctedProposition: "Things do not arise through the collision of isolated objects; events emerge through connected, dependent conditions.",
     correctionRationale: "Explains causality as a dependable web of conditions rather than a magical collision between isolated objects.",
-    simpleExplanation: "Nāgārjuna proves that causes aren't separate magical bricks hitting other bricks. But we must be clear: things still happen dependently in regular, predictable patterns."
+    simpleExplanation: "Nāgārjuna proves that causes aren't separate magical bricks hitting other bricks. But we must be clear: things still happen dependently in regular, predictable patterns.",
+    toneVoices: {
+      everyday: "Things don't just appear out of thin air or by magic; everything happens because other things made it happen.",
+      balanced: "Things do not arise through the collision of isolated objects; events emerge through connected, dependent conditions.",
+      airtight: "Phenomena lack independent, self-contained origination and operate as an interdependent network of dependent conditions."
+    },
+    stressTest: {
+      skepticObjection: "If nothing arises on its own, does that mean nothing is really real?",
+      shieldResponse: "No; things are practically real and functional, they just aren't isolated islands. Interdependence makes things work, not fake.",
+      solidityRating: "ROCK_SOLID",
+      solidityNote: "Interdependence is fully compatible with both daily practical life and scientific causality."
+    }
   },
 
   "parmenides-nothing": {
@@ -199,7 +232,18 @@ export const CANONICAL_CRITIQUES: Record<string, ClaimCritiqueResult> = {
     ],
     correctedProposition: "Saying 'nothing' simply describes the absence of specific things; it does not name a mysterious cosmic void.",
     correctionRationale: "Returns the word 'nothing' to its normal everyday job of describing absence, instead of inventing a spooky void.",
-    simpleExplanation: "Parmenides thought 'nothing' was a thing that couldn't be talked about without turning it into 'something'. He confused a simple word of absence with an actual physical substance."
+    simpleExplanation: "Parmenides thought 'nothing' was a thing that couldn't be talked about without turning it into 'something'. He confused a simple word of absence with an actual physical substance.",
+    toneVoices: {
+      everyday: "When we say 'there is nothing in the box', we just mean the box is empty—we don't mean a monster named 'Nothing' lives inside.",
+      balanced: "Saying 'nothing' simply describes the absence of specific things; it does not name a mysterious cosmic void.",
+      airtight: "The term 'nothing' operates as a negative quantifier of absence, not a substantive referring noun denoting a physical entity."
+    },
+    stressTest: {
+      skepticObjection: "Isn't empty space in quantum physics considered 'nothing' that produces particles?",
+      shieldResponse: "A quantum vacuum is filled with energy and physical fields—it is very much a 'something', not an empty word on paper.",
+      solidityRating: "ROCK_SOLID",
+      solidityNote: "Completely resolves the ancient riddle by treating 'nothing' as an everyday word for absence."
+    }
   },
 
   "hume-induction": {
@@ -243,7 +287,18 @@ export const CANONICAL_CRITIQUES: Record<string, ClaimCritiqueResult> = {
     ],
     correctedProposition: "Based on past observations, we reasonably expect the sun to rise tomorrow, but it is a strong expectation, not a mathematical certainty.",
     correctionRationale: "Correctly distinguishes between highly reliable practical experience and strict logical proof.",
-    simpleExplanation: "Expecting the sun to rise is a smart habit, but we can't prove mathematically that the future will always repeat the past without exception."
+    simpleExplanation: "Expecting the sun to rise is a smart habit, but we can't prove mathematically that the future will always repeat the past without exception.",
+    toneVoices: {
+      everyday: "We can be super confident the sun will rise tomorrow, but it's based on daily habit, not mathematical proof.",
+      balanced: "Based on past observations, we reasonably expect the sun to rise tomorrow, but it is a strong expectation, not a mathematical certainty.",
+      airtight: "Inductive generalizations provide high empirical probability based on observed regularities, but lack deductive logical necessity."
+    },
+    stressTest: {
+      skepticObjection: "If tomorrow's sunrise isn't logically certain, why should we plan our lives around it?",
+      shieldResponse: "Because practical habits and scientific probabilities are the smartest way to live, even without 100% mathematical guarantees.",
+      solidityRating: "ROCK_SOLID",
+      solidityNote: "Separates practical everyday confidence from strict logical certainty without disrupting daily life."
+    }
   },
 
   "anselm-ontological": {
@@ -287,7 +342,18 @@ export const CANONICAL_CRITIQUES: Record<string, ClaimCritiqueResult> = {
     ],
     correctedProposition: "We can imagine the concept of a greatest possible being, but whether such a being actually exists outside our minds requires evidence beyond definitions.",
     correctionRationale: "Separates mental concepts and definitions from whether something physically exists in reality.",
-    simpleExplanation: "You can't prove something is real in the physical world just by defining it as 'the greatest thing ever'. Thinking of something perfect doesn't make it real outside your head."
+    simpleExplanation: "You can't prove something is real in the physical world just by defining it as 'the greatest thing ever'. Thinking of something perfect doesn't make it real outside your head.",
+    toneVoices: {
+      everyday: "You can't prove something exists in the real world just by defining it as the greatest thing you can imagine.",
+      balanced: "We can imagine the concept of a greatest possible being, but whether such a being actually exists outside our minds requires evidence beyond definitions.",
+      airtight: "Conceptual perfection is an intensional attribute of thought, which cannot deductively entail extensional reality without empirical demonstration."
+    },
+    stressTest: {
+      skepticObjection: "If God is truly the greatest, wouldn't existing in reality be part of that definition?",
+      shieldResponse: "Definitions describe what an idea means in your head; they cannot force the physical universe to create a matching object.",
+      solidityRating: "ROCK_SOLID",
+      solidityNote: "Correctly protects against the fallacy of defining mental ideas into physical existence."
+    }
   },
 
   "zeno-dichotomy": {
@@ -331,7 +397,18 @@ export const CANONICAL_CRITIQUES: Record<string, ClaimCritiqueResult> = {
     ],
     correctedProposition: "Distance can be divided into infinite mathematical fractions, but a moving object crosses those finite fractions continuously in finite time.",
     correctionRationale: "Recognizes that continuous physical motion easily covers mathematically divisible space.",
-    simpleExplanation: "You can slice a 1-meter walk into infinite fractions on a piece of paper, but that doesn't stop your foot from taking one simple step across the room in one second."
+    simpleExplanation: "You can slice a 1-meter walk into infinite fractions on a piece of paper, but that doesn't stop your foot from taking one simple step across the room in one second.",
+    toneVoices: {
+      everyday: "You can cut a 1-meter walk into infinite fractions on paper, but your foot still crosses the room in one second.",
+      balanced: "Distance can be divided into infinite mathematical fractions, but a moving object crosses those finite fractions continuously in finite time.",
+      airtight: "Continuous physical motion traverses a continuum whose infinite sub-intervals converge to a finite spatial sum within finite time."
+    },
+    stressTest: {
+      skepticObjection: "How can a physical object finish an infinite number of tasks?",
+      shieldResponse: "Walking is one single physical movement. The 'infinite tasks' exist only in the way we choose to count fractions on paper.",
+      solidityRating: "ROCK_SOLID",
+      solidityNote: "Solves the paradox cleanly using modern calculus and common-sense motion."
+    }
   }
 };
 
@@ -509,6 +586,17 @@ function generateHeuristicCritique(input: string, author?: string): ClaimCritiqu
     ],
     correctedProposition: `In clear terms, "${input}" describes a specific situation rather than an absolute rule of the universe.`,
     correctionRationale: "Keeps the assertion grounded in what can actually be seen, tested, or demonstrated.",
-    simpleExplanation: "The claim takes an idea that works in a limited situation and turns it into a cosmic law without proving the connection."
+    simpleExplanation: "The claim takes an idea that works in a limited situation and turns it into a cosmic law without proving the connection.",
+    toneVoices: {
+      everyday: `In everyday life, "${input}" is a helpful observation if kept within reasonable limits.`,
+      balanced: `In clear terms, "${input}" describes a specific situation rather than an absolute rule of the universe.`,
+      airtight: `Under restricted empirical parameters, "${input}" holds, but cannot be generalized into an unconditional law.`
+    },
+    stressTest: {
+      skepticObjection: `A critic would ask: "Why can't we treat this principle as an absolute truth if it feels true in so many situations?"`,
+      shieldResponse: `You can answer: "Because stretching a local observation into an absolute cosmic law creates logical contradictions when edge cases appear."`,
+      solidityRating: "NEEDS_BOUNDARY",
+      solidityNote: "Valid in everyday contexts, but requires clearly stated boundary conditions."
+    }
   };
 }

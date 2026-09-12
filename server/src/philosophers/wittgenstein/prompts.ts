@@ -146,6 +146,17 @@ Return a single complete JSON object with all required fields:
       "whatIsAlteredOrLost": "..."
     }
   ],
+  "toneVoices": {
+    "everyday": "How to phrase this over coffee with a friend in plain, everyday conversational English",
+    "balanced": "Clear, grounded proposition with natural boundary criteria",
+    "airtight": "Guardrails-included statement with explicit conditions shielding against edge-case attacks"
+  },
+  "stressTest": {
+    "skepticObjection": "The single strongest objection or counter-example someone would raise against this thought (in plain English)",
+    "shieldResponse": "How your statement clearly answers this challenge without getting trapped in semantic debates",
+    "solidityRating": "ROCK_SOLID" | "NEEDS_BOUNDARY" | "SUBJECTIVE_EXPERIENCE",
+    "solidityNote": "Plain English explanation of the rating"
+  },
   "linterWarnings": [
     {
       "code": "W001" | "W002" | "W003" | "W004" | "W005" | "INFO",
@@ -159,4 +170,5 @@ Return a single complete JSON object with all required fields:
   "humilityNote": "..."
 }
 `;
+
 }

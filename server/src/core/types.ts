@@ -100,7 +100,7 @@ export interface TruthFalsityConditions {
 
 export interface QuestionDiagnostic {
   isQuestion: boolean;
-  requestedExplanationType?: "CAUSAL" | "ONTOLOGICAL" | "TELEOLOGICAL" | "EPISTEMIC" | "LINGUISTIC" | "DOMAIN_ERROR";
+  requestedExplanationType?: "CAUSAL" | "ONTOLOGICAL" | "TELEOLOGICAL" | "EPISTEMIC" | "LINGUISTIC" | "DOMAIN_ERROR" | "NONE" | "N/A";
   spatialOrMetaphoricalShift?: string;
   whatWouldCountAsAnAnswer?: string;
   clarificationSubQuestions?: string[];
@@ -182,6 +182,10 @@ export interface PhilosophicalAnalysisResult {
   intuitionPreservation: IntuitionPreservation;
   reformulations: Reformulation[];
 
+  // Tone Voices & Stress-Test (Friendly Skeptic)
+  toneVoices?: ToneVoices;
+  stressTest?: StressTestAnalysis;
+
   // Linter warnings
   linterWarnings: LinterWarning[];
 
@@ -191,6 +195,19 @@ export interface PhilosophicalAnalysisResult {
 }
 
 export type AnalysisMode = "wittgenstein" | "nagarjuna" | "comparative" | "karika";
+
+export interface ToneVoices {
+  everyday: string; // Plain English conversation with a friend
+  balanced: string; // Clear, grounded proposition
+  airtight: string; // Explicitly shielded with boundary conditions against edge-case attacks
+}
+
+export interface StressTestAnalysis {
+  skepticObjection: string; // The #1 real-world counter-example or objection
+  shieldResponse: string; // How to defend and answer the objection without getting trapped
+  solidityRating: "ROCK_SOLID" | "NEEDS_BOUNDARY" | "SUBJECTIVE_EXPERIENCE";
+  solidityNote: string; // Brief plain-English rationale for the rating
+}
 
 export interface NagarjunaDiagnosticResult {
   id: string;
@@ -276,6 +293,9 @@ export interface ClaimCritiqueResult {
   simpleExplanation: string;
   stepByStepFlow?: StepByStepFlowStep[];
   authorCounterDefense?: string;
+  toneVoices?: ToneVoices;
+  stressTest?: StressTestAnalysis;
 }
+
 
 
