@@ -2,11 +2,13 @@ import React, { useState, useEffect, useRef } from "react";
 import { Scale, ArrowRight, Loader2, BookOpen, AlertCircle } from "lucide-react";
 import { ClaimCritiqueResult } from "../types";
 import { ClaimCritiqueCard } from "./ClaimCritiqueCard";
+import { directCritiqueClaim, findCanonicalCritique } from "../services/directEngine";
 
 interface ClaimCritiqueViewProps {
   apiKey?: string;
   model?: string;
   onSaveCritiqueToNotebook: (critique: ClaimCritiqueResult) => void;
+  onOpenSettings?: () => void;
 }
 
 const HISTORICAL_SAMPLES = [
@@ -39,7 +41,8 @@ const HISTORICAL_SAMPLES = [
 export const ClaimCritiqueView: React.FC<ClaimCritiqueViewProps> = ({
   apiKey,
   model,
-  onSaveCritiqueToNotebook
+  onSaveCritiqueToNotebook,
+  onOpenSettings
 }) => {
   const [claimText, setClaimText] = useState<string>("");
   const [authorText, setAuthorText] = useState<string>("");
@@ -73,12 +76,34 @@ export const ClaimCritiqueView: React.FC<ClaimCritiqueViewProps> = ({
     setIsLoading(true);
     setError(null);
 
+    // 1. Instant check for matching canonical critique preset
+    const preset = findCanonicalCritique(trimmed, authorStr);
+    if (preset) {
+      setCritique(preset);
+      setIsLoading(false);
+      return;
+    }
+
+    // 2. Direct client-side execution if user entered their API key
+    if (apiKey && apiKey.trim()) {
+      try {
+        const result = await directCritiqueClaim(trimmed, authorStr, apiKey, model);
+        setCritique(result);
+      } catch (err: any) {
+        console.error("Direct critique failed:", err);
+        setError(err.message || "Failed to audit the claim with your API key.");
+      } finally {
+        setIsLoading(false);
+      }
+      return;
+    }
+
+    // 3. Fallback to local dev backend if available
     try {
       const res = await fetch("/api/critique", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
-          ...(apiKey ? { "x-gemini-api-key": apiKey } : {})
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
           input: trimmed,
@@ -88,15 +113,17 @@ export const ClaimCritiqueView: React.FC<ClaimCritiqueViewProps> = ({
       });
 
       if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || `HTTP error ${res.status}`);
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || `Server error ${res.status}`);
       }
 
       const result: ClaimCritiqueResult = await res.json();
       setCritique(result);
     } catch (err: any) {
-      console.error("Critique failed:", err);
-      setError(err.message || "Failed to audit the philosophical claim.");
+      console.warn("Backend critique unavailable:", err);
+      setError(
+        "To critique your own custom claims, please add your free Groq or Gemini API key in Settings (⚙️). Or try any of the historical thinker benchmarks below!"
+      );
     } finally {
       setIsLoading(false);
     }
@@ -207,19 +234,29 @@ export const ClaimCritiqueView: React.FC<ClaimCritiqueViewProps> = ({
         </div>
       )}
 
-      {/* Error Notice */}
+      {/* Error Notice with Open Settings link */}
       {error && (
-        <div className="rounded-2xl p-4 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 text-rose-800 dark:text-rose-200 text-xs flex items-center justify-between">
+        <div className="rounded-2xl p-4 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900 text-amber-900 dark:text-amber-200 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div className="flex items-center space-x-2">
-            <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+            <AlertCircle className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
             <span>{error}</span>
           </div>
-          <button
-            onClick={() => handleRunCritique(claimText, authorText)}
-            className="font-mono underline text-rose-700 dark:text-rose-300 ml-2"
-          >
-            Retry
-          </button>
+          <div className="flex items-center space-x-2 self-end sm:self-auto shrink-0">
+            {onOpenSettings && (
+              <button
+                onClick={onOpenSettings}
+                className="px-3 py-1 rounded-lg bg-amber-200/70 dark:bg-amber-800/50 text-amber-900 dark:text-amber-100 font-medium text-[11px] hover:bg-amber-200 transition-colors"
+              >
+                Open Settings (⚙️)
+              </button>
+            )}
+            <button
+              onClick={() => handleRunCritique(claimText, authorText)}
+              className="font-mono underline text-amber-700 dark:text-amber-300 text-[11px]"
+            >
+              Retry
+            </button>
+          </div>
         </div>
       )}
 

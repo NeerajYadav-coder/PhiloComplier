@@ -37,7 +37,9 @@ import {
   exportNotebookJson,
   importNotebookJson
 } from "./services/notebookStorage";
-import { GitCommit, Search, Key, Sparkles, BookOpen } from "lucide-react";
+import { CANONICAL_PRESETS } from "./data/canonicalPresets";
+import { directAnalyzeThought, findCanonicalPreset } from "./services/directEngine";
+import { GitCommit, Search, Key, Sparkles, BookOpen, AlertCircle } from "lucide-react";
 
 export function App() {
   const [currentView, setCurrentView] = useState<"debugger" | "critic" | "notebook">("debugger");
@@ -46,7 +48,15 @@ export function App() {
   const [analysis, setAnalysis] = useState<AnyAnalysisResult | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [presets, setPresets] = useState<CanonicalPresetMeta[]>([]);
+  const [presets, setPresets] = useState<CanonicalPresetMeta[]>(() =>
+    Object.values(CANONICAL_PRESETS).map((p) => ({
+      id: p.id,
+      title: p.title,
+      category: p.category,
+      input: p.input,
+      previewSummary: p.previewSummary
+    }))
+  );
 
   // Notebook state
   const [notebookEntries, setNotebookEntries] = useState<NotebookEntry[]>([]);
@@ -104,14 +114,36 @@ export function App() {
 
     setIsLoading(true);
     setError(null);
-    setShowDeepInspection(false); // keep deep inspection closed by default for clean result
+    setShowDeepInspection(false);
 
+    // 1. Instant check for matching canonical preset
+    const preset = findCanonicalPreset(trimmed);
+    if (preset) {
+      setAnalysis(preset);
+      setIsLoading(false);
+      return;
+    }
+
+    // 2. Direct client-side execution if user entered their API key
+    if (apiKey && apiKey.trim()) {
+      try {
+        const result = await directAnalyzeThought(trimmed, apiKey, model);
+        setAnalysis(result);
+      } catch (err: any) {
+        console.error("Direct analysis failed:", err);
+        setError(err.message || "Failed to analyze thought with your API key.");
+      } finally {
+        setIsLoading(false);
+      }
+      return;
+    }
+
+    // 3. Fallback to local dev backend if available
     try {
       const response = await fetch("/api/analyze", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          ...(apiKey ? { "x-gemini-api-key": apiKey } : {}),
         },
         body: JSON.stringify({
           input: trimmed,
@@ -121,15 +153,17 @@ export function App() {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
+        const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.error || `HTTP error ${response.status}`);
       }
 
       const data = await response.json();
       setAnalysis(data);
     } catch (err: any) {
-      console.error("Analysis failed:", err);
-      setError(err.message || "Failed to analyze the proposition.");
+      console.warn("Backend analysis unavailable:", err);
+      setError(
+        "To debug your own thoughts, please enter your free Groq or Gemini API key in Settings (⚙️). Or try any of the built-in presets below!"
+      );
     } finally {
       setIsLoading(false);
     }
@@ -251,6 +285,7 @@ export function App() {
             apiKey={apiKey}
             model={model}
             onSaveCritiqueToNotebook={handleSaveCritiqueToNotebook}
+            onOpenSettings={() => setIsSettingsOpen(true)}
           />
         ) : (
           /* ================= FEATURE 1: PROMPT YOUR INTUITION / DEBUGGER ================= */
@@ -278,14 +313,25 @@ export function App() {
 
             {/* Error notification */}
             {error && (
-              <div className="rounded-2xl p-4 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 text-rose-800 dark:text-rose-200 text-xs flex items-center justify-between">
-                <span>{error}</span>
-                <button
-                  onClick={() => handleAnalyze(input)}
-                  className="font-mono underline text-rose-700 dark:text-rose-300 ml-2"
-                >
-                  Retry
-                </button>
+              <div className="rounded-2xl p-4 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900 text-amber-900 dark:text-amber-200 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div className="flex items-center space-x-2">
+                  <AlertCircle className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
+                  <span>{error}</span>
+                </div>
+                <div className="flex items-center space-x-2 self-end sm:self-auto shrink-0">
+                  <button
+                    onClick={() => setIsSettingsOpen(true)}
+                    className="px-3 py-1 rounded-lg bg-amber-200/70 dark:bg-amber-800/50 text-amber-900 dark:text-amber-100 font-medium text-[11px] hover:bg-amber-200 transition-colors"
+                  >
+                    Open Settings (⚙️)
+                  </button>
+                  <button
+                    onClick={() => handleAnalyze(input)}
+                    className="font-mono underline text-amber-700 dark:text-amber-300 text-[11px]"
+                  >
+                    Retry
+                  </button>
+                </div>
               </div>
             )}
 
