@@ -191,26 +191,45 @@ export async function orchestrateAnalysis(
 }
 
 function ensureToneVoicesAndStressTest(analysis: PhilosophicalAnalysisResult): PhilosophicalAnalysisResult {
-  const primaryReformulation = analysis.reformulations[0]?.proposition || analysis.input;
+  const isSound = Boolean(
+    analysis.isAlreadySound ||
+    analysis.verdict === "CLEAR" ||
+    analysis.verdict === "EMPIRICALLY TESTABLE"
+  );
+
+  const primaryReformulation = isSound
+    ? analysis.input
+    : (analysis.reformulations[0]?.proposition || analysis.input);
   const empiricalReformulation = analysis.reformulations.find(r => r.mode === "empirical")?.proposition;
 
   const toneVoices = analysis.toneVoices || {
-    everyday: analysis.intuitionPreservation?.underlyingIntuition
-      ? `In plain terms: "${analysis.intuitionPreservation.underlyingIntuition}"`
-      : primaryReformulation,
-    balanced: primaryReformulation,
-    airtight: empiricalReformulation || `${primaryReformulation} (bounded strictly by observable contexts).`
+    everyday: isSound
+      ? analysis.input
+      : (analysis.intuitionPreservation?.underlyingIntuition
+          ? `In plain terms: "${analysis.intuitionPreservation.underlyingIntuition}"`
+          : primaryReformulation),
+    balanced: isSound ? analysis.input : primaryReformulation,
+    airtight: isSound
+      ? analysis.input
+      : (empiricalReformulation || `${primaryReformulation} (bounded strictly by observable contexts).`)
   };
 
   const stressTest = analysis.stressTest || {
-    skepticObjection: `A skeptic would ask: "How do you know this isn't just an arbitrary preference or an oversimplified metaphor?"`,
-    shieldResponse: `You can answer: "We are not asserting a cosmic dogma; we are simply separating our direct observation from grammatical traps."`,
-    solidityRating: (analysis.verdict === "CLEAR" || analysis.verdict === "EMPIRICALLY TESTABLE") ? "ROCK_SOLID" : "NEEDS_BOUNDARY",
-    solidityNote: analysis.verdictRationale || "Grounded when kept within its proper everyday language context."
+    skepticObjection: isSound
+      ? `A skeptic might ask: "Could there be an unstated edge-case condition where this straightforward observation fails?"`
+      : `A skeptic would ask: "How do you know this isn't just an arbitrary preference or an oversimplified metaphor?"`,
+    shieldResponse: isSound
+      ? `You can answer: "This statement directly describes a clear, observable state of affairs or valid logical relation; it makes no unproven metaphysical leaps."`
+      : `You can answer: "We are not asserting a cosmic dogma; we are simply separating our direct observation from grammatical traps."`,
+    solidityRating: isSound ? "ROCK_SOLID" : "NEEDS_BOUNDARY",
+    solidityNote: isSound
+      ? "Already sound and well-grounded according to Wittgensteinian logic. No debugging needed."
+      : (analysis.verdictRationale || "Grounded when kept within its proper everyday language context.")
   };
 
   return {
     ...analysis,
+    isAlreadySound: isSound,
     toneVoices,
     stressTest
   };

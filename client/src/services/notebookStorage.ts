@@ -218,6 +218,7 @@ function extractGenericVersion(
     userNotes: userNotes?.trim() || undefined,
     diffFromPrevious: diff,
     toneVoices: analysis.toneVoices,
+    isAlreadySound: ("isAlreadySound" in analysis && Boolean(analysis.isAlreadySound)) || analysis.verdict === "CLEAR" || analysis.verdict === "EMPIRICALLY TESTABLE",
     stressTest: analysis.stressTest ? {
       skepticObjection: analysis.stressTest.skepticObjection,
       shieldResponse: analysis.stressTest.shieldResponse,

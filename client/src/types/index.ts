@@ -149,6 +149,7 @@ export interface PhilosophicalAnalysisResult {
   }[];
   verdict: EpistemicVerdict;
   verdictRationale: string;
+  isAlreadySound?: boolean;
   termsInUse: LinguisticTerm[];
   grammaticalAnalysis: GrammaticalFormAnalysis;
   typeErrorAnalysis: PhilosophicalTypeError;

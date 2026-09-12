@@ -192,6 +192,7 @@ export const PhilosophicalAnalysisResultSchema = z.object({
   ),
   verdict: EpistemicVerdictEnum,
   verdictRationale: z.string(),
+  isAlreadySound: z.boolean().optional(),
   termsInUse: z.array(LinguisticTermSchema),
   grammaticalAnalysis: GrammaticalFormAnalysisSchema,
   typeErrorAnalysis: PhilosophicalTypeErrorSchema,

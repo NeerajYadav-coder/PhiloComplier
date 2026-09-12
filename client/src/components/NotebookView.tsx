@@ -3,21 +3,21 @@ import { NotebookEntry, ThoughtVersion } from "../types/notebook";
 import {
   BookOpen,
   Search,
-  Tag,
-  Clock,
-  ArrowRight,
-  GitBranch,
+  RotateCcw,
+  FileText,
   Trash2,
   Download,
   Upload,
-  ArrowLeftRight,
   Sparkles,
-  RotateCcw,
   CheckCircle2,
-  AlertCircle,
-  Columns2,
-  FileText,
-  Zap
+  ChevronDown,
+  ChevronUp,
+  ArrowRight,
+  Shield,
+  Coffee,
+  Scale,
+  Zap,
+  ArrowLeftRight
 } from "lucide-react";
 
 interface NotebookViewProps {
@@ -41,11 +41,11 @@ export const NotebookView: React.FC<NotebookViewProps> = ({
   const [selectedVersionIndex, setSelectedVersionIndex] = useState<number>(0);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedTag, setSelectedTag] = useState<string>("All");
-  const [isSideBySide, setIsSideBySide] = useState<boolean>(false);
+  const [showDeepDive, setShowDeepDive] = useState<boolean>(false);
 
   const activeEntry = entries.find((e) => e.id === selectedEntryId) || entries[0];
   const activeVersion: ThoughtVersion | undefined =
-    activeEntry?.versions[selectedVersionIndex] || activeEntry?.versions[activeEntry?.versions.length - 1];
+    activeEntry?.versions[selectedVersionIndex] ?? activeEntry?.versions[activeEntry?.versions.length - 1];
 
   const handleExportEntryMarkdown = () => {
     if (!activeEntry || !activeVersion) return;
@@ -60,11 +60,11 @@ Date: ${new Date(activeEntry.updatedAt).toLocaleDateString()}
 **Clear Refined Version:**
 > "${activeVersion.transformedThought}"
 
-**Verdict:** ${activeVersion.verdict}
-**Why this is clearer:**
+**Status:** ${activeVersion.isAlreadySound ? "Already Clear & Sound" : activeVersion.verdict}
+**Why this works:**
 ${activeVersion.reasonSummary}
 
-**Assumptions Behind Thought:**
+**Key Assumptions:**
 ${activeVersion.keyAssumptions.map(a => `- ${a}`).join("\n")}
 
 ${activeVersion.toneVoices ? `**Clarity Voices:**
@@ -72,11 +72,11 @@ ${activeVersion.toneVoices ? `**Clarity Voices:**
 - **Balanced:** "${activeVersion.toneVoices.balanced}"
 - **Airtight:** "${activeVersion.toneVoices.airtight}"
 ` : ""}${activeVersion.stressTest ? `**The Friendly Skeptic Check:**
-- **Solidity Rating:** ${activeVersion.stressTest.solidityRating}
+- **Solidity:** ${activeVersion.stressTest.solidityRating}
 - **Objection:** "${activeVersion.stressTest.skepticObjection}"
-- **Shield Response:** "${activeVersion.stressTest.shieldResponse}"
+- **Shield:** "${activeVersion.stressTest.shieldResponse}"
 - **Tip:** ${activeVersion.stressTest.solidityNote}
-` : ""}${activeVersion.userNotes ? `**Notes:**\n${activeVersion.userNotes}\n` : ""}---
+` : ""}${activeVersion.userNotes ? `**Personal Notes:**\n${activeVersion.userNotes}\n` : ""}---
 *Exported from PhiloCompiler*
 `;
     const blob = new Blob([md], { type: "text/markdown" });
@@ -91,7 +91,11 @@ ${activeVersion.toneVoices ? `**Clarity Voices:**
   const filteredEntries = entries.filter((e) => {
     const matchesSearch =
       e.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      e.versions.some(v => v.rawThought.toLowerCase().includes(searchQuery.toLowerCase()) || v.transformedThought.toLowerCase().includes(searchQuery.toLowerCase()));
+      e.versions.some(
+        v =>
+          v.rawThought.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          v.transformedThought.toLowerCase().includes(searchQuery.toLowerCase())
+      );
     const matchesTag = selectedTag === "All" || e.tag === selectedTag;
     return matchesSearch && matchesTag;
   });
@@ -100,17 +104,19 @@ ${activeVersion.toneVoices ? `**Clarity Voices:**
 
   if (entries.length === 0) {
     return (
-      <div className="rounded-3xl p-12 text-center bg-white dark:bg-apple-darkSurface border border-apple-border dark:border-apple-darkBorder shadow-apple-sm space-y-4 max-w-xl mx-auto">
-        <BookOpen className="w-8 h-8 text-apple-secondary mx-auto" />
-        <h3 className="text-lg font-serif font-medium text-apple-text dark:text-white">
+      <div className="rounded-3xl p-12 text-center bg-white dark:bg-apple-darkSurface border border-apple-border dark:border-apple-darkBorder shadow-apple-sm space-y-4 max-w-xl mx-auto animate-fade-in">
+        <div className="w-12 h-12 rounded-2xl bg-apple-subtle dark:bg-apple-darkSubtle flex items-center justify-center mx-auto text-apple-secondary">
+          <BookOpen className="w-6 h-6 stroke-[1.5]" />
+        </div>
+        <h3 className="text-xl font-serif font-medium text-apple-text dark:text-white">
           Your Notebook is Empty
         </h3>
-        <p className="text-xs text-apple-secondary max-w-md mx-auto leading-relaxed">
-          Check any thought with the debugger, then click "Save to Notebook" to track your thoughts and clear versions over time.
+        <p className="text-sm text-apple-secondary max-w-sm mx-auto leading-relaxed font-sans">
+          Test any thought with the debugger, then save it to your notebook to track your thoughts and clear versions over time.
         </p>
         <button
           onClick={onGoToDebugger}
-          className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-xl text-xs font-medium text-white bg-apple-text dark:bg-white dark:text-black hover:opacity-90 transition-all shadow-apple-sm"
+          className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-full text-xs font-medium text-white bg-apple-text dark:bg-white dark:text-black hover:opacity-90 transition-all shadow-apple-sm"
         >
           <span>Open Debugger</span>
           <ArrowRight className="w-3.5 h-3.5" />
@@ -119,26 +125,32 @@ ${activeVersion.toneVoices ? `**Clarity Voices:**
     );
   }
 
+  const isSound =
+    activeVersion?.isAlreadySound ||
+    activeVersion?.verdict?.toLowerCase().includes("clear") ||
+    activeVersion?.verdict?.toLowerCase().includes("empirical");
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       {/* Top action / search bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center space-x-2 flex-1 max-w-md">
           <div className="relative w-full">
-            <Search className="w-3.5 h-3.5 text-apple-secondary absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-3.5 h-3.5 text-apple-secondary absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search thoughts and clear versions..."
-              className="w-full pl-9 pr-3 py-2 rounded-xl border border-apple-border dark:border-apple-darkBorder bg-white dark:bg-apple-darkSurface text-xs text-apple-text dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:border-apple-accent shadow-apple-sm"
+              placeholder="Search thoughts..."
+              className="w-full pl-9 pr-3 py-2 rounded-xl border border-apple-border dark:border-apple-darkBorder bg-white dark:bg-apple-darkSurface text-xs text-apple-text dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:border-apple-accent transition-colors shadow-apple-sm"
             />
           </div>
 
           <select
             value={selectedTag}
             onChange={(e) => setSelectedTag(e.target.value)}
-            className="px-3 py-2 rounded-xl border border-apple-border dark:border-apple-darkBorder bg-white dark:bg-apple-darkSurface text-xs font-mono text-apple-secondary focus:outline-none focus:border-apple-accent shadow-apple-sm"
+            aria-label="Filter by tag"
+            className="px-3 py-2 rounded-xl border border-apple-border dark:border-apple-darkBorder bg-white dark:bg-apple-darkSurface text-xs font-sans text-apple-secondary focus:outline-none focus:border-apple-accent shadow-apple-sm"
           >
             {tags.map((t) => (
               <option key={t} value={t}>
@@ -148,31 +160,37 @@ ${activeVersion.toneVoices ? `**Clarity Voices:**
           </select>
         </div>
 
-        <div className="flex items-center space-x-2 self-start sm:self-auto">
+        <div className="flex items-center space-x-1.5 self-start sm:self-auto">
           <button
             onClick={onExport}
-            className="p-2 rounded-xl text-apple-secondary hover:text-apple-text bg-white dark:bg-apple-darkSurface border border-apple-border dark:border-apple-darkBorder shadow-apple-sm transition-all"
+            className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs text-apple-secondary hover:text-apple-text dark:hover:text-white bg-white dark:bg-apple-darkSurface border border-apple-border dark:border-apple-darkBorder shadow-apple-sm transition-all"
             title="Export Notebook JSON"
           >
             <Download className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Export</span>
           </button>
           <button
             onClick={onImport}
-            className="p-2 rounded-xl text-apple-secondary hover:text-apple-text bg-white dark:bg-apple-darkSurface border border-apple-border dark:border-apple-darkBorder shadow-apple-sm transition-all"
+            className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs text-apple-secondary hover:text-apple-text dark:hover:text-white bg-white dark:bg-apple-darkSurface border border-apple-border dark:border-apple-darkBorder shadow-apple-sm transition-all"
             title="Import Notebook JSON"
           >
             <Upload className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Import</span>
           </button>
         </div>
       </div>
 
       {/* Main split: Left list + Right details */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
-        {/* Left Column: Thoughts List */}
-        <div className="md:col-span-4 space-y-2 max-h-[70vh] overflow-y-auto pr-1">
+        {/* Left Column: Quiet & Serene Thoughts List */}
+        <div className="md:col-span-4 space-y-2 max-h-[75vh] overflow-y-auto pr-1 custom-scrollbar">
           {filteredEntries.map((entry) => {
             const isSelected = entry.id === (activeEntry?.id || "");
-            const latestVersion = entry.versions[entry.versions.length - 1];
+            const latestVer = entry.versions[entry.versions.length - 1];
+            const entryIsSound =
+              latestVer?.isAlreadySound ||
+              latestVer?.verdict?.toLowerCase().includes("clear") ||
+              latestVer?.verdict?.toLowerCase().includes("empirical");
 
             return (
               <button
@@ -181,295 +199,338 @@ ${activeVersion.toneVoices ? `**Clarity Voices:**
                   setSelectedEntryId(entry.id);
                   setSelectedVersionIndex(entry.versions.length - 1);
                 }}
-                className={`w-full text-left p-4 rounded-2xl border transition-all space-y-2 ${
+                className={`w-full text-left p-4 rounded-2xl border transition-all duration-150 space-y-2 ${
                   isSelected
-                    ? "bg-white dark:bg-apple-darkSurface border-apple-accent/60 shadow-apple"
-                    : "bg-white/60 dark:bg-apple-darkSurface/60 border-apple-border/70 dark:border-apple-darkBorder hover:border-apple-secondary/40"
+                    ? "bg-white dark:bg-apple-darkSurface border-apple-accent/50 shadow-apple ring-1 ring-apple-accent/20"
+                    : "bg-white/60 dark:bg-apple-darkSurface/50 border-apple-border/60 dark:border-apple-darkBorder/60 hover:bg-white dark:hover:bg-apple-darkSurface hover:border-apple-secondary/30"
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-apple-subtle dark:bg-apple-darkSubtle border border-apple-border/60 text-apple-secondary">
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-apple-subtle dark:bg-apple-darkSubtle text-apple-secondary">
                     #{entry.tag}
                   </span>
-                  <span className="text-[10px] font-mono text-apple-secondary flex items-center space-x-1">
-                    <GitBranch className="w-3 h-3" />
-                    <span>{entry.versions.length} {entry.versions.length === 1 ? "v" : "versions"}</span>
-                  </span>
+                  <div className="flex items-center space-x-1.5 text-[10px] font-mono text-apple-secondary">
+                    {entryIsSound && (
+                      <span className="text-emerald-600 dark:text-emerald-400 font-sans" title="Already Sound">
+                        ✓ Sound
+                      </span>
+                    )}
+                    {entry.versions.length > 1 && (
+                      <span className="px-1.5 py-0.2 rounded bg-black/5 dark:bg-white/10">
+                        v{entry.versions.length}
+                      </span>
+                    )}
+                  </div>
                 </div>
 
-                <div className="font-medium text-sm text-apple-text dark:text-zinc-100 line-clamp-1 font-sans">
+                <div className="font-serif font-medium text-sm text-apple-text dark:text-zinc-100 line-clamp-1">
                   {entry.title}
                 </div>
 
-                <div className="text-xs font-serif italic text-apple-secondary line-clamp-2">
-                  "{latestVersion.rawThought}"
+                <div className="text-xs font-serif italic text-apple-secondary line-clamp-2 leading-relaxed">
+                  "{latestVer.rawThought}"
                 </div>
 
-                <div className="text-[10px] text-apple-secondary/80 font-mono">
-                  {new Date(entry.updatedAt).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
+                <div className="text-[10px] text-apple-secondary/70 font-mono pt-1">
+                  {new Date(entry.updatedAt).toLocaleDateString(undefined, {
+                    month: "short",
+                    day: "numeric",
+                  })}
                 </div>
               </button>
             );
           })}
         </div>
 
-        {/* Right Column: Active Thought & Refinement Evolution */}
+        {/* Right Column: Active Thought - Tranquil & Elegant */}
         {activeEntry && activeVersion && (
           <div className="md:col-span-8 rounded-3xl p-6 sm:p-8 bg-white dark:bg-apple-darkSurface border border-apple-border dark:border-apple-darkBorder shadow-apple-lg space-y-6">
             {/* Header: Title, Tag, and Actions */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-apple-border/40 dark:border-apple-darkBorder/40 pb-4">
               <div>
-                <div className="flex items-center space-x-2 mb-1">
-                  <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-apple-subtle dark:bg-apple-darkSubtle border border-apple-border/60 text-apple-secondary">
+                <div className="flex items-center space-x-2 mb-1.5">
+                  <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-apple-subtle dark:bg-apple-darkSubtle text-apple-secondary">
                     #{activeEntry.tag}
                   </span>
                   <span className="text-xs text-apple-secondary font-mono">
-                    Created {new Date(activeEntry.createdAt).toLocaleDateString()}
+                    {new Date(activeEntry.createdAt).toLocaleDateString(undefined, {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })}
                   </span>
                 </div>
-                <h2 className="text-xl sm:text-2xl font-serif text-apple-text dark:text-white font-medium">
+                <h2 className="text-xl sm:text-2xl font-serif text-apple-text dark:white font-medium">
                   {activeEntry.title}
                 </h2>
               </div>
 
-              <div className="flex items-center space-x-2 self-start sm:self-auto">
-                <button
-                  onClick={() => setIsSideBySide(!isSideBySide)}
-                  className={`inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-mono transition-all ${
-                    isSideBySide
-                      ? "bg-apple-text text-white dark:bg-white dark:text-black font-semibold shadow-apple-sm"
-                      : "bg-apple-subtle dark:bg-apple-darkSubtle text-apple-secondary hover:text-apple-text border border-apple-border/60"
-                  }`}
-                  title="Toggle side-by-side comparison"
-                >
-                  <Columns2 className="w-3.5 h-3.5" />
-                  <span>{isSideBySide ? "Stacked View" : "Side-by-Side"}</span>
-                </button>
-
-                <button
-                  onClick={handleExportEntryMarkdown}
-                  className="p-2 rounded-xl text-apple-secondary hover:text-apple-text bg-apple-subtle dark:bg-apple-darkSubtle border border-apple-border/60 transition-colors"
-                  title="Export this thought as Markdown"
-                >
-                  <FileText className="w-3.5 h-3.5" />
-                </button>
-
+              <div className="flex items-center space-x-1.5 self-start sm:self-auto">
                 <button
                   onClick={() => onLoadIntoDebugger(activeVersion.rawThought)}
                   className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-medium text-white bg-apple-text dark:bg-white dark:text-black hover:opacity-90 transition-all shadow-apple-sm"
-                  title="Open this thought in the Debugger"
+                  title="Open in Debugger"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
                   <span>Open in Debugger</span>
                 </button>
 
                 <button
+                  onClick={handleExportEntryMarkdown}
+                  className="p-2 rounded-xl text-apple-secondary hover:text-apple-text bg-apple-subtle dark:bg-apple-darkSubtle border border-apple-border/50 transition-colors"
+                  title="Export Markdown"
+                >
+                  <FileText className="w-3.5 h-3.5" />
+                </button>
+
+                <button
                   onClick={() => onDeleteEntry(activeEntry.id)}
                   className="p-2 rounded-xl text-apple-secondary hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/20 transition-colors"
-                  title="Delete Entry"
+                  title="Delete Thought"
                 >
-                  <Trash2 className="w-4 h-4" />
+                  <Trash2 className="w-3.5 h-3.5" />
                 </button>
               </div>
             </div>
 
-            {/* Version Stepper Tabs (v1 -> v2 -> v3) */}
-            <div className="space-y-2">
-              <div className="text-[10px] font-mono uppercase tracking-wider text-apple-secondary font-semibold">
-                Versions ({activeEntry.versions.length} {activeEntry.versions.length === 1 ? "Version" : "Versions"}):
-              </div>
+            {/* Version Stepper (only visible if multiple versions exist) */}
+            {activeEntry.versions.length > 1 && (
               <div className="flex items-center space-x-1.5 overflow-x-auto pb-1">
+                <span className="text-[11px] font-mono text-apple-secondary mr-1">Version:</span>
                 {activeEntry.versions.map((ver, idx) => (
                   <button
                     key={ver.versionNumber}
                     onClick={() => setSelectedVersionIndex(idx)}
-                    className={`flex items-center space-x-1 px-3 py-1.5 rounded-xl text-xs font-mono transition-all ${
-                      (selectedVersionIndex === idx || (!selectedVersionIndex && idx === activeEntry.versions.length - 1))
-                        ? "bg-apple-accent text-white font-medium shadow-apple-sm"
-                        : "bg-apple-subtle dark:bg-apple-darkSubtle text-apple-secondary hover:text-apple-text border border-apple-border/60"
+                    className={`flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-mono transition-all ${
+                      selectedVersionIndex === idx
+                        ? "bg-apple-text text-white dark:bg-white dark:text-black font-medium shadow-apple-sm"
+                        : "bg-apple-subtle dark:bg-apple-darkSubtle text-apple-secondary hover:text-apple-text border border-apple-border/50"
                     }`}
                   >
                     <span>v{ver.versionNumber}</span>
-                    {idx === 0 && <span className="opacity-70 text-[10px]">(Original)</span>}
-                    {idx === activeEntry.versions.length - 1 && idx > 0 && <span className="opacity-70 text-[10px]">(Latest)</span>}
+                    {idx === 0 && <span className="opacity-60 text-[10px]">(First)</span>}
+                    {idx === activeEntry.versions.length - 1 && idx > 0 && (
+                      <span className="opacity-60 text-[10px]">(Latest)</span>
+                    )}
                   </button>
                 ))}
               </div>
-            </div>
-
-            {/* "What Changed Between Versions?" (The Signature Feature) */}
-            {activeVersion.diffFromPrevious && (
-              <div className="p-4 rounded-2xl bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-200/60 dark:border-indigo-900/40 space-y-2">
-                <div className="flex items-center space-x-2 text-xs font-mono font-semibold uppercase text-indigo-700 dark:text-indigo-400">
-                  <ArrowLeftRight className="w-3.5 h-3.5" />
-                  <span>What Changed from Version {activeVersion.versionNumber - 1}?</span>
-                </div>
-                <p className="text-xs sm:text-sm text-apple-text/90 dark:text-zinc-200 font-sans leading-relaxed">
-                  {activeVersion.diffFromPrevious.summary}
-                </p>
-                <div className="flex flex-wrap gap-1.5 pt-1">
-                  {activeVersion.diffFromPrevious.intentionalityRemoved && (
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-indigo-800 dark:text-indigo-300">
-                      ✓ Removed Intentional Words
-                    </span>
-                  )}
-                  {activeVersion.diffFromPrevious.empiricalSpecificityIncreased && (
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-300">
-                      ✓ More Specific & Observable
-                    </span>
-                  )}
-                  {activeVersion.diffFromPrevious.observationalBoundaryClarified && (
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300">
-                      ✓ Clearer Boundary
-                    </span>
-                  )}
-                  {activeVersion.diffFromPrevious.metaphysicalScopeReduced && (
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300">
-                      ✓ Kept Grounded & Realistic
-                    </span>
-                  )}
-                </div>
-              </div>
             )}
 
-            {/* Version Detail: Raw vs Transformed */}
-            {isSideBySide ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-5 rounded-2xl bg-apple-subtle/50 dark:bg-apple-darkSubtle/50 border border-apple-border/70 dark:border-apple-darkBorder/70 space-y-2 flex flex-col justify-between">
-                  <div className="space-y-2">
-                    <span className="text-[10px] uppercase font-mono tracking-wider text-apple-secondary font-semibold block">
-                      Original Starting Wording (v{activeVersion.versionNumber}):
-                    </span>
-                    <p className="font-serif italic text-base text-apple-text dark:text-zinc-200">
-                      "{activeVersion.rawThought}"
-                    </p>
-                  </div>
-                  <div className="pt-2 border-t border-apple-border/40 dark:border-apple-darkBorder/40 text-xs text-apple-secondary">
-                    <span className="font-mono text-[10px] uppercase block">Starting Status:</span>
-                    <span className="font-medium text-apple-text dark:text-zinc-300">{activeVersion.verdict}</span>
-                  </div>
+            {/* THE CORE THOUGHT DISPLAY */}
+            {isSound ? (
+              /* Already Sound Affirmation Card */
+              <div className="p-6 sm:p-7 rounded-2xl bg-emerald-50/60 dark:bg-emerald-950/20 border border-emerald-500/30 space-y-4">
+                <div className="flex items-center space-x-2 text-emerald-800 dark:text-emerald-300">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                  <span className="text-xs font-mono font-medium tracking-wide uppercase">
+                    Already Clear & Sound
+                  </span>
                 </div>
 
-                <div className="p-5 rounded-2xl bg-emerald-500/[0.05] dark:bg-emerald-500/[0.09] border border-emerald-500/25 space-y-2 flex flex-col justify-between">
-                  <div className="space-y-2">
-                    <div className="flex items-center space-x-1.5 text-[10px] uppercase font-mono tracking-wider text-emerald-700 dark:text-emerald-400 font-semibold">
-                      <Sparkles className="w-3.5 h-3.5" />
-                      <span>Clear Refined Version:</span>
-                    </div>
-                    <p className="font-serif text-base sm:text-lg text-apple-text dark:text-white leading-relaxed">
-                      "{activeVersion.transformedThought}"
-                    </p>
-                  </div>
-                  <div className="pt-2 border-t border-emerald-500/20 text-xs text-emerald-900 dark:text-emerald-300">
-                    <span className="font-mono text-[10px] uppercase block">Why this is clearer:</span>
-                    <span className="font-sans leading-relaxed">{activeVersion.reasonSummary}</span>
-                  </div>
+                <div className="space-y-1.5">
+                  <p className="font-serif text-lg sm:text-xl text-apple-text dark:text-white leading-relaxed">
+                    "{activeVersion.transformedThought || activeVersion.rawThought}"
+                  </p>
                 </div>
+
+                <p className="text-xs sm:text-sm text-emerald-900/80 dark:text-emerald-200/80 font-sans leading-relaxed border-t border-emerald-500/20 pt-3">
+                  {activeVersion.reasonSummary ||
+                    "This sentence is already clear and grounded in observable reality. PhiloCompiler kept it exactly as you wrote it—no debugging needed."}
+                </p>
               </div>
             ) : (
-              <div className="space-y-4">
-                <div className="p-4 rounded-2xl bg-apple-subtle/50 dark:bg-apple-darkSubtle/50 border border-apple-border/60 dark:border-apple-darkBorder/60 space-y-1">
-                  <span className="text-[10px] uppercase font-mono tracking-wider text-apple-secondary font-semibold block">
-                    Original Wording (v{activeVersion.versionNumber}):
+              /* Transformation Card: Before and After */
+              <div className="rounded-2xl border border-apple-border dark:border-apple-darkBorder overflow-hidden divide-y divide-apple-border/50 dark:divide-apple-darkBorder/50 shadow-apple-sm">
+                {/* Original Starting Wording */}
+                <div className="p-5 sm:p-6 bg-apple-subtle/30 dark:bg-apple-darkSubtle/20 space-y-1.5">
+                  <span className="text-[10px] uppercase font-mono tracking-wider text-apple-secondary font-medium">
+                    Original Thought:
                   </span>
-                  <p className="font-serif italic text-sm sm:text-base text-apple-text dark:text-zinc-200">
+                  <p className="font-serif italic text-base sm:text-lg text-apple-text/80 dark:text-zinc-300 leading-relaxed">
                     "{activeVersion.rawThought}"
                   </p>
                 </div>
 
-                <div className="p-5 rounded-2xl bg-emerald-500/[0.04] dark:bg-emerald-500/[0.08] border border-emerald-500/20 space-y-1.5">
-                  <div className="flex items-center space-x-1.5 text-[10px] uppercase font-mono tracking-wider text-emerald-700 dark:text-emerald-400 font-semibold">
+                {/* Refined Proposition */}
+                <div className="p-5 sm:p-6 bg-white dark:bg-apple-darkSurface space-y-2">
+                  <div className="flex items-center space-x-1.5 text-xs font-mono font-medium text-apple-accent dark:text-apple-accent">
                     <Sparkles className="w-3.5 h-3.5" />
-                    <span>Clear, Refined Version:</span>
+                    <span>Clear Refined Thought:</span>
                   </div>
-                  <p className="font-serif text-base sm:text-lg text-apple-text dark:text-white leading-relaxed">
+                  <p className="font-serif text-lg sm:text-xl text-apple-text dark:text-white leading-relaxed">
                     "{activeVersion.transformedThought}"
                   </p>
+                  {activeVersion.reasonSummary && (
+                    <p className="text-xs text-apple-secondary font-sans leading-relaxed pt-2 border-t border-apple-border/30 dark:border-apple-darkBorder/30">
+                      <span className="font-medium text-apple-text/80 dark:text-zinc-200">Why this works: </span>
+                      {activeVersion.reasonSummary}
+                    </p>
+                  )}
                 </div>
               </div>
             )}
 
-            {/* Reason & Core Assumptions */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-              <div className="p-3.5 rounded-xl bg-white dark:bg-apple-darkSurface border border-apple-border/70 dark:border-apple-darkBorder/70 space-y-1">
-                <span className="font-mono text-[10px] uppercase text-apple-secondary font-semibold block">
-                  Why This is Clearer:
-                </span>
-                <p className="text-apple-text/90 dark:text-zinc-300 font-sans leading-relaxed">
-                  {activeVersion.reasonSummary}
-                </p>
-              </div>
-
-              <div className="p-3.5 rounded-xl bg-white dark:bg-apple-darkSurface border border-apple-border/70 dark:border-apple-darkBorder/70 space-y-1">
-                <span className="font-mono text-[10px] uppercase text-apple-secondary font-semibold block">
-                  Assumptions Behind the Thought:
-                </span>
-                <div className="text-apple-text/90 dark:text-zinc-300 font-sans space-y-0.5">
-                  {activeVersion.keyAssumptions.map((a, i) => (
-                    <div key={i} className="flex items-start space-x-1">
-                      <span className="text-apple-secondary">•</span>
-                      <span>{a}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Tone Voices (if recorded) */}
-            {activeVersion.toneVoices && (
-              <div className="p-4 rounded-2xl bg-black/[0.02] dark:bg-white/[0.03] border border-apple-border/60 dark:border-apple-darkBorder/60 space-y-2 text-xs">
-                <span className="font-mono text-[10px] uppercase text-apple-secondary font-semibold block">
-                  Clarity Voices:
-                </span>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                  <div className="p-2.5 rounded-xl bg-white/70 dark:bg-apple-darkSurface border border-apple-border/50 dark:border-apple-darkBorder/50 space-y-1">
-                    <span className="font-semibold text-apple-text dark:text-zinc-200 block text-[11px]">☕ Everyday:</span>
-                    <p className="text-apple-secondary font-serif italic text-[11px] leading-relaxed">"{activeVersion.toneVoices.everyday}"</p>
-                  </div>
-                  <div className="p-2.5 rounded-xl bg-white/70 dark:bg-apple-darkSurface border border-apple-border/50 dark:border-apple-darkBorder/50 space-y-1">
-                    <span className="font-semibold text-apple-text dark:text-zinc-200 block text-[11px]">⚖ Balanced:</span>
-                    <p className="text-apple-secondary font-serif text-[11px] leading-relaxed">"{activeVersion.toneVoices.balanced}"</p>
-                  </div>
-                  <div className="p-2.5 rounded-xl bg-white/70 dark:bg-apple-darkSurface border border-apple-border/50 dark:border-apple-darkBorder/50 space-y-1">
-                    <span className="font-semibold text-apple-text dark:text-zinc-200 block text-[11px]">🛡 Airtight:</span>
-                    <p className="text-apple-secondary font-serif text-[11px] leading-relaxed">"{activeVersion.toneVoices.airtight}"</p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* The Friendly Skeptic Check (if recorded) */}
-            {activeVersion.stressTest && (
-              <div className="p-4 rounded-2xl bg-amber-500/[0.04] dark:bg-amber-500/[0.07] border border-amber-500/25 space-y-2.5 text-xs">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-1.5 font-mono text-[10px] uppercase text-amber-900 dark:text-amber-200 font-semibold">
-                    <Zap className="w-3.5 h-3.5 text-amber-500" />
-                    <span>The Friendly Skeptic Check</span>
-                  </div>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full border border-amber-500/30 bg-white/80 dark:bg-black/40 text-amber-900 dark:text-amber-200">
-                    {activeVersion.stressTest.solidityRating === "ROCK_SOLID" ? "🟢 Rock Solid" : activeVersion.stressTest.solidityRating === "NEEDS_BOUNDARY" ? "🟡 Needs Boundary" : "🟣 Subjective"}
+            {/* PROGRESSIVE DISCLOSURE: Deep Dive Toggle */}
+            <div className="pt-2">
+              <button
+                onClick={() => setShowDeepDive(!showDeepDive)}
+                className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl border border-apple-border/70 dark:border-apple-darkBorder/70 bg-apple-subtle/40 dark:bg-apple-darkSubtle/30 hover:bg-apple-subtle dark:hover:bg-apple-darkSubtle text-xs text-apple-secondary hover:text-apple-text dark:hover:text-zinc-200 transition-all font-sans"
+              >
+                <div className="flex items-center space-x-2">
+                  <Zap className="w-3.5 h-3.5 text-apple-secondary" />
+                  <span className="font-medium">
+                    {showDeepDive
+                      ? "Hide Deep Dive Details"
+                      : "Explore Deep Dive: Skeptic Check, Clarity Voices & Assumptions"}
                   </span>
                 </div>
-                <div className="space-y-1.5">
-                  <div>
-                    <span className="font-semibold text-amber-800 dark:text-amber-300 block text-[11px]">The Objection:</span>
-                    <p className="italic text-apple-text dark:text-zinc-200 text-xs">"{activeVersion.stressTest.skepticObjection}"</p>
-                  </div>
-                  <div>
-                    <span className="font-semibold text-emerald-800 dark:text-emerald-400 block text-[11px]">The Shield:</span>
-                    <p className="text-apple-text dark:text-zinc-200 text-xs">{activeVersion.stressTest.shieldResponse}</p>
-                  </div>
-                </div>
-              </div>
-            )}
+                {showDeepDive ? (
+                  <ChevronUp className="w-4 h-4" />
+                ) : (
+                  <ChevronDown className="w-4 h-4" />
+                )}
+              </button>
 
-            {/* Personal contemplative notes */}
+              {/* COLLAPSED / EXPANDED SECTION */}
+              {showDeepDive && (
+                <div className="mt-4 space-y-5 animate-fade-in">
+                  {/* 1. What Changed (Diff from previous version) */}
+                  {activeVersion.diffFromPrevious && (
+                    <div className="p-4 rounded-xl bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-200/50 dark:border-indigo-900/30 space-y-2">
+                      <div className="flex items-center space-x-2 text-xs font-mono font-medium text-indigo-700 dark:text-indigo-400">
+                        <ArrowLeftRight className="w-3.5 h-3.5" />
+                        <span>Evolution from Version {activeVersion.versionNumber - 1}</span>
+                      </div>
+                      <p className="text-xs text-apple-text/90 dark:text-zinc-200 font-sans leading-relaxed">
+                        {activeVersion.diffFromPrevious.summary}
+                      </p>
+                      <div className="flex flex-wrap gap-1.5 pt-1">
+                        {activeVersion.diffFromPrevious.intentionalityRemoved && (
+                          <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-indigo-800 dark:text-indigo-300">
+                            ✓ Removed Intentional Words
+                          </span>
+                        )}
+                        {activeVersion.diffFromPrevious.empiricalSpecificityIncreased && (
+                          <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-300">
+                            ✓ More Specific & Observable
+                          </span>
+                        )}
+                        {activeVersion.diffFromPrevious.observationalBoundaryClarified && (
+                          <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300">
+                            ✓ Clearer Boundary
+                          </span>
+                        )}
+                        {activeVersion.diffFromPrevious.metaphysicalScopeReduced && (
+                          <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300">
+                            ✓ Kept Grounded & Realistic
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 2. Clarity Voices (Everyday, Balanced, Airtight) */}
+                  {activeVersion.toneVoices && (
+                    <div className="space-y-2">
+                      <span className="font-mono text-[10px] uppercase text-apple-secondary font-medium tracking-wider block">
+                        3 Clarity Voices:
+                      </span>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                        <div className="p-3 rounded-xl bg-apple-subtle/30 dark:bg-apple-darkSubtle/20 border border-apple-border/50 dark:border-apple-darkBorder/50 space-y-1">
+                          <div className="flex items-center space-x-1 text-apple-secondary text-[11px] font-medium">
+                            <Coffee className="w-3 h-3 text-amber-600 dark:text-amber-400" />
+                            <span>Everyday</span>
+                          </div>
+                          <p className="text-apple-text dark:text-zinc-200 font-serif italic text-xs leading-relaxed">
+                            "{activeVersion.toneVoices.everyday}"
+                          </p>
+                        </div>
+                        <div className="p-3 rounded-xl bg-apple-subtle/30 dark:bg-apple-darkSubtle/20 border border-apple-border/50 dark:border-apple-darkBorder/50 space-y-1">
+                          <div className="flex items-center space-x-1 text-apple-secondary text-[11px] font-medium">
+                            <Scale className="w-3 h-3 text-blue-600 dark:text-blue-400" />
+                            <span>Balanced</span>
+                          </div>
+                          <p className="text-apple-text dark:text-zinc-200 font-serif text-xs leading-relaxed">
+                            "{activeVersion.toneVoices.balanced}"
+                          </p>
+                        </div>
+                        <div className="p-3 rounded-xl bg-apple-subtle/30 dark:bg-apple-darkSubtle/20 border border-apple-border/50 dark:border-apple-darkBorder/50 space-y-1">
+                          <div className="flex items-center space-x-1 text-apple-secondary text-[11px] font-medium">
+                            <Shield className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                            <span>Airtight</span>
+                          </div>
+                          <p className="text-apple-text dark:text-zinc-200 font-serif text-xs leading-relaxed">
+                            "{activeVersion.toneVoices.airtight}"
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 3. The Friendly Skeptic Check */}
+                  {activeVersion.stressTest && (
+                    <div className="p-4 rounded-xl bg-amber-50/40 dark:bg-amber-950/10 border border-amber-500/20 space-y-2.5 text-xs">
+                      <div className="flex items-center justify-between">
+                        <span className="font-mono text-[10px] uppercase text-amber-900 dark:text-amber-200 font-medium">
+                          The Friendly Skeptic Check
+                        </span>
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded-full border border-amber-500/30 bg-white/70 dark:bg-black/30 text-amber-900 dark:text-amber-200">
+                          {activeVersion.stressTest.solidityRating === "ROCK_SOLID"
+                            ? "🟢 Rock Solid"
+                            : activeVersion.stressTest.solidityRating === "NEEDS_BOUNDARY"
+                            ? "🟡 Needs Boundary"
+                            : "🟣 Subjective"}
+                        </span>
+                      </div>
+                      <div className="space-y-1.5 font-sans">
+                        <div>
+                          <span className="font-medium text-amber-800 dark:text-amber-300 block text-[11px]">
+                            The Objection:
+                          </span>
+                          <p className="italic text-apple-text dark:text-zinc-200 text-xs">
+                            "{activeVersion.stressTest.skepticObjection}"
+                          </p>
+                        </div>
+                        <div>
+                          <span className="font-medium text-emerald-800 dark:text-emerald-400 block text-[11px]">
+                            The Shield:
+                          </span>
+                          <p className="text-apple-text dark:text-zinc-200 text-xs">
+                            {activeVersion.stressTest.shieldResponse}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 4. Assumptions Behind Thought */}
+                  {activeVersion.keyAssumptions.length > 0 && (
+                    <div className="p-4 rounded-xl bg-apple-subtle/30 dark:bg-apple-darkSubtle/20 border border-apple-border/50 dark:border-apple-darkBorder/50 space-y-1.5 text-xs">
+                      <span className="font-mono text-[10px] uppercase text-apple-secondary font-medium tracking-wider block">
+                        Assumptions Behind the Thought:
+                      </span>
+                      <div className="text-apple-text/80 dark:text-zinc-300 font-sans space-y-1">
+                        {activeVersion.keyAssumptions.map((a, i) => (
+                          <div key={i} className="flex items-start space-x-1.5">
+                            <span className="text-apple-secondary">•</span>
+                            <span>{a}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Personal Notes (if recorded) */}
             {activeVersion.userNotes && (
-              <div className="p-3.5 rounded-xl bg-black/[0.02] dark:bg-white/[0.02] border border-apple-border/50 dark:border-apple-darkBorder/50 text-xs space-y-1">
-                <span className="font-mono text-[10px] uppercase text-apple-secondary font-semibold block">
-                  Your Notes:
+              <div className="p-4 rounded-xl bg-apple-subtle/20 dark:bg-apple-darkSubtle/20 border-l-2 border-apple-secondary/40 text-xs space-y-1">
+                <span className="font-mono text-[10px] uppercase text-apple-secondary font-medium block">
+                  Personal Note:
                 </span>
-                <p className="italic text-apple-secondary font-sans leading-relaxed">
+                <p className="italic text-apple-text/90 dark:text-zinc-300 font-sans leading-relaxed">
                   "{activeVersion.userNotes}"
                 </p>
               </div>

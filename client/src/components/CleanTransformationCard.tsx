@@ -12,7 +12,8 @@ import {
   Bookmark,
   GitBranch,
   Zap,
-  Volume2
+  Volume2,
+  CheckCircle2
 } from "lucide-react";
 
 interface CleanTransformationCardProps {
@@ -37,11 +38,18 @@ export const CleanTransformationCard: React.FC<CleanTransformationCardProps> = (
   const [activeVoice, setActiveVoice] = useState<"everyday" | "balanced" | "airtight">("balanced");
   const [showStressTest, setShowStressTest] = useState<boolean>(false);
 
+  const isSound = Boolean(
+    analysis.isAlreadySound ||
+    analysis.verdict === "CLEAR" ||
+    analysis.verdict === "EMPIRICALLY TESTABLE"
+  );
+
   const activeReformulation: Reformulation | undefined =
     analysis.reformulations[selectedReformulationIndex] || analysis.reformulations[0];
 
   // Derive the active proposition based on chosen clarity voice or default reformulation
   const currentProposition = (() => {
+    if (isSound) return analysis.input;
     if (analysis.toneVoices) {
       if (activeVoice === "everyday") return analysis.toneVoices.everyday;
       if (activeVoice === "airtight") return analysis.toneVoices.airtight;
@@ -57,12 +65,18 @@ export const CleanTransformationCard: React.FC<CleanTransformationCardProps> = (
   };
 
   const getVerdictBadge = (verdict: string) => {
+    if (isSound) {
+      return {
+        bg: "bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 border-emerald-500/20",
+        label: "✓ Already Clear & Sound (No Debugging Needed)",
+      };
+    }
     switch (verdict) {
       case "CLEAR":
       case "EMPIRICALLY TESTABLE":
         return {
           bg: "bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 border-emerald-500/20",
-          label: "Clear & Sound",
+          label: "✓ Already Clear & Sound",
         };
       case "CATEGORYALLY PROBLEMATIC":
       case "PSEUDO-PROPOSITION SUSPECTED":
@@ -97,7 +111,7 @@ export const CleanTransformationCard: React.FC<CleanTransformationCardProps> = (
             {badge.label}
           </span>
           <span className="text-[11px] font-mono text-apple-secondary hidden sm:inline">
-            • Refined Formulation
+            • {isSound ? "Verified Sound Logic" : "Refined Formulation"}
           </span>
         </div>
 
@@ -168,102 +182,126 @@ export const CleanTransformationCard: React.FC<CleanTransformationCardProps> = (
 
       {/* 1. The Core Transformation (Original -> Transformed) */}
       <div className="space-y-4">
-        {/* Original */}
-        <div className="text-xs text-apple-secondary flex items-center space-x-2">
-          <span className="uppercase font-mono tracking-wider text-[10px] font-semibold text-apple-secondary">
-            What You Said:
-          </span>
-          <span className="font-serif italic text-apple-text/70 dark:text-zinc-400">
-            "{analysis.input}"
-          </span>
-        </div>
+        {isSound ? (
+          /* Already Sound Affirmation Card */
+          <div className="p-6 sm:p-7 rounded-2xl bg-emerald-500/[0.05] dark:bg-emerald-500/[0.09] border border-emerald-500/25 space-y-4">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <span className="text-xs font-mono font-semibold uppercase tracking-wider text-emerald-700 dark:text-emerald-300 flex items-center space-x-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                <span>This Thought Is Already Logically Sound</span>
+              </span>
+              <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 border border-emerald-500/20 font-medium">
+                No Correction Needed
+              </span>
+            </div>
 
-        {/* Transformed Card */}
-        <div className="p-5 sm:p-6 rounded-2xl bg-apple-subtle/50 dark:bg-apple-darkSubtle/50 border border-apple-border/70 dark:border-apple-darkBorder/70 space-y-4">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <span className="text-xs font-mono font-semibold uppercase tracking-wider text-apple-accent flex items-center space-x-1.5">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Clear, Refined Version</span>
-            </span>
+            <p className="text-xl sm:text-2xl font-serif text-apple-text dark:text-white leading-relaxed font-normal">
+              "{analysis.input}"
+            </p>
 
-            {/* Tone Voice Selector: Everyday | Balanced | Airtight */}
-            {analysis.toneVoices ? (
-              <div className="flex items-center space-x-1 p-0.5 rounded-xl bg-black/[0.04] dark:bg-white/[0.06] border border-apple-border/40 dark:border-apple-darkBorder/40">
-                <button
-                  onClick={() => setActiveVoice("everyday")}
-                  className={`px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all ${
-                    activeVoice === "everyday"
-                      ? "bg-white dark:bg-apple-darkSurface text-apple-text dark:text-white shadow-apple-sm font-semibold"
-                      : "text-apple-secondary hover:text-apple-text"
-                  }`}
-                  title="How you'd explain it to a friend over coffee"
-                >
-                  ☕ Everyday
-                </button>
-                <button
-                  onClick={() => setActiveVoice("balanced")}
-                  className={`px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all ${
-                    activeVoice === "balanced"
-                      ? "bg-white dark:bg-apple-darkSurface text-apple-text dark:text-white shadow-apple-sm font-semibold"
-                      : "text-apple-secondary hover:text-apple-text"
-                  }`}
-                  title="Balanced logical proposition"
-                >
-                  ⚖ Balanced
-                </button>
-                <button
-                  onClick={() => setActiveVoice("airtight")}
-                  className={`px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all ${
-                    activeVoice === "airtight"
-                      ? "bg-white dark:bg-apple-darkSurface text-apple-text dark:text-white shadow-apple-sm font-semibold"
-                      : "text-apple-secondary hover:text-apple-text"
-                  }`}
-                  title="Explicit boundaries preventing edge-case attacks"
-                >
-                  🛡 Airtight
-                </button>
-              </div>
-            ) : analysis.reformulations.length > 1 ? (
-              <div className="flex items-center space-x-1">
-                {analysis.reformulations.map((ref, idx) => (
-                  <button
-                    key={ref.id}
-                    onClick={() => setSelectedReformulationIndex(idx)}
-                    className={`px-2.5 py-1 rounded-lg text-[11px] font-mono transition-all ${
-                      selectedReformulationIndex === idx
-                        ? "bg-apple-text text-white dark:bg-white dark:text-black font-semibold shadow-apple-sm"
-                        : "text-apple-secondary hover:text-apple-text bg-black/5 dark:bg-white/5"
-                    }`}
-                  >
-                    {ref.mode}
-                  </button>
-                ))}
-              </div>
-            ) : null}
+            <p className="text-xs sm:text-sm text-emerald-950/90 dark:text-emerald-200/90 font-sans leading-relaxed pt-2 border-t border-emerald-500/20">
+              ✨ According to Wittgensteinian logic, your proposition is already grounded in verifiable observation and unambiguous language. It pictures reality clearly without grammatical illusions or unproven metaphysical jumps.
+            </p>
           </div>
+        ) : (
+          /* Standard Transformation Card */
+          <>
+            <div className="text-xs text-apple-secondary flex items-center space-x-2">
+              <span className="uppercase font-mono tracking-wider text-[10px] font-semibold text-apple-secondary">
+                What You Said:
+              </span>
+              <span className="font-serif italic text-apple-text/70 dark:text-zinc-400">
+                "{analysis.input}"
+              </span>
+            </div>
 
-          <p className="text-lg sm:text-xl font-serif text-apple-text dark:text-white leading-relaxed font-normal">
-            "{currentProposition}"
-          </p>
+            <div className="p-5 sm:p-6 rounded-2xl bg-apple-subtle/50 dark:bg-apple-darkSubtle/50 border border-apple-border/70 dark:border-apple-darkBorder/70 space-y-4">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <span className="text-xs font-mono font-semibold uppercase tracking-wider text-apple-accent flex items-center space-x-1.5">
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>Clear, Refined Version</span>
+                </span>
 
-          <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-apple-border/40 dark:border-apple-darkBorder/40">
-            {activeReformulation?.nonEquivalenceNote ? (
-              <p className="text-[11px] text-apple-secondary italic">
-                Note: {activeReformulation.nonEquivalenceNote}
+                {/* Tone Voice Selector: Everyday | Balanced | Airtight */}
+                {analysis.toneVoices ? (
+                  <div className="flex items-center space-x-1 p-0.5 rounded-xl bg-black/[0.04] dark:bg-white/[0.06] border border-apple-border/40 dark:border-apple-darkBorder/40">
+                    <button
+                      onClick={() => setActiveVoice("everyday")}
+                      className={`px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all ${
+                        activeVoice === "everyday"
+                          ? "bg-white dark:bg-apple-darkSurface text-apple-text dark:text-white shadow-apple-sm font-semibold"
+                          : "text-apple-secondary hover:text-apple-text"
+                      }`}
+                      title="How you'd explain it to a friend over coffee"
+                    >
+                      ☕ Everyday
+                    </button>
+                    <button
+                      onClick={() => setActiveVoice("balanced")}
+                      className={`px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all ${
+                        activeVoice === "balanced"
+                          ? "bg-white dark:bg-apple-darkSurface text-apple-text dark:text-white shadow-apple-sm font-semibold"
+                          : "text-apple-secondary hover:text-apple-text"
+                      }`}
+                      title="Balanced logical proposition"
+                    >
+                      ⚖ Balanced
+                    </button>
+                    <button
+                      onClick={() => setActiveVoice("airtight")}
+                      className={`px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all ${
+                        activeVoice === "airtight"
+                          ? "bg-white dark:bg-apple-darkSurface text-apple-text dark:text-white shadow-apple-sm font-semibold"
+                          : "text-apple-secondary hover:text-apple-text"
+                      }`}
+                      title="Explicit boundaries preventing edge-case attacks"
+                    >
+                      🛡 Airtight
+                    </button>
+                  </div>
+                ) : analysis.reformulations.length > 1 ? (
+                  <div className="flex items-center space-x-1">
+                    {analysis.reformulations.map((ref, idx) => (
+                      <button
+                        key={ref.id}
+                        onClick={() => setSelectedReformulationIndex(idx)}
+                        className={`px-2.5 py-1 rounded-lg text-[11px] font-mono transition-all ${
+                          selectedReformulationIndex === idx
+                            ? "bg-apple-text text-white dark:bg-white dark:text-black font-semibold shadow-apple-sm"
+                            : "text-apple-secondary hover:text-apple-text bg-black/5 dark:bg-white/5"
+                        }`}
+                      >
+                        {ref.mode}
+                      </button>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
+
+              <p className="text-lg sm:text-xl font-serif text-apple-text dark:text-white leading-relaxed font-normal">
+                "{currentProposition}"
               </p>
-            ) : <div />}
 
-            {onEvolveThought && (
-              <button
-                onClick={() => onEvolveThought(currentProposition)}
-                className="inline-flex items-center space-x-1.5 text-xs font-mono text-apple-accent hover:text-apple-accentHover transition-colors ml-auto"
-              >
-                <GitBranch className="w-3.5 h-3.5" />
-                <span>Evolve into next version →</span>
-              </button>
-            )}
-          </div>
-        </div>
+              <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-apple-border/40 dark:border-apple-darkBorder/40">
+                {activeReformulation?.nonEquivalenceNote ? (
+                  <p className="text-[11px] text-apple-secondary italic">
+                    Note: {activeReformulation.nonEquivalenceNote}
+                  </p>
+                ) : <div />}
+
+                {onEvolveThought && (
+                  <button
+                    onClick={() => onEvolveThought(currentProposition)}
+                    className="inline-flex items-center space-x-1.5 text-xs font-mono text-apple-accent hover:text-apple-accentHover transition-colors ml-auto"
+                  >
+                    <GitBranch className="w-3.5 h-3.5" />
+                    <span>Evolve into next version →</span>
+                  </button>
+                )}
+              </div>
+            </div>
+          </>
+        )}
       </div>
 
       {/* The Friendly Skeptic (Stress-Test Card) - Hidden by default, smooth disclosure */}

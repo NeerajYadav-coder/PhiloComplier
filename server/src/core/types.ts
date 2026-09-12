@@ -156,6 +156,7 @@ export interface PhilosophicalAnalysisResult {
   }[];
   verdict: EpistemicVerdict;
   verdictRationale: string;
+  isAlreadySound?: boolean; // Set true when proposition already satisfies Wittgensteinian criteria without needing fixes
 
   // Linguistic & Grammatical dissection
   termsInUse: LinguisticTerm[];

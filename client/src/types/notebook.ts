@@ -15,6 +15,7 @@ export interface ThoughtVersion {
   keyAssumptions: string[];
   preservedIntuition: string;
   timestamp: string;
+  isAlreadySound?: boolean;
   userNotes?: string;
   diffFromPrevious?: VersionDiff;
   toneVoices?: {

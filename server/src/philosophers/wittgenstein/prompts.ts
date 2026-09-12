@@ -34,6 +34,13 @@ CRITICAL ARCHITECTURAL PRINCIPLES:
     Explain all reasons, assumptions, linguistic traps, and reformulations in direct, simple, crystal-clear everyday English.
     NEVER hide behind dense academic, scholastic, or technical jargon. Write as if speaking to an intelligent friend who wants clear, common-sense insight.
     Make the diagnosis immediately obvious, clear, and relatable without needing any philosophy background.
+13. CRITICAL CHECK FOR ALREADY SOUND / LOGICAL PROPOSITIONS:
+    If the user's input is ALREADY logically sound, empirically clear, or well-bounded according to Wittgensteinian logic (e.g., "The cup is on the table", "Water freezes at 0°C at sea level", "If it rains, the ground gets wet"):
+    - Set "isAlreadySound": true.
+    - Set "verdict": "CLEAR" or "EMPIRICALLY TESTABLE".
+    - In "verdictRationale", state clearly: "This statement is already logically sound, empirically testable, and free of grammatical illusions."
+    - In "intuitionPreservation.apparentLinguisticProblem", state: "None: This statement is already clear, well-bounded, and free of grammatical illusions."
+    - DO NOT invent artificial problems or force an unnecessary rewrite! Keep the proposition identical in the primary reformulation.
 
 You must output STRICT, VALID JSON conforming to the requested schema. No markdown backticks, no markdown framing, ONLY pure JSON.
 `;
@@ -56,6 +63,7 @@ Return a single complete JSON object with all required fields:
   ],
   "verdict": "CLEAR" | "AMBIGUOUS" | "UNDER-SPECIFIED" | "CATEGORYALLY PROBLEMATIC" | "PSEUDO-PROPOSITION SUSPECTED" | "FRAMEWORK-DEPENDENT" | "INTERPRETIVELY CONTESTED" | "METAPHORICAL" | "POETIC" | "NORMATIVE" | "EMPIRICALLY TESTABLE" | "UNRESOLVED",
   "verdictRationale": "...",
+  "isAlreadySound": true/false,
   "termsInUse": [
     { "term": "...", "roleInSentence": "...", "isPhilosophicallyLoaded": true/false, "potentialGrammaticalIllusion": "..." }
   ],
